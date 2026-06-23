@@ -42,7 +42,7 @@ const Page = () => {
       if (res.status === 200 && res.data) {
         const user = await getUser();
         setUser(user);
-        router.replace("../home");
+        router.replace("(app)/(tabs)/Homepage");
       } else {
         console.log("Invalid username or password");
       }

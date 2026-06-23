@@ -11,8 +11,10 @@ import StatusBar from "@/components/common/StatusBar";
 
 type Book = {
   _id: string;
-  title: string;
-  image: string;
+  book: {
+    title: string;
+    image: string;
+  };
 };
 
 type User = {
@@ -26,11 +28,14 @@ const HomeScreen = () => {
 
   const getBookCollection = async () => {
     try {
-      const res = await api.get("/books/myBooks");
-      const data: Book[] = res.data.bookCollection;
+      const res = await api.get("/books/me");
+      console.log(res);
+      const data: Book[] = res.data;
+      console.log(data);
 
       if (data) setBooks(data);
       else setBooks([]);
+      console.log("books:", books);
     } catch (error) {
       console.error(error);
     }
@@ -49,7 +54,7 @@ const HomeScreen = () => {
 
   const renderBookItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
-      className="w-[45%] m-2 bg-white rounded-lg p-3 items-center"
+      className="bg-white rounded-lg p-3 items-center"
       onPress={() =>
         router.push({
           pathname: "/books/bookDetails/[bookId]",
@@ -58,11 +63,11 @@ const HomeScreen = () => {
       }
     >
       <Image
-        source={{ uri: item.image }}
-        className="w-25 h-35 mb-2 bg-gray-200 rounded"
+        source={{ uri: item.book.image }}
+        className="w-22 h-32 mb-2 bg-gray-200 rounded"
       />
-      <Text className="text-sm font-semibold text-[#3B2719] text-center">
-        {item.title}
+      <Text className="text-sm font-semibold text-text-light text-center">
+        {item.book.title}
       </Text>
     </TouchableOpacity>
   );
@@ -74,7 +79,7 @@ const HomeScreen = () => {
       <StatusBar />
 
       {/* Header */}
-      <View className="px-5 pt-3 pb-2" style={{ backgroundColor: Colors.primary }}>
+      <View className="px-5 pt-3 pb-2 bg-primary">
         <View className="flex-row justify-between items-center">
           <LogoText />
 
@@ -97,12 +102,17 @@ const HomeScreen = () => {
       </View>
 
       {/* Book List */}
+
       <FlatList
         data={books}
-        numColumns={2}
+        numColumns={3}
         keyExtractor={(item) => item._id}
         renderItem={renderBookItem}
         contentContainerClassName="p-4"
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 10,
+        }}
         ListEmptyComponent={
           <Text className="text-center mt-5 text-gray-500">
             No books available.

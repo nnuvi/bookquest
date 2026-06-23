@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import User from "../model/user.model.js";
-import { protectRoute } from "../middleware/protectRoute.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
 import Notification from "../model/notification.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import bcrypt from "bcryptjs";
