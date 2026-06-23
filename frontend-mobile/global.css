@@ -1,0 +1,56 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  /* Primary */
+  --color-primary: #1B3C53;
+
+  /* Secondary */
+  --color-secondary: #9BA1A6;
+  --color-secondary-dark: #BFC5C8;
+
+  /* Background */
+  --color-background: #FDF6ED;
+  --color-background-dark: #121212;
+
+  /* Text Input */
+  --color-textinput: #F1F1F1;
+  --color-textinput-dark: #1E1E1E;
+
+  /* Button */
+  --color-button: #456882;
+  --color-button-dark: #2E86C1;
+
+  /* Selection */
+  --color-selection: #CFECF3;
+  --color-selection-dark: #1F3A5F;
+
+  /* Text */
+  --color-text-light: #333333;
+  --color-text-dark: #F5F5F5;
+
+  /* Mid Gray */
+  --color-midgray: #666666;
+  --color-midgray-dark: #A0A0A0;
+
+  /* Common Colors */
+  --color-yellow: #f1c40f;
+  --color-red: #ef0827;
+  --color-green: #2ecc71;
+  --color-gray: #cccccc;
+
+  /* Choco */
+  --color-choco: #433530;
+  --color-choco-dark: #7B5E57;
+
+  /* Savoy */
+  --color-savoy: #6A4E37;
+  --color-savoy-dark: #A67C52;
+
+  /* Blue */
+  --color-blue: #0047AB;
+  --color-blue-dark: #4A90E2;
+}
