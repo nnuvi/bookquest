@@ -29,13 +29,13 @@ const HomeScreen = () => {
   const getBookCollection = async () => {
     try {
       const res = await api.get("/books/me");
-      console.log(res);
+      console.log(res.status);
       const data: Book[] = res.data;
-      console.log(data);
+      // console.log(data);
 
       if (data) setBooks(data);
       else setBooks([]);
-      console.log("books:", books);
+      // console.log("books:", books);
     } catch (error) {
       console.error(error);
     }
@@ -54,19 +54,23 @@ const HomeScreen = () => {
 
   const renderBookItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
-      className="bg-white rounded-lg p-3 items-center"
+      className="w-[33%] h-48 p-3 items-center "
       onPress={() =>
         router.push({
-          pathname: "/books/bookDetails/[bookId]",
+          pathname: "(app)/books/UserBookDetails/[bookId]",
           params: { bookId: item._id },
         })
       }
     >
       <Image
         source={{ uri: item.book.image }}
-        className="w-22 h-32 mb-2 bg-gray-200 rounded"
+        className="w-full h-35 mb-2 bg-gray-200 rounded"
       />
-      <Text className="text-sm font-semibold text-text-light text-center">
+      <Text
+        className="text-sm font-semibold text-text-light text-center"
+        numberOfLines={2}
+        ellipsizeMode="tail"
+      >
         {item.book.title}
       </Text>
     </TouchableOpacity>
@@ -111,7 +115,7 @@ const HomeScreen = () => {
         contentContainerClassName="p-4"
         columnWrapperStyle={{
           justifyContent: "space-between",
-          marginBottom: 10,
+          marginBottom: 4,
         }}
         ListEmptyComponent={
           <Text className="text-center mt-5 text-gray-500">

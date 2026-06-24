@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
-import Books, { BookSchemaType } from "../model/Book.model.js";
+// import "../model/Book.model.js";
+import Book, { BookSchemaType } from "../model/Book.model.js";
 import UserBook, { UserBookSchemaType } from "../model/UserBook.model.js";
-import User from "../model/user.model.js";
-import Book from "../model/Book.model.js";
-
-//import { preprocessImage } from "../lib/util/preProcessImage.js";
+import User, { UserSchemaType } from "../model/user.model.js";
 
 export const getMyBooks = async (req: Request, res: Response) => {
   const userId = req.user._id.toString();
-  //console.log( req.user );
+
   const user = await User.findById(userId);
   if (!user) return res.status(400).json({ message: "User not Found" });
 
@@ -19,14 +17,14 @@ export const getMyBooks = async (req: Request, res: Response) => {
   if (!userBooks) {
     return res.status(404).json({ message: "No books found" });
   }
-  console.log(userBooks)
+  console.log(userBooks);
   res.status(200).json(userBooks);
 };
 
-export const getUserBookList = async (req: Request, res: Response) => {
+export const getUserBooks = async (req: Request, res: Response) => {
   const profileUserId = req.params.id;
 
-  const userBooks = await UserBook.find({ owner:profileUserId })
+  const userBooks = await UserBook.find({ owner: profileUserId })
     .populate<{
       book: BookSchemaType;
     }>("book")
@@ -36,9 +34,28 @@ export const getUserBookList = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "No books found for this user." });
   }
 
-  console.log("Book Titles (user):", userBooks.map((b) => b.book.title));
+  console.log(
+    "Book Titles (user):",
+    userBooks.map((b) => b.book.title),
+  );
 
   res.status(200).json(userBooks);
+};
+
+export const getUserBookDetails = async (req: Request, res: Response) => {
+  const bookId = req.params.id;
+  console.log("bookid", bookId);
+
+  const userBookDetails = await UserBook.findById(bookId)
+    .populate<{
+      book: BookSchemaType;
+    }>("book")
+    .populate<{
+      User: UserSchemaType;
+    }>("owner", "fullName username");
+  console.log("get book details", userBookDetails);
+
+  res.status(200).json(userBookDetails);
 };
 
 export const getBookDetails = async (req: Request, res: Response) => {
@@ -46,7 +63,6 @@ export const getBookDetails = async (req: Request, res: Response) => {
 
   const bookDetails = await Book.findById(bookId);
   console.log("get book details", bookDetails);
-  console.log(JSON.stringify(bookDetails, null, 2));
 
   res.status(200).json(bookDetails);
 };

@@ -15,6 +15,17 @@ const BookSchema = new Schema(
       required: true,
     },
 
+    genres: {
+      type: [String],
+      default: [],
+    },
+
+    pageCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     isbn: {
       type: String,
       unique: true,

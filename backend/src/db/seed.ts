@@ -30,7 +30,7 @@ const seed = async () => {
 
     // console.log("User created:", user.username);
 
-    const findUser = await User.findOne({ username: "user" });
+    const findUser = await User.findOne({ username: "nuvi11" });
     if (!findUser) throw new Error("No user found. Create a user first.");
 
     console.log("Adding Books...");
@@ -40,6 +40,36 @@ const seed = async () => {
         $in: ["9780735211292", "9780061122415", "9780132350884"],
       },
     });
+
+    const extraBooks = await Book.insertMany([
+      {
+        title: "Sapiens: A Brief History of Humankind",
+        author: ["Yuval Noah Harari"],
+        isbn: "9780062316097",
+        publisher: "Harper",
+        description: "A journey through human history and evolution.",
+        coverImage: "",
+        rating: { average: 4.7, count: 50000 },
+      },
+      {
+        title: "Think and Grow Rich",
+        author: ["Napoleon Hill"],
+        isbn: "9780449214923",
+        publisher: "Ballantine Books",
+        description: "Classic personal development and wealth mindset book.",
+        coverImage: "",
+        rating: { average: 4.6, count: 35000 },
+      },
+      {
+        title: "The Psychology of Money",
+        author: ["Morgan Housel"],
+        isbn: "9780857197689",
+        publisher: "Harriman House",
+        description: "Timeless lessons on wealth, greed, and happiness.",
+        coverImage: "",
+        rating: { average: 4.8, count: 60000 },
+      },
+    ]);
     // const books = await Book.find([
     //   {
     //     title: "Atomic Habits",
@@ -63,6 +93,42 @@ const seed = async () => {
     console.log("adding UseeBooks...");
     // 2. UserBook dummy data
     await UserBook.insertMany([
+      {
+        owner: findUser._id,
+        book: extraBooks[0]?._id,
+        condition: "good",
+        availability: "available",
+        inputSource: {
+          method: "manual",
+          rawInput: "added manually",
+          confidence: 1,
+        },
+        notes: "Must-read history book",
+      },
+      {
+        owner: findUser._id,
+        book: extraBooks[1]?._id,
+        condition: "new",
+        availability: "available",
+        inputSource: {
+          method: "manual",
+          rawInput: "added manually",
+          confidence: 1,
+        },
+        notes: "Motivation and mindset",
+      },
+      {
+        owner: findUser._id,
+        book: extraBooks[2]?._id,
+        condition: "good",
+        availability: "borrowed",
+        inputSource: {
+          method: "manual",
+          rawInput: "added manually",
+          confidence: 1,
+        },
+        notes: "Finance psychology book",
+      },
       {
         owner: findUser._id,
         book: books[0]?._id,

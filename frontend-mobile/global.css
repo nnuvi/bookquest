@@ -20,6 +20,9 @@
   --color-textinput: #F1F1F1;
   --color-textinput-dark: #1E1E1E;
 
+  /* Card Background */
+  --color-card-bg: #F6F6F6;
+
   /* Button */
   --color-button: #456882;
   --color-button-dark: #2E86C1;
