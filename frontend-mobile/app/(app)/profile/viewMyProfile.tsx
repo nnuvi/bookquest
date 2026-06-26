@@ -13,8 +13,8 @@ import { Camera } from "expo-camera"; // Correct Camera import from expo-camera
 import * as ImagePicker from "expo-image-picker";
 import { Colors } from "@/constants/Colors";
 import { readAsStringAsync, EncodingType } from "expo-file-system";
-import {api }from "@/utils/api";
-import { binarizeImageOnCanvas } from "../../../src/utils/preProcessImage";
+import { api } from "@/lib/api";
+import { binarizeImageOnCanvas } from "../../../src/lib/preProcessImage";
 import Canvas from "react-native-canvas";
 
 const Page = () => {

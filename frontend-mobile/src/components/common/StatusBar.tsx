@@ -1,24 +1,30 @@
-import React from 'react';
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
+import { Colors } from "@/constants/Colors";
+import { StatusBar, useColorScheme } from "react-native";
 
 type CustomStatusBarProps = {
-  style?: 'auto' | 'inverted' | 'light' | 'dark'; // Optional style prop
-  translucent?: boolean; // Optional translucent prop
-  backgroundColor?: string; // Optional background color prop
+  barStyle?: "default" | "light-content" | "dark-content";
+  translucent?: boolean;
+  backgroundColor?: string;
 };
 
-const CustomStatusBar: React.FC<CustomStatusBarProps> = ({
-  style = 'auto',
+export default function CustomStatusBar({
+  barStyle,
   translucent = true,
-  backgroundColor = 'transparent',
-}) => {
+  backgroundColor = Colors.primary,
+}: CustomStatusBarProps) {
+  const colorScheme = useColorScheme();
+
+  const statusBarStyle =
+    barStyle ??
+    (colorScheme === "dark"
+      ? "light-content"
+      : "dark-content");
+
   return (
-    <ExpoStatusBar
-      style={style}
+    <StatusBar
+      barStyle={statusBarStyle}
       translucent={translucent}
       backgroundColor={backgroundColor}
     />
   );
-};
-
-export default CustomStatusBar;
+}

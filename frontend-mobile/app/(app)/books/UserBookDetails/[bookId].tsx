@@ -1,4 +1,4 @@
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { useGlobalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View, Image, ScrollView } from "react-native";
@@ -7,14 +7,13 @@ import Toast from "react-native-toast-message";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 import StatusBar from "@/components/common/StatusBar";
 import DropdownModal from "@/components/common/DropdownModal";
-import  AppText from "@/components/common/AppText";
+import AppText from "@/components/common/AppText";
 import { UserBook } from "@/types/book";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId?: string }>();
 
   const [data, setData] = useState<UserBook | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const options = ["Option 1", "Option 2", "Option 3"];
@@ -23,11 +22,11 @@ export default function BookDetails() {
   const getBookDetails = async () => {
     console.log("bookid:", bookId);
     try {
-      const res = await api.get(`/books/details/${bookId}`);
+      const res = await api.get(`/book/details/${bookId}`);
       console.log("res", res.status);
       console.log("res.data: ", res.data);
       setData(res.data);
-      setUsername(res.data.owner.username);
+      // setUsername(res.data.owner.username);
     } catch (err) {
       console.error(err);
     }
@@ -90,10 +89,10 @@ export default function BookDetails() {
                   data?.availability === "available"
                     ? "bg-green-500"
                     : data?.availability === "borrowed"
-                    ? "bg-yellow-500"
-                    : data?.availability === "lent"
-                    ? "bg-blue-500"
-                    : "bg-red-500"
+                      ? "bg-yellow-500"
+                      : data?.availability === "lent"
+                        ? "bg-blue-500"
+                        : "bg-red-500"
                 }`}
               />
 
@@ -114,15 +113,11 @@ export default function BookDetails() {
             ["Publisher", data?.book?.publisher],
             [
               "Added",
-              data?.addedAt
-                ? new Date(data.addedAt).toLocaleDateString()
-                : "",
+              data?.addedAt ? new Date(data.addedAt).toLocaleDateString() : "",
             ],
           ].map(([label, value]) => (
             <View key={String(label)} className="flex-row py-2">
-              <AppText className="w-24 font-medium">
-                {label}
-              </AppText>
+              <AppText className="w-24 font-medium">{label}</AppText>
 
               <AppText
                 numberOfLines={2}
@@ -137,9 +132,7 @@ export default function BookDetails() {
 
         {/* Description */}
         <View className="mt-5">
-          <AppText className="text-xl font-semibold mb-1">
-            Description
-          </AppText>
+          <AppText className="text-xl font-semibold mb-1">Description</AppText>
 
           <AppText className="leading-5">
             {data?.book?.description || "N/A"}

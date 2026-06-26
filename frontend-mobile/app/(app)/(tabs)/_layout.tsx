@@ -40,6 +40,15 @@ export default function HomeLayout() {
         }}
       />
       <Tabs.Screen
+        name="Scan"
+        options={{
+          title: "Scan",
+          tabBarIcon: ({ color }) => (
+            <Octicons name="search" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="Notifications"
         options={{
           title: "Notifications",

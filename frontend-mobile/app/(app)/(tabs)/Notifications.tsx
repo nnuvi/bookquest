@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import StatusBar from "@/components/common/StatusBar";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 

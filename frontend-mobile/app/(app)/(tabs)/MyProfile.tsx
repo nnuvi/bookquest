@@ -1,624 +1,455 @@
-import React, { useEffect, useState } from "react";
-import { Colors } from "@/constants/Colors";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-} from "react-native";
-import { router, useRouter } from "expo-router";
-import { api } from "@/utils/api";
-import moment from "moment";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ListItemsSkeleton from "@/components/skeleton/ListItemsSkeleton";
 
-type Book = {
-  _id: string;
-  title: string;
-  author: string[];
-  genre: string[];
-  publisher: string;
-  publicationDate: Date | null;
-  pageCount: number | null;
-  description: string;
-  isbn: number | null;
-  bookAdded: Date | null;
-  bookType: string;
-  borrowedBy: String;
-};
-type User = {
-  _id: string | null;
-  fullName: string | "";
-  username: string | null;
-  bio: string | null;
-};
+import BookList from "@/components/common/BookList";
+import { ProfileHeader } from "@/components/common/ProfileHeader";
+import ProfileTabs from "@/components/common/ProfileTabs";
+import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
+import { useMyProfile } from "@/hooks/user";
 
 const ProfileScreen = () => {
-  const route = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("list");
-  const [bookCollection, setBookCollection] = useState<Book[]>([]); // Array of books
-  const [lentBooks, setLentBooks] = useState<Book[]>([]); // Array of lent books
-  const [borrowedBooks, setBorrowedBooks] = useState<Book[]>([]); // Array of borrowed books
-  const [friendsNo, setFriendsNo] = useState<number | undefined>(); // Friends count (number or undefined)
-  const [bookNo, setBookNo] = useState<number>(0); // Book count (defaults to 0)
-  const [user, setUser] = useState<User>();
+  type TabType = "list" | "borrowed" | "lent";
 
-  const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
-  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState<TabType>("list");
 
-  useEffect(() => {
-    if (authUser) {
-      setUser(authUser);
-      console.log("authUser", user?.username);
-    }
-  }, [authUser]);
+  const { data: user } = useMyProfile();
 
-  useEffect(() => {
-    console.log("ue user", user?.username); // Log user whenever it changes
-  }, [user]);
+  const { data: userBooks = [] } = useMyBooks();
 
-  const getMe = async () => {
-    try {
-      const res = await api.get("/auth/me");
-      const data = res.data;
-      console.log("current getMe: ", data.username);
-      setFriendsNo(res.data.friends.length);
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data: borrowedBooks = [] } = useBorrowedBooks();
 
-  useEffect(() => {
-    getMe();
-    getBookCollection();
-    getLentBook();
-    getBorrowedBook();
-  }, []);
+  const { data: lentBooks = [] } = useLentBooks();
 
-  const getBookCollection = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/books/myBooks");
-      const data: Book[] = res.data.bookCollection;
-      console.log(
-        "bc current book data: ",
-        data.map((books) => books.title),
-      );
-      setBookNo(res.data.bookCollection.length);
-      setBookCollection(data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-    }
-  };
+  //   console.log("My Books:", userBooks);
+  // console.log("Borrowed Books:", borrowedBooks);
+  // console.log("Lent Books:", lentBooks);
 
-  const getLentBook = async () => {
-    try {
-      const res = await api.get("/books/lentBooks");
-      const data: Book[] = res.data;
-      console.log(
-        "current lent data: ",
-        data.map((books) => books.title),
-      );
-      setLentBooks(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const currentData =
+    activeTab === "list"
+      ? userBooks
+      : activeTab === "borrowed"
+        ? borrowedBooks
+        : lentBooks;
 
-  const getBorrowedBook = async () => {
-    try {
-      const res = await api.get("/books/borrowedBooks");
-      const data: Book[] = res.data;
-      console.log(
-        "current borrowed book title: ",
-        data.map((books) => books.title),
-      );
-      setBorrowedBooks(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const returnBook = async (bookId: string) => {
-    try {
-      console.log("bookId", bookId);
-      const res = await api.put("/books/returnBook", { bookId });
-      console.log("res book data: ", res.data.title);
-      await getBookCollection();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    console.log(
-      "Updated book collection:",
-      bookCollection.map((books) => books.title),
-    );
-  }, [bookCollection, lentBooks, borrowedBooks, activeTab]);
-
-  const calculateDaysSinceAdded = (bookAddedDate: moment.MomentInput) => {
-    if (!bookAddedDate) return "Unknown date"; // Handle missing dates
-    const addedDate = moment(bookAddedDate);
-    if (!addedDate.isValid()) return "Invalid date"; // Handle invalid dates
-    const today = moment();
-    const daysPassed = today.diff(addedDate, "days");
-    return daysPassed > 0 ? `${daysPassed} days ago` : "Today";
-  };
-
-  const renderBookItem = ({ item }: { item: Book }) => (
-    <View style={styles.bookItem}>
-      <View style={styles.bookImage} />
-      <TouchableOpacity
-        style={styles.bookDetails}
-        onPress={() =>
-          router.push({
-            pathname: "/books/bookDetails/[bookId]",
-            params: { bookId: item._id },
-          })
-        }
-      >
-        <Text style={styles.bookTitle}>{item.title}</Text>
-        <Text style={styles.bookAuthor}>{item.author.join(", ")}</Text>
-        {item.bookType !== "myBook" &&
-          (item.bookType === "lent" || item.bookType === "lentBook" ? (
-            <Text style={styles.bookDate}>
-              Lent {calculateDaysSinceAdded(item.bookAdded)}{" "}
-            </Text>
-          ) : item.bookType === "borrow" || item.bookType === "borrowedBook" ? (
-            <Text style={styles.bookDate}>
-              Borrowed {calculateDaysSinceAdded(item.bookAdded)}{" "}
-            </Text>
-          ) : null)}
-      </TouchableOpacity>
-
-      {item.bookType !== "myBook" &&
-        (item.bookType === "lent" || item.bookType === "lentBook" ? (
-          <TouchableOpacity style={styles.lendButton}>
-            <Text style={styles.lendButtonText}>Ask Back</Text>
-          </TouchableOpacity>
-        ) : item.bookType === "borrow" || item.bookType === "borrowedBook" ? (
-          <TouchableOpacity style={styles.lendButton}>
-            <Text
-              style={styles.lendButtonText}
-              onPress={() => {
-                returnBook(item._id);
-              }}
-            >
-              Return
-            </Text>
-          </TouchableOpacity>
-        ) : null)}
-    </View>
-  );
-
-  const [isModalVisible, setModalVisible] = useState(false);
-  const router = useRouter();
-
-  const openModal = () => setModalVisible(true);
-  const closeModal = () => setModalVisible(false);
-
-  const handleOptionPress = (route: string) => {
-    setModalVisible(false);
-    router.push(route);
-  };
+  console.log("activeTab: ", activeTab);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={router.back}>
-          {/* <Ionicons name="arrow-back-outline" size={24} color="black" /> */}
-          <AntDesign name="back" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <AntDesign name="message1" size={25} color="black" />
-        </TouchableOpacity>
-      </View>
-      {/* Profile Section */}
-      <View style={styles.profileSection}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: "https://example.com/profile-pic.jpg" }}
-            style={styles.profilePic}
-          />
-        </View>
-        <View style={styles.infoBoxes}>
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>{bookNo}</Text>
-            <Text style={styles.infoLabel}>Books</Text>
-          </View>
-          <TouchableOpacity style={styles.infoBox}>
-            <Text style={styles.infoText}>{friendsNo}</Text>
-            <Text
-              style={styles.infoLabel}
-              onPress={() => router.push("../friends/MyFriendlist")}
-            >
-              Friends
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+    <SafeAreaView className="flex-1">
+      <ProfileHeader user={user} bookNo={userBooks?.length ?? 0} />
 
-      {/* Edit Button Container */}
-      <View style={styles.editButtonContainer}>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => {
-            router.push(`/profile/EditProfile`);
-          }}
-        >
-          <Text style={styles.editButtonText}>Edit</Text>
-        </TouchableOpacity>
-      </View>
+      <ProfileTabs
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        // onAddPress={() => setModalVisible(true)}
+      />
 
-      {/* Profile Details */}
-      <View style={styles.profileDetails}>
-        <Text style={styles.name}>{user?.fullName}</Text>
-        <Text style={styles.username}>@{user?.username}</Text>
-        <Text style={styles.bio}>{user?.bio}</Text>
-      </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              How do you want to add your books?
-            </Text>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => handleOptionPress("/profile/AddBooksManually")}
-            >
-              <Text style={styles.optionText}>Manually</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => handleOptionPress("/profile/viewMyProfile")}
-            >
-              <Text style={styles.optionText}>Image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton}>
-              <Text style={styles.optionText}>ISBN Scan</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Navigation Bar */}
-      <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => setActiveTab("list")}>
-          <Text
-            style={[styles.navItem, activeTab === "list" && styles.highlighted]}
-          >
-            List
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => setActiveTab("borrowed")}>
-          <Text
-            style={[
-              styles.navItem,
-              activeTab === "borrowed" && styles.highlighted,
-            ]}
-          >
-            Borrowed
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab("lent")}>
-          <Text
-            style={[styles.navItem, activeTab === "lent" && styles.highlighted]}
-          >
-            Lent
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text style={styles.navItem}>Add+</Text>
-        </TouchableOpacity>
-      </View>
-
-      {activeTab === "list" && (
-        // loading ? (
-        //   <ListItemsSkeleton />
-        // ) : (
-
-        // )
-        <FlatList
-          data={bookCollection}
-          renderItem={renderBookItem}
-          keyExtractor={(item) => item._id.toString()}
-          contentContainerStyle={styles.bookList}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20 }}>
-              No books available.
-            </Text>
-          }
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-
-      {activeTab === "borrowed" && (
-        <FlatList
-          data={borrowedBooks}
-          renderItem={renderBookItem}
-          keyExtractor={(item) => item._id.toString()}
-          contentContainerStyle={styles.bookList}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20 }}>
-              No books available.
-            </Text>
-          }
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-
-      {activeTab === "lent" && (
-        <FlatList
-          data={lentBooks}
-          renderItem={renderBookItem}
-          keyExtractor={(item) => item._id.toString()}
-          contentContainerStyle={styles.bookList}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20 }}>
-              No books available.
-            </Text>
-          }
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <BookList
+        data={currentData}
+        // returnBook={returnBook}
+        // calculateDaysSinceAdded={calculateDaysSinceAdded}
+      />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    paddingHorizontal: 16,
-  },
-  profileSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-  },
-  imageContainer: {
-    marginTop: 10,
-    borderWidth: 2,
-    borderColor: Colors.primary,
-    borderRadius: 75,
-    overflow: "hidden",
-    marginBottom: 10,
-  },
-  profilePic: {
-    width: 100,
-    height: 100,
-    resizeMode: "cover",
-  },
-  infoBoxes: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    width: "70%",
-    marginTop: 10,
-    marginRight: 10,
-  },
-  infoBox: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: Colors.primary,
-    borderRadius: 10,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  infoText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.background,
-  },
-  infoLabel: {
-    fontSize: 12,
-    color: Colors.background,
-  },
-  editButtonContainer: {
-    alignItems: "flex-end",
-  },
-  editButton: {
-    position: "absolute",
-    right: 5,
-    top: 50,
-    paddingVertical: 5,
-    paddingHorizontal: 25,
-    backgroundColor: Colors.primary,
-    borderRadius: 8,
-  },
-  editButtonText: {
-    color: Colors.background,
-    fontWeight: "bold",
-  },
-  profileDetails: {
-    marginBottom: 20,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.primary,
-  },
-  username: {
-    fontSize: 16,
-    color: Colors.primary,
-  },
-  bio: {
-    fontSize: 14,
-    color: Colors.primary,
-  },
-  navBar: {
-    flexDirection: "row",
-    backgroundColor: Colors.primary,
-    padding: 10,
-    justifyContent: "space-around",
-    marginTop: 10,
-  },
-  navItem: {
-    fontSize: 16,
-    color: Colors.background,
-  },
-  highlighted: {
-    fontWeight: "bold",
-    color: Colors.selection,
-  },
-  bookList: {
-    paddingBottom: 20,
-  },
-  bookItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-  },
-  bookImage: {
-    width: 50,
-    height: 75,
-    borderRadius: 5,
-    marginRight: 10,
-    borderColor: Colors.primary,
-  },
-  bookDetails: {
-    flex: 1,
-  },
-  bookTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.primary,
-  },
-  bookAuthor: {
-    fontSize: 14,
-    color: Colors.primary,
-  },
-  lendButton: {
-    backgroundColor: Colors.primary,
-    padding: 10,
-    borderRadius: 8,
-  },
-  lendButtonText: {
-    color: Colors.background,
-    fontWeight: "bold",
-  },
-  bookDate: {
-    fontSize: 12,
-    color: Colors.primary,
-  },
-  notifyButton: {
-    backgroundColor: Colors.primary,
-    padding: 10,
-    borderRadius: 8,
-  },
-  notifyButtonText: {
-    color: Colors.background,
-    fontWeight: "bold",
-  },
-  giveBackButton: {
-    backgroundColor: Colors.primary,
-    padding: 10,
-    borderRadius: 8,
-  },
-  giveBackButtonText: {
-    color: Colors.background,
-    fontWeight: "bold",
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    backgroundColor: Colors.gray,
-    width: "80%",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  optionButton: {
-    padding: 10,
-    marginVertical: 5,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
-  },
-  optionText: {
-    fontSize: 16,
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  cancelButton: {
-    marginTop: 20,
-    backgroundColor: Colors.savoy,
-    padding: 10,
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
-  },
-  cancelButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  header: {
-    flexDirection: "row",
-    padding: 4,
-    justifyContent: "space-between",
-    marginTop: 5,
-  },
-});
-
 export default ProfileScreen;
+
+// import { useEffect, useState } from "react";
+// import { useQuery } from "@tanstack/react-query";
+// import { FlatList, Image, TouchableOpacity, View, Text } from "react-native";
+// import { SafeAreaView } from "react-native-safe-area-context";
+// import Ionicons from "@expo/vector-icons/Ionicons";
+// import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+// import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+// import { useRouter } from "expo-router";
+// import moment from "moment";
+
+// import AppText from "@/components/common/AppText";
+// import { Book, UserBook } from "@/types/book";
+// import { User } from "@/types/user";
+// import { api } from "@/utils/api";
+// import StatusBar from "@/components/common/StatusBar";
+// import { Colors } from "@/constants/Colors";
+
+// const ProfileScreen = () => {
+//   const route = useRouter();
+//   const [loading, setLoading] = useState(false);
+//   const [activeTab, setActiveTab] = useState("list");
+//   const [bookCollection, setBookCollection] = useState<Book[]>([]); // Array of books
+//   const [lentBooks, setLentBooks] = useState<Book[]>([]); // Array of lent books
+//   const [borrowedBooks, setBorrowedBooks] = useState<Book[]>([]); // Array of borrowed books
+//   const [friendsNo, setFriendsNo] = useState<number | undefined>(); // Friends count (number or undefined)
+//   const [bookNo, setBookNo] = useState<number>(0); // Book count (defaults to 0)
+//   // const [user, setUser] = useState<User>();
+//   const [userBook, setUserBook] = useState<UserBook>();
+
+//   // const { data: authUser } = useQuery<User>({ queryKey: ["authUser"] });
+//   // const queryClient = useQueryClient();
+
+//   // useEffect(() => {
+//   //   if (authUser) {
+//   //     setUser(authUser);
+//   //     console.log("authUser", user?.username);
+//   //   }
+//   // }, [authUser]);
+
+//   const {
+//     data: user,
+//     isLoading,
+//     error,
+//   } = useQuery({
+//     queryKey: ["me"],
+//     queryFn: async () => {
+//       const res = await api.get<User>("/user/me");
+//       return res.data;
+//     },
+//   });
+
+//   // useEffect(() => {
+//   //   console.log("ue user", user?.username); // Log user whenever it changes
+//   // }, [user]);
+
+//   useEffect(() => {
+//     // getMe();
+//     // getBookCollection();
+//     getLentBook();
+//     getBorrowedBook();
+//   }, []);
+
+//   // const getBookCollection = async () => {
+//   //   try {
+//   //     setLoading(true);
+//   //     const res = await api.get("/book/me");
+//   //     const data: UserBook[] = res.data;
+//   //     console.log(
+//   //       "bc current book data: ",
+//   //       data.map((books) => books.title),
+//   //     );
+//   //     setBookNo(res.data.bookCollection.length);
+//   //     setBookCollection(data);
+//   //     setLoading(false);
+//   //   } catch (error) {
+//   //     setLoading(false);
+//   //     console.error(error);
+//   //   }
+//   // };
+
+//   const getLentBook = async () => {
+//     try {
+//       const res = await api.get("/books/lentBooks");
+//       const data: Book[] = res.data;
+//       console.log(
+//         "current lent data: ",
+//         data.map((books) => books.title),
+//       );
+//       setLentBooks(data);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   const getBorrowedBook = async () => {
+//     try {
+//       const res = await api.get("/books/borrowedBooks");
+//       const data: Book[] = res.data;
+//       console.log(
+//         "current borrowed book title: ",
+//         data.map((books) => books.title),
+//       );
+//       setBorrowedBooks(data);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   // const returnBook = async (bookId: string) => {
+//   //   try {
+//   //     console.log("bookId", bookId);
+//   //     const res = await api.put("/books/returnBook", { bookId });
+//   //     console.log("res book data: ", res.data.title);
+//   //     await getBookCollection();
+//   //   } catch (error) {
+//   //     console.error(error);
+//   //   }
+//   // };
+
+//   useEffect(() => {
+//     console.log(
+//       "Updated book collection:",
+//       bookCollection.map((books) => books.title),
+//     );
+//   }, [bookCollection, lentBooks, borrowedBooks, activeTab]);
+
+//   const calculateDaysSinceAdded = (bookAddedDate: moment.MomentInput) => {
+//     if (!bookAddedDate) return "Unknown date"; // Handle missing dates
+//     const addedDate = moment(bookAddedDate);
+//     if (!addedDate.isValid()) return "Invalid date"; // Handle invalid dates
+//     const today = moment();
+//     const daysPassed = today.diff(addedDate, "days");
+//     return daysPassed > 0 ? `${daysPassed} days ago` : "Today";
+//   };
+
+//   const renderBookItem = ({ item }: { item: Book }) => (
+//     <View className="flex-row items-center py-3 border-b border-primary">
+//       <View className="w-12.5 h-18.75 rounded-md mr-3 border border-primary bg-gray-200" />
+
+//       <TouchableOpacity
+//         className="flex-1"
+//         onPress={() =>
+//           router.push({
+//             pathname: "/book/detail/[bookId]",
+//             params: { bookId: item._id },
+//           })
+//         }
+//       >
+//         <AppText className="text-base font-semibold">{item.book.title}</AppText>
+
+//         <AppText className="text-sm">{item.book.author.join(", ")}</AppText>
+
+//         {item.bookType !== "myBook" &&
+//           (item.bookType === "lent" || item.bookType === "lentBook" ? (
+//             <AppText className="text-xs mt-1">
+//               Lent {calculateDaysSinceAdded(item.bookAdded)}
+//             </AppText>
+//           ) : item.bookType === "borrow" || item.bookType === "borrowedBook" ? (
+//             <AppText className="text-xs mt-1">
+//               Borrowed {calculateDaysSinceAdded(item.bookAdded)}
+//             </AppText>
+//           ) : null)}
+//       </TouchableOpacity>
+
+//       {item.bookType !== "myBook" &&
+//         (item.bookType === "lent" || item.bookType === "lentBook" ? (
+//           <TouchableOpacity className="bg-primary px-3 py-2 rounded-lg">
+//             <AppText className="text-background font-bold">Ask Back</AppText>
+//           </TouchableOpacity>
+//         ) : item.bookType === "borrow" || item.bookType === "borrowedBook" ? (
+//           <TouchableOpacity
+//             className="bg-primary px-3 py-2 rounded-lg"
+//             onPress={() => returnBook(item._id)}
+//           >
+//             <AppText className="text-background font-bold">Return</AppText>
+//           </TouchableOpacity>
+//         ) : null)}
+//     </View>
+//   );
+
+//   const [isModalVisible, setModalVisible] = useState(false);
+//   const router = useRouter();
+
+//   const openModal = () => setModalVisible(true);
+//   const closeModal = () => setModalVisible(false);
+
+//   const handleOptionPress = (route: string) => {
+//     setModalVisible(false);
+//     router.push(route);
+//   };
+
+//   const getTabStyle = (tab: string) =>
+//     activeTab === tab
+//       ? "mb-1 font-bold text-selection"
+//       : "mb-1 text-background";
+
+//   return (
+//     <SafeAreaView className="flex-1">
+//       {/** Header */}
+//       <View className="bg-primary flex-row justify-between p-2 px-4">
+//         <TouchableOpacity onPress={router.back}>
+//           <Ionicons name="return-up-back" size={28} color="white" />
+//         </TouchableOpacity>
+
+//         <Text className="font-bold text-text-dark text-2xl">
+//           @{user?.username}
+//         </Text>
+
+//         <TouchableOpacity>
+//           <Ionicons name="chatbubbles-outline" size={28} color="white" />
+//         </TouchableOpacity>
+//       </View>
+//       <View className="justify-between p-2 px-4">
+//         {/* Profile Section */}
+//         {/* Image */}
+//         <View className="flex-row items-center w-full">
+//           <View className="mt-2 border border-primary rounded-full overflow-hidden mb-2">
+//             <Image
+//               source={{ uri: "https://example.com/profile-pic.jpg" }}
+//               className="w-24 h-24"
+//             />
+//           </View>
+//           {/** Book and Friends */}
+//           <View className="flex-row justify-end w-[70%] mt-2 mr-2">
+//             <View className="items-center justify-center mx-2 py-2 px-5">
+//               <AppText className="text-lg font-bold text-text-light">
+//                 {bookNo}
+//               </AppText>
+//               <AppText className="text-lg text-text-light">Books</AppText>
+//             </View>
+
+//             <TouchableOpacity className="items-center justify-center mx-2 py-2 px-5">
+//               <AppText className="text-lg font-bold text-text-light">
+//                 0{friendsNo}
+//               </AppText>
+
+//               <AppText
+//                 className="text-lg text-text-light"
+//                 onPress={() => router.push("../friends/MyFriendlist")}
+//               >
+//                 Friends
+//               </AppText>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+
+//         {/* Edit Button */}
+//         <View className="items-end">
+//           <TouchableOpacity
+//             className="absolute top-12 py-1.5 px-6 bg-primary rounded-full"
+//             onPress={() => router.push("/profile/EditProfile")}
+//           >
+//             <AppText className="font-bold text-background">Edit</AppText>
+//           </TouchableOpacity>
+//         </View>
+
+//         {/* Profile Details */}
+//         <View className="mb-4 ml-2">
+//           <AppText className="text-xl font-bold text-primary">
+//             {user?.fullName}
+//           </AppText>
+
+//           <AppText className="text-base text-primary">
+//             @{user?.username}
+//           </AppText>
+
+//           <AppText className="text-sm text-primary">{user?.bio}</AppText>
+//         </View>
+//       </View>
+
+//       {/* Navigation */}
+//       <View className="flex-row justify-around items-center bg-primary p-2 mt-2">
+//         <TouchableOpacity
+//           className="items-center justify-center"
+//           onPress={() => setActiveTab("list")}
+//         >
+//           <Ionicons
+//             name="list-outline"
+//             size={20}
+//             color={
+//               activeTab === "list" ? Colors.selection : Colors.background
+//             }
+//           />
+//           <AppText
+//             className={`mb-1 ${
+//               activeTab === "list"
+//                 ? "font-bold text-selection"
+//                 : "text-background"
+//             }`}
+//           >
+//             List
+//           </AppText>
+//         </TouchableOpacity>
+
+//         <TouchableOpacity
+//           className="items-center justify-center"
+//           onPress={() => setActiveTab("borrowed")}
+//         >
+//           <MaterialCommunityIcons
+//             name="book-plus-multiple"
+//             size={19}
+//             color={
+//               activeTab === "borrowed" ? Colors.selection : Colors.background
+//             }
+//           />
+//           <AppText
+//             className={`mb-1 ${
+//               activeTab === "borrowed"
+//                 ? "font-bold text-selection"
+//                 : "text-background"
+//             }`}
+//           >
+//             Borrowed
+//           </AppText>
+//         </TouchableOpacity>
+
+//         <TouchableOpacity
+//           className="items-center justify-center"
+//           onPress={() => setActiveTab("lent")}
+//         >
+//           <MaterialCommunityIcons
+//             name="book-minus-multiple"
+//             size={19}
+//             color={
+//               activeTab === "lent" ? Colors.selection : Colors.background
+//             }
+//           />
+//           <AppText
+//             className={`mb-1 ${
+//               activeTab === "lent"
+//                 ? "font-bold text-selection"
+//                 : "text-background"
+//             }`}
+//           >
+//             Lent
+//           </AppText>
+//         </TouchableOpacity>
+
+//         <TouchableOpacity
+//           className="items-center justify-center"
+//           onPress={() => setModalVisible(true)}
+//         >
+//           <MaterialIcons
+//             name="library-add"
+//             size={19}
+//             color={
+//               activeTab === "add" ? Colors.selection : Colors.background
+//             }
+//           />
+//           <AppText className="text-background">Add</AppText>
+//         </TouchableOpacity>
+//       </View>
+
+//       {/* Lists */}
+//       {activeTab === "list" && (
+//         <FlatList
+//           data={bookCollection}
+//           renderItem={renderBookItem}
+//           keyExtractor={(item) => item._id.toString()}
+//           contentContainerStyle={{ paddingBottom: 20 }}
+//           ListEmptyComponent={
+//             <AppText className="text-center mt-5">No books available.</AppText>
+//           }
+//           showsHorizontalScrollIndicator={false}
+//           showsVerticalScrollIndicator={false}
+//         />
+//       )}
+
+//       {activeTab === "borrowed" && (
+//         <FlatList
+//           data={borrowedBooks}
+//           renderItem={renderBookItem}
+//           keyExtractor={(item) => item._id.toString()}
+//           contentContainerStyle={{ paddingBottom: 20 }}
+//           ListEmptyComponent={
+//             <AppText className="text-center mt-5">No books available.</AppText>
+//           }
+//           showsHorizontalScrollIndicator={false}
+//           showsVerticalScrollIndicator={false}
+//         />
+//       )}
+
+//       {activeTab === "lent" && (
+//         <FlatList
+//           data={lentBooks}
+//           renderItem={renderBookItem}
+//           keyExtractor={(item) => item._id.toString()}
+//           contentContainerStyle={{ paddingBottom: 20 }}
+//           ListEmptyComponent={
+//             <AppText className="text-center mt-5">No books available.</AppText>
+//           }
+//           showsHorizontalScrollIndicator={false}
+//           showsVerticalScrollIndicator={false}
+//         />
+//       )}
+//     </SafeAreaView>
+//   );
+// };
+// export default ProfileScreen;

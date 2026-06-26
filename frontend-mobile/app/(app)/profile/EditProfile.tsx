@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import {api }from "@/utils/api";
+import { api } from "@/lib/api";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {

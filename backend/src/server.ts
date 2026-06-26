@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/auth.routes.js";
-import userRoutes from "./routes/user.routes.js";
+import authRoutes from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js";
 import bookRoutes from "./routes/book.route.js";
-import notificationRoutes from "./routes/notification.routes.js";
+import recordRoutes from "./routes/record.route.js";
+import requestRoutes from "./routes/request.route.js";
+import notificationRoutes from "./routes/notification.route.js";
 
 import connectMongoDB from "./db/connectMongoDB.js";
 
@@ -41,8 +43,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/books", bookRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/book", bookRoutes);
+app.use("/api/record", recordRoutes);
+app.use("/api/request", requestRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Alert, Button } from "react-native";
 import { Camera } from "expo-camera";
 //import { BarCodeScanner } from 'expo-barcode-scanner';
-import {api }from "@/utils/api";
+import { api } from "@/lib/api";
 
 export default function ISBNScannerScreen() {
   const [hasPermission, setHasPermission] = useState(null);

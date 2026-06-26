@@ -9,7 +9,7 @@ import { protectRoute } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 router.get("/me", protectRoute, getMyBooks);
-router.get("/:id", protectRoute, getUserBooks);
 router.get("/details/:id", protectRoute, getUserBookDetails);
+router.get("/:id", protectRoute, getUserBooks);
 
 export default router;

@@ -11,9 +11,9 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 import { Colors } from "@/constants/Colors";
-import { retroFont } from "@/utils/fontAdd";
+import { retroFont } from "@/lib/fontAdd";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import Button from "@/components/ui/Button";
 import LogoText from "@/components/common/LogoText";
 import ErrorMessageModal from "@/components/common/ErrorMessageModal";

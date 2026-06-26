@@ -1,23 +1,16 @@
-import { Stack, Redirect } from "expo-router";
-// import { useAuth } from "@/auth/AuthProvider";
-import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
+import StatusBar from "@/components/common/StatusBar";
+import { Stack } from "expo-router";
 
 export default function AppLayout() {
-//   const { user, loading } = useAuth();
-
-//   if (loading) {
-//     return <PageLoadingIndicator />;
-//   }
-
-//   if (!user) {
-//     return <Redirect href="/landing" />;
-//   }
 
   return (
+    <>
+    <StatusBar barStyle="default" />
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="books/[bookId]" />
-      <Stack.Screen name="profile/[profileId]" />
+      <Stack.Screen name="(app)/books/[bookId]" />
+      <Stack.Screen name="(app)/profile/[profileId]" />
     </Stack>
+    </>
   );
-}
+} 

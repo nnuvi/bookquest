@@ -5,12 +5,16 @@ type AppTextProps = TextProps & {
 };
 
 export default function AppText({
-  className = "",
+  className,
   ...props
 }: AppTextProps) {
   return (
     <Text
-      className={`text-text-light text-md ${className}`}
+      className={
+        className
+          ? className
+          : "text-text-light text-md"
+      }
       {...props}
     />
   );

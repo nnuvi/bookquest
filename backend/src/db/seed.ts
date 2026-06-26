@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 import Book from "../model/Book.model.js";
 import UserBook from "../model/UserBook.model.js";
-import User from "../model/user.model.js"; // assuming you have this
+import User from "../model/user.model.js"; // assuming you have this  import BorrowRequest from "../model/BorrowRequest.model.js";
+import BorrowRecord from "../model/BorrowRecord.model.js";
+import BorrowRequest from "../model/BorrowRequest.model.js";
 import { Request, Response } from "express";
 import connectMongoDB from "./connectMongoDB.js";
 import bcrypt from "bcryptjs";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,157 +20,110 @@ const seed = async () => {
 
     console.log("Start...");
 
-    const hashedPassword = await bcrypt.hash("userpass", 10);
+    await BorrowRecord.deleteMany({});
+    await BorrowRequest.deleteMany({});
 
-    // const user = await User.create({
-    //   username: "user",
-    //   fullName: "User",
-    //   email: "user@mail.com",
-    //   password: hashedPassword,
-    //   bio: "Book lover",
-    //   role: "user",
-    // });
+    const nuvi = "6728e3488dd68787b583316f";
+    const neve = "6a3ab7ceb34b44bf27af2a27";
 
-    // console.log("User created:", user.username);
+    const neveBook = "6a3ab9eac3d53434722b2d9d";
+    const nuviBook1 = "6a3aee70fba3aa50bbca3b95";
+    const nuviBook2 = "6a3aee70fba3aa50bbca3b93";
+    const nuviBook3 = "6a3aee70fba3aa50bbca3b96";
 
-    const findUser = await User.findOne({ username: "nuvi11" });
-    if (!findUser) throw new Error("No user found. Create a user first.");
-
-    console.log("Adding Books...");
-    // 1. Books dummy data
-    const books = await Book.find({
-      isbn: {
-        $in: ["9780735211292", "9780061122415", "9780132350884"],
+    // Requests
+    const requests = await BorrowRequest.insertMany([
+      {
+        requester: nuvi,
+        owner: neve,
+        userBook: neveBook,
+        status: "approved",
+        message: "Need this for a week.",
       },
+
+      {
+        requester: neve,
+        owner: nuvi,
+        userBook: nuviBook2,
+        status: "pending",
+        message: "Need it for my finance course.",
+      },
+
+      {
+        requester: nuvi,
+        owner: neve,
+        userBook: neveBook,
+        status: "declined",
+        message: "Can I borrow it again?",
+      },
+
+      {
+        requester: neve,
+        owner: nuvi,
+        userBook: nuviBook3,
+        status: "approved",
+        message: "Looks interesting.",
+      },
+
+      {
+        requester: nuvi,
+        owner: neve,
+        userBook: neveBook,
+        status: "approved",
+        message: "One more request.",
+      },
+    ]);
+
+    // Borrowed
+    await BorrowRecord.create({
+      borrowRequest: requests[0]?._id,
+
+      borrower: nuvi,
+      owner: neve,
+
+      userBook: neveBook,
+
+      borrowDate: new Date(),
+
+      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+
+      status: "borrowed",
     });
 
-    const extraBooks = await Book.insertMany([
-      {
-        title: "Sapiens: A Brief History of Humankind",
-        author: ["Yuval Noah Harari"],
-        isbn: "9780062316097",
-        publisher: "Harper",
-        description: "A journey through human history and evolution.",
-        coverImage: "",
-        rating: { average: 4.7, count: 50000 },
-      },
-      {
-        title: "Think and Grow Rich",
-        author: ["Napoleon Hill"],
-        isbn: "9780449214923",
-        publisher: "Ballantine Books",
-        description: "Classic personal development and wealth mindset book.",
-        coverImage: "",
-        rating: { average: 4.6, count: 35000 },
-      },
-      {
-        title: "The Psychology of Money",
-        author: ["Morgan Housel"],
-        isbn: "9780857197689",
-        publisher: "Harriman House",
-        description: "Timeless lessons on wealth, greed, and happiness.",
-        coverImage: "",
-        rating: { average: 4.8, count: 60000 },
-      },
-    ]);
-    // const books = await Book.find([
-    //   {
-    //     title: "Atomic Habits",
-    //     author: ["James Clear"],
-    //     isbn: "9780735211292",
-    //   },
-    //   {
-    //     title: "The Alchemist",
-    //     author: ["Paulo Coelho"],
-    //     isbn: "9780061122415",
-    //   },
-    //   {
-    //     title: "Clean Code",
-    //     author: ["Robert C. Martin"],
-    //     isbn: "9780132350884",
-    //   },
-    // ]);
+    // Returned
+    await BorrowRecord.create({
+      borrowRequest: requests[3]?._id,
 
-    // console.log("Books inserted");
+      borrower: neve,
+      owner: nuvi,
 
-    console.log("adding UseeBooks...");
-    // 2. UserBook dummy data
-    await UserBook.insertMany([
-      {
-        owner: findUser._id,
-        book: extraBooks[0]?._id,
-        condition: "good",
-        availability: "available",
-        inputSource: {
-          method: "manual",
-          rawInput: "added manually",
-          confidence: 1,
-        },
-        notes: "Must-read history book",
-      },
-      {
-        owner: findUser._id,
-        book: extraBooks[1]?._id,
-        condition: "new",
-        availability: "available",
-        inputSource: {
-          method: "manual",
-          rawInput: "added manually",
-          confidence: 1,
-        },
-        notes: "Motivation and mindset",
-      },
-      {
-        owner: findUser._id,
-        book: extraBooks[2]?._id,
-        condition: "good",
-        availability: "borrowed",
-        inputSource: {
-          method: "manual",
-          rawInput: "added manually",
-          confidence: 1,
-        },
-        notes: "Finance psychology book",
-      },
-      {
-        owner: findUser._id,
-        book: books[0]?._id,
-        condition: "good",
-        availability: "available",
-        inputSource: {
-          method: "manual",
-          rawInput: "manual entry",
-          confidence: 1,
-        },
-        notes: "My personal favorite",
-      },
-      {
-        owner: findUser._id,
-        book: books[1]?._id,
-        condition: "new",
-        availability: "borrowed",
-        inputSource: {
-          method: "isbn",
-          rawInput: "9780061122415",
-          confidence: 0.95,
-        },
-        notes: "Currently lent to friend",
-      },
-      {
-        owner: findUser._id,
-        book: books[2]?._id,
-        condition: "fair",
-        availability: "available",
-        inputSource: {
-          method: "ai",
-          rawInput: "Clean Code detected",
-          confidence: 0.87,
-        },
-        notes: "",
-      },
-    ]);
+      userBook: nuviBook3,
 
-    console.log("UserBooks inserted!");
+      borrowDate: new Date("2026-06-01"),
+
+      dueDate: new Date("2026-06-15"),
+
+      returnDate: new Date("2026-06-12"),
+
+      status: "returned",
+    });
+
+    // Overdue
+    await BorrowRecord.create({
+      borrowRequest: requests[4]?._id,
+
+      borrower: nuvi,
+      owner: neve,
+
+      userBook: neveBook,
+
+      borrowDate: new Date("2026-05-01"),
+
+      dueDate: new Date("2026-05-15"),
+
+      status: "overdue",
+    });
+
     console.log("Seeding completed!");
 
     await mongoose.disconnect();

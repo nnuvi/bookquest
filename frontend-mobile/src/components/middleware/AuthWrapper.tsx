@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useRouter } from "expo-router";
-import { getToken } from "../../utils/secureStore"; // Your SecureStore utility
+import { getToken } from "../../lib/secureStore"; // Your SecureStore utility
 import api from "@/src/utils/api"; // Your API utility
 
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {

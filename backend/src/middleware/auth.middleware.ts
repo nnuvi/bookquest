@@ -17,6 +17,7 @@ export const protectRoute = async (
         message: "Authentication required. No token provided.",
       });
     }
+    console.log(token)
 
     let decoded: Authtoken;
 

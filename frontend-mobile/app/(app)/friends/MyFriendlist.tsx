@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet, Button } from "react-native";
 // import { useUser } from "./getMe";
-import {api }from "@/utils/api";
+import { api } from "@/lib/api";
 import { Colors } from "@/constants/Colors";
 
 type Friends = {

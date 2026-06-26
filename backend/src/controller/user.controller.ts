@@ -1,9 +1,17 @@
+import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
 import User from "../model/user.model.js";
-import { protectRoute } from "../middleware/auth.middleware.js";
-import Notification from "../model/notification.model.js";
-import { v2 as cloudinary } from "cloudinary";
-import bcrypt from "bcryptjs";
+
+export const getMyProfile = async (req: Request, res: Response) => {
+  const userId = req.user._id;
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.status(200).json(user);
+};
 
 export const getUserProfile = async (req: Request, res: Response) => {
   const { id } = req.params;

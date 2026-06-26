@@ -6,7 +6,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/auth";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,10 +29,9 @@ export default function RootLayout() {
     return <PageLoadingIndicator />;
   }
 
-
   return (
     <QueryClientProvider client={queryClient}>
-        <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }} />
     </QueryClientProvider>
   );
 }

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { router, useGlobalSearchParams } from "expo-router";
-import {api }from "@/utils/api";
+import { api } from "@/lib/api";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 import DropdownModal from "@/components/common/DropdownModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

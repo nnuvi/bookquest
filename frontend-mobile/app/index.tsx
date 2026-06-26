@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/auth.store";
 import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
 import { View } from "react-native";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/auth";
 
 export default function Index() {
   const router = useRouter();

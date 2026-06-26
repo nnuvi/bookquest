@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
-import { retroFont } from "@/utils/fontAdd";
-import{ api } from "@/utils/api";
+import { retroFont } from "@/lib/fontAdd";
+import { api } from "@/lib/api";
 import Button from "@/components/ui/Button";
 import LogoText from "@/components/common/LogoText";
 import StatusBar from "@/components/common/StatusBar";

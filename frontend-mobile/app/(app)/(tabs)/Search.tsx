@@ -10,7 +10,7 @@ import {
 } from "react-native";
 // import { useNavigation } from '@react-navigation/native';
 import { Colors } from "@/constants/Colors";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { router, useGlobalSearchParams } from "expo-router";
 // import { useUser } from "../profile/getMe";
 import Octicons from "@expo/vector-icons/Octicons";

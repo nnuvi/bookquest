@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import Toast from "react-native-toast-message";
 import LogoText from "@/components/common/LogoText";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -28,7 +29,7 @@ const HomeScreen = () => {
 
   const getBookCollection = async () => {
     try {
-      const res = await api.get("/books/me");
+      const res = await api.get("/book/me");
       console.log(res.status);
       const data: Book[] = res.data;
       // console.log(data);
@@ -79,9 +80,7 @@ const HomeScreen = () => {
   const options = ["Option 1", "Option 2", "Option 3", "Log out"];
 
   return (
-    <View className="flex-1">
-      <StatusBar />
-
+    <SafeAreaView className="flex-1">
       {/* Header */}
       <View className="px-5 pt-3 pb-2 bg-primary">
         <View className="flex-row justify-between items-center">
@@ -123,7 +122,7 @@ const HomeScreen = () => {
           </Text>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
