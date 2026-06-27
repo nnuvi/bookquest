@@ -1,7 +1,7 @@
 import { FlatList } from "react-native";
 
 import AppText from "@/components/common/AppText";
-import BookCard from "./BookCard";
+import BookCard from "../book/BookCard";
 import { BookCardItem, UserBook } from "@/types/book";
 
 type BookListProps = {

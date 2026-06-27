@@ -20,109 +20,21 @@ const seed = async () => {
 
     console.log("Start...");
 
-    await BorrowRecord.deleteMany({});
-    await BorrowRequest.deleteMany({});
+    const users = [
+      "6a3ab7ceb34b44bf27af2a27", // neve
+      "6717d21ce19ee353a8302cd3", // nuvi
+      "670fd9a1ec6b18e700a6f1f2",
+      "6728e3488dd68787b583316f",
+      "67189ad51b9ad794b47e866f",
+    ];
 
-    const nuvi = "6728e3488dd68787b583316f";
-    const neve = "6a3ab7ceb34b44bf27af2a27";
-
-    const neveBook = "6a3ab9eac3d53434722b2d9d";
-    const nuviBook1 = "6a3aee70fba3aa50bbca3b95";
-    const nuviBook2 = "6a3aee70fba3aa50bbca3b93";
-    const nuviBook3 = "6a3aee70fba3aa50bbca3b96";
-
-    // Requests
-    const requests = await BorrowRequest.insertMany([
-      {
-        requester: nuvi,
-        owner: neve,
-        userBook: neveBook,
-        status: "approved",
-        message: "Need this for a week.",
-      },
-
-      {
-        requester: neve,
-        owner: nuvi,
-        userBook: nuviBook2,
-        status: "pending",
-        message: "Need it for my finance course.",
-      },
-
-      {
-        requester: nuvi,
-        owner: neve,
-        userBook: neveBook,
-        status: "declined",
-        message: "Can I borrow it again?",
-      },
-
-      {
-        requester: neve,
-        owner: nuvi,
-        userBook: nuviBook3,
-        status: "approved",
-        message: "Looks interesting.",
-      },
-
-      {
-        requester: nuvi,
-        owner: neve,
-        userBook: neveBook,
-        status: "approved",
-        message: "One more request.",
-      },
-    ]);
-
-    // Borrowed
-    await BorrowRecord.create({
-      borrowRequest: requests[0]?._id,
-
-      borrower: nuvi,
-      owner: neve,
-
-      userBook: neveBook,
-
-      borrowDate: new Date(),
-
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-
-      status: "borrowed",
-    });
-
-    // Returned
-    await BorrowRecord.create({
-      borrowRequest: requests[3]?._id,
-
-      borrower: neve,
-      owner: nuvi,
-
-      userBook: nuviBook3,
-
-      borrowDate: new Date("2026-06-01"),
-
-      dueDate: new Date("2026-06-15"),
-
-      returnDate: new Date("2026-06-12"),
-
-      status: "returned",
-    });
-
-    // Overdue
-    await BorrowRecord.create({
-      borrowRequest: requests[4]?._id,
-
-      borrower: nuvi,
-      owner: neve,
-
-      userBook: neveBook,
-
-      borrowDate: new Date("2026-05-01"),
-
-      dueDate: new Date("2026-05-15"),
-
-      status: "overdue",
-    });
+    for (const userId of users) {
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: {
+          friends: { $each: users.filter((id) => id !== userId) },
+        },
+      });
+    }
 
     console.log("Seeding completed!");
 
@@ -134,3 +46,7 @@ const seed = async () => {
 };
 
 seed();
+
+
+
+

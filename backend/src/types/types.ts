@@ -39,7 +39,7 @@ export type UserType = {
 
   role: "admin" | "user";
 
-  bookCollection: string[];
+  bookCollection?: string[];
 
   createdAt?: Date;
   updatedAt?: Date;

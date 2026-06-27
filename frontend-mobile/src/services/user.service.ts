@@ -4,3 +4,8 @@ export const getMyProfile = async () => {
   const { data } = await api.get("/user/me");
   return data;
 };
+
+export const getMFriendList = async () => {
+  const { data } = await api.get("/user/friends");
+  return data;
+};

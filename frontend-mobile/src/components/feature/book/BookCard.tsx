@@ -31,11 +31,11 @@ export default function BookCard({ item }: BookCardProps) {
           })
         }
       >
-        <AppText className="text-lg font-semibold">
+        <AppText className="text-lg font-semibold" ellipsizeMode="tail">
           {item.userBook.book?.title ?? "N/A"}
         </AppText>
 
-        <AppText className="text-md">
+        <AppText className="text-md" ellipsizeMode="tail">
           {item.userBook.book?.author.join(", ") ?? "N/A"}
         </AppText>
 

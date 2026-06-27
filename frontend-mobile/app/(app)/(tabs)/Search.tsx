@@ -121,70 +121,6 @@ const Search = () => {
     </TouchableOpacity>
   );
 
-  /*
-  const renderButton = (item: SearchResult) => {
-    if (item.type === 'book') {
-      return item.isBorrowed ? (
-        <TouchableOpacity style={styles.borrowedButton}>
-          <Text style={styles.borrowText}>BORROWED</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.borrowButton}
-          onPress={() => onBorrow(item.id)}
-        >
-          <Text style={styles.borrowText}>BORROW</Text>
-        </TouchableOpacity>
-      );
-    } else if (item.type === 'user') {
-      return item.isConnected ? (
-        <TouchableOpacity style={styles.messageButton}>
-          <Text style={styles.messageText}>MESSAGE</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.connectButton}
-          onPress={() => onConnect(item.id)}
-        >
-          <Text style={styles.connectText}>CONNECT</Text>
-        </TouchableOpacity>
-      );
-    }
-    return null;
-  };
-*/
-  /*
-  const renderItem = ({ item }: { item: SearchResult }) => (
-    <View style={styles.resultContainer}>
-      {item.type === 'book' ? (
-        <>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/100' }}
-            style={styles.bookImage}
-          />
-          <View style={styles.bookInfo}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.author}>{item.author}</Text>
-            <TouchableOpacity onPress={() => handleProfilePress(item.username!)}>
-              <Text style={styles.username}>{item.username}</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <>
-          <TouchableOpacity onPress={() => handleProfilePress(item.username!)}>
-            <Image source={{ uri: item.profileImage }} style={styles.image} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleProfilePress(item.username!)}>
-            <Text style={styles.username}>{item.username}</Text>
-          </TouchableOpacity>
-        </>
-      )}
-      {renderButton(item)}
-    </View>
-  );
-*/
-
   return (
     <View style={styles.container}>
       <StatusBar />
@@ -218,18 +154,6 @@ const Search = () => {
     </View>
   );
 };
-{
-  /*     
-    <FlatList
-       data={results.filter((item) =>
-         item.type === 'book'
-           ? item.title?.toLowerCase().includes(query.toLowerCase())
-           : item.username?.toLowerCase().includes(query.toLowerCase())
-       )}
-       keyExtractor={(item) => item.id}
-       renderItem={renderItem}
-     />*/
-}
 
 const styles = StyleSheet.create({
   container: {

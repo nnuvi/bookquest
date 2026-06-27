@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/me", protectRoute, getMyProfile);
 router.get("/profile/:id", protectRoute, getUserProfile);
 router.post("/friends/:id", protectRoute, friendsRequestSendUnsend);
-router.post("/friends", protectRoute, friendList);
+router.get("/friends", protectRoute, friendList);
 router.post("/editProfile", protectRoute, editProfile);
 router.get("/searchProfile", protectRoute, searchProfile);
 

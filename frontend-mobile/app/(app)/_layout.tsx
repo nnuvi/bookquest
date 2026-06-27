@@ -8,8 +8,9 @@ export default function AppLayout() {
     <StatusBar barStyle="default" />
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="(app)/books/[bookId]" />
+      {/* <Stack.Screen name="(app)/books/[bookId]" />
       <Stack.Screen name="(app)/profile/[profileId]" />
+      <Stack.Screen name="(app)/profile/FriendList" /> */}
     </Stack>
     </>
   );

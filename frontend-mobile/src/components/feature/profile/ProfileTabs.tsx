@@ -22,7 +22,7 @@ export default function ProfileTabs({
   return (
     <View className="flex-row justify-around items-center bg-primary p-2 mt-2">
       <TouchableOpacity
-        className="items-center justify-center"
+        className="px-3 items-center justify-center"
         onPress={() => onChange("list")}
       >
         <Ionicons
@@ -47,7 +47,7 @@ export default function ProfileTabs({
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="items-center justify-center"
+        className="px-3 items-center justify-center"
         onPress={() => onChange("borrowed")}
       >
         <MaterialCommunityIcons
@@ -72,7 +72,7 @@ export default function ProfileTabs({
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="items-center justify-center"
+        className="px-3 items-center justify-center"
         onPress={() => onChange("lent")}
       >
         <MaterialCommunityIcons
@@ -97,7 +97,7 @@ export default function ProfileTabs({
       </TouchableOpacity>
 
       <TouchableOpacity
-        className="items-center justify-center"
+        className="px-3 items-center justify-center"
         onPress={onAddPress}
       >
         <MaterialIcons
