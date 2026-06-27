@@ -1,67 +1,38 @@
 import React from "react";
-import {
-  Text,
-  StyleSheet,
-  TextStyle,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import { Colors } from "@/constants/Colors";
+import { Text, TextStyle, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Colors } from "@/constants/Colors";
 
 type HeaderTextProps = {
   text: string;
-  backgroundColor?: string;
-  color?: string;
-  fontSize?: number;
+  classname?: string;
   threeDotsVisible?: boolean;
   onPress?: () => void;
 };
 
 export const HeaderTitle = ({
   text,
-  color = Colors.background,
-  fontSize = 26,
+  classname,
   threeDotsVisible = false,
   onPress,
 }: HeaderTextProps) => {
-  const style: TextStyle = { color, fontSize };
-
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.subcontainer}>
-        <Text style={[styles.headerText, style]}>{text}</Text>
-        {threeDotsVisible && (
-          <TouchableOpacity onPress={onPress}>
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="black"
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    </SafeAreaView>
+    <View className="bg-primary flex-row justify-between p-3 px-4">
+      <Text
+        className={`font-bold text-4xl text-background ${classname ?? ""}`}
+      >
+        {text}
+      </Text>
+      {threeDotsVisible && (
+        <TouchableOpacity onPress={onPress}>
+          <MaterialCommunityIcons
+            name="dots-vertical"
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Colors.primary,
-    padding: 20,
-    paddingTop: 10,
-    paddingBottom: 0,
-    paddingHorizontal: null,
-  },
-  headerText: {
-    fontWeight: "bold",
-    textAlign: "left",
-    marginBottom: 10,
-  },
-  subcontainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-  },
-});

@@ -9,42 +9,15 @@ import LogoText from "@/components/common/LogoText";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import DropdownModal from "@/components/common/DropdownModal";
 import StatusBar from "@/components/common/StatusBar";
-
-type Book = {
-  _id: string;
-  book: {
-    title: string;
-    image: string;
-  };
-};
-
-type User = {
-  _id: string | null;
-  username: string | null;
-};
+import { useMyBooks } from "@/hooks/books";
+import { BookCardItem } from "@/types/book";
+import Loading from "@/components/common/Loading";
 
 const HomeScreen = () => {
-  const [books, setBooks] = useState<Book[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const getBookCollection = async () => {
-    try {
-      const res = await api.get("/book/me");
-      console.log(res.status);
-      const data: Book[] = res.data;
-      // console.log(data);
-
-      if (data) setBooks(data);
-      else setBooks([]);
-      // console.log("books:", books);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getBookCollection();
-  }, []);
+  const { data: books = [], refetch, isRefetching, isLoading } = useMyBooks();
+  console.log(books);
 
   const handleOptionActions = (option: string) => {
     if (option === "Log out") {
@@ -53,18 +26,18 @@ const HomeScreen = () => {
     }
   };
 
-  const renderBookItem = ({ item }: { item: Book }) => (
+  const renderBookItem = ({ item }: { item: BookCardItem }) => (
     <TouchableOpacity
       className="w-[33%] h-48 p-3 items-center "
       onPress={() =>
         router.push({
           pathname: "(app)/books/UserBookDetails/[bookId]",
-          params: { bookId: item._id },
+          params: { bookId: item.userBook._id },
         })
       }
     >
       <Image
-        source={{ uri: item.book.image }}
+        source={{ uri: item.userBook.book.coverImage }}
         className="w-full h-35 mb-2 bg-gray-200 rounded"
       />
       <Text
@@ -72,12 +45,14 @@ const HomeScreen = () => {
         numberOfLines={2}
         ellipsizeMode="tail"
       >
-        {item.book.title}
+        {item.userBook.book.title}
       </Text>
     </TouchableOpacity>
   );
 
   const options = ["Option 1", "Option 2", "Option 3", "Log out"];
+
+  if (isLoading) return <Loading />;
 
   return (
     <SafeAreaView className="flex-1">
@@ -111,6 +86,8 @@ const HomeScreen = () => {
         numColumns={3}
         keyExtractor={(item) => item._id}
         renderItem={renderBookItem}
+        refreshing={isRefetching}
+        onRefresh={refetch}
         contentContainerClassName="p-4"
         columnWrapperStyle={{
           justifyContent: "space-between",

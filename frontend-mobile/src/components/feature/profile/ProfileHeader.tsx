@@ -8,23 +8,33 @@ import { router } from "expo-router";
 type ProfileHeaderProps = {
   user: User;
   bookNo: number;
+  currentUser?: boolean;
 };
 
-export const ProfileHeader = ({ user, bookNo }: ProfileHeaderProps) => {
+export const ProfileHeader = ({
+  user,
+  bookNo,
+  currentUser = true,
+}: ProfileHeaderProps) => {
   return (
-    <>
-      <View className="bg-primary flex-row justify-between p-2 px-4">
-        <TouchableOpacity onPress={router.back}>
-          <Ionicons name="return-up-back" size={28} color="white" />
-        </TouchableOpacity>
+    <View>
+      <View className="bg-primary ems-center flex-row justify-between p-3 px-4 relative">
+        <View className="flex-1 pl-4">
+          <TouchableOpacity onPress={router.back}>
+            <Ionicons name="return-up-back" size={28} color="white" />
+          </TouchableOpacity>
+        </View>
 
-        <Text className="font-bold text-text-dark text-2xl">
+        <Text className="text-center font-bold text-text-dark text-2xl">
           @{user?.username}
         </Text>
-
-        <TouchableOpacity>
-          <Ionicons name="chatbubbles-outline" size={28} color="white" />
-        </TouchableOpacity>
+        <View className="flex-1 items-end pr-4">
+          {currentUser && (
+            <TouchableOpacity>
+              <Ionicons name="chatbubbles-outline" size={28} color="white" />
+            </TouchableOpacity>
+          )}{" "}
+        </View>
       </View>
       <View className="justify-between p-2 px-8">
         {/* Profile Section */}
@@ -45,7 +55,10 @@ export const ProfileHeader = ({ user, bookNo }: ProfileHeaderProps) => {
               <AppText className="text-lg text-text-light">Books</AppText>
             </View>
 
-            <TouchableOpacity className="items-center justify-center mx-2 py-2 px-5" onPress={() => router.push("/profile/FriendList")}>
+            <TouchableOpacity
+              className="items-center justify-center mx-2 py-2 px-5"
+              onPress={() => router.push("/profile/FriendList")}
+            >
               <AppText className="text-lg font-bold text-text-light">
                 {user?.friends?.length ?? 0}
               </AppText>
@@ -61,6 +74,7 @@ export const ProfileHeader = ({ user, bookNo }: ProfileHeaderProps) => {
         </View>
 
         {/* Edit Button */}
+
         <View className="flex-row justify-between">
           {/* Profile Details */}
           <View className="pb-4 w-[70%]">
@@ -75,16 +89,18 @@ export const ProfileHeader = ({ user, bookNo }: ProfileHeaderProps) => {
             <AppText className="text-sm text-primary">{user?.bio}</AppText>
           </View>
           {/* Edit Button */}
-          <View className="justify-end pb-2 px-2">
-          <TouchableOpacity
-            className="h-8 py-1.5 px-6 items-center bg-primary rounded-full"
-            onPress={() => router.push("/profile/EditProfile")}
-          >
-            <AppText className="font-bold text-background">Edit</AppText>
-          </TouchableOpacity>
-          </View>
+          {currentUser && (
+            <View className="justify-end pb-2 px-2">
+              <TouchableOpacity
+                className="h-8 py-1.5 px-6 items-center bg-primary rounded-full"
+                onPress={() => router.push("/profile/EditProfile")}
+              >
+                <AppText className="font-bold text-background">Edit</AppText>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
-    </>
+    </View>
   );
 };

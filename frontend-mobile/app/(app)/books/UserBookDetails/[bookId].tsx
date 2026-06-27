@@ -1,49 +1,37 @@
-import { api } from "@/lib/api";
 import { useGlobalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Text, View, Image, ScrollView } from "react-native";
+import { useState } from "react";
+import { Image, RefreshControl, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { HeaderTitle } from "@/components/common/HeaderTitle";
-import StatusBar from "@/components/common/StatusBar";
-import DropdownModal from "@/components/common/DropdownModal";
 import AppText from "@/components/common/AppText";
-import { UserBook } from "@/types/book";
+import DropdownModal from "@/components/common/DropdownModal";
+import { HeaderTitle } from "@/components/common/HeaderTitle";
+// import { UserBook } from "@/types/book";
+import Loading from "@/components/common/Loading";
+import { useBookDeatails } from "@/hooks/books";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BookDetails() {
-  const { bookId } = useGlobalSearchParams<{ bookId?: string }>();
-
-  const [data, setData] = useState<UserBook | null>(null);
+  const { bookId } = useGlobalSearchParams<{ bookId: string }>();
   const [modalVisible, setModalVisible] = useState(false);
 
   const options = ["Option 1", "Option 2", "Option 3"];
 
-  // fetch book
-  const getBookDetails = async () => {
-    console.log("bookid:", bookId);
-    try {
-      const res = await api.get(`/book/details/${bookId}`);
-      console.log("res", res.status);
-      console.log("res.data: ", res.data);
-      setData(res.data);
-      // setUsername(res.data.owner.username);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const {
+    data: userBook,
+    refetch,
+    isRefetching,
+    isLoading,
+  } = useBookDeatails(bookId);
 
-  useEffect(() => {
-    if (bookId) getBookDetails();
-  }, [bookId]);
+  if (isLoading) return <Loading />;
 
   const handleOptionActions = (option: string) => {
     console.log(option);
   };
 
   return (
-    <View className="flex-1 bg-background">
-      <StatusBar />
-
+    <SafeAreaView style={{ flex: 1 }}>
       {/* Header */}
       <HeaderTitle
         text="Book Information"
@@ -59,13 +47,18 @@ export default function BookDetails() {
       />
 
       {/* Body */}
-      <ScrollView className="flex-1 px-4 py-4">
+      <ScrollView
+        className="flex-1 px-4 py-4"
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
+      >
         {/* Top section */}
         <View className="flex-row space-x-4">
           {/* Image */}
           <View className="w-1/3 mr-3">
             <Image
-              source={{ uri: data?.book?.coverImage }}
+              source={{ uri: userBook?.book?.coverImage }}
               className="w-full h-44 rounded-lg bg-gray-200"
               resizeMode="cover"
             />
@@ -75,29 +68,29 @@ export default function BookDetails() {
           <View className="w-2/3 justify-between py-4">
             <View>
               <AppText className="text-2xl font-bold">
-                {data?.book?.title || "N/A"}
+                {userBook?.book?.title || "N/A"}
               </AppText>
 
               <AppText className="text-lg mt-1 text-midgray-dark">
-                by {data?.book?.author?.join(", ") || "N/A"}
+                by {userBook?.book?.author?.join(", ") || "N/A"}
               </AppText>
             </View>
 
             <View className="flex-row items-center">
               <View
                 className={`w-3 h-3 rounded-full mr-2 ${
-                  data?.availability === "available"
+                  userBook?.availability === "available"
                     ? "bg-green-500"
-                    : data?.availability === "borrowed"
+                    : userBook?.availability === "borrowed"
                       ? "bg-yellow-500"
-                      : data?.availability === "lent"
+                      : userBook?.availability === "lent"
                         ? "bg-blue-500"
                         : "bg-red-500"
                 }`}
               />
 
               <AppText className="capitalize font-medium">
-                {data?.availability}
+                {userBook?.availability}
               </AppText>
             </View>
           </View>
@@ -106,14 +99,16 @@ export default function BookDetails() {
         {/* Mid Details */}
         <View className="bg-card-bg rounded-xl p-4 mt-4 shadow">
           {[
-            ["Genre", data?.book?.genres.join(", ")],
-            ["Pages", data?.book?.pageCount],
-            ["Condition", data?.condition],
-            ["ISBN", data?.book?.isbn],
-            ["Publisher", data?.book?.publisher],
+            ["Genre", userBook?.book?.genres.join(", ")],
+            ["Pages", userBook?.book?.pageCount],
+            ["Condition", userBook?.condition],
+            ["ISBN", userBook?.book?.isbn],
+            ["Publisher", userBook?.book?.publisher],
             [
               "Added",
-              data?.addedAt ? new Date(data.addedAt).toLocaleDateString() : "",
+              userBook?.addedAt
+                ? new Date(userBook?.addedAt).toLocaleDateString()
+                : "",
             ],
           ].map(([label, value]) => (
             <View key={String(label)} className="flex-row py-2">
@@ -135,12 +130,12 @@ export default function BookDetails() {
           <AppText className="text-xl font-semibold mb-1">Description</AppText>
 
           <AppText className="leading-5">
-            {data?.book?.description || "N/A"}
+            {userBook?.book?.description || "N/A"}
           </AppText>
         </View>
 
         {/* Borrowed by */}
-        {/* {data?.availability === "borrowed" && username && (
+        {/* {book?.availability === "borrowed" && username && (
           <View className="mt-5">
             <AppText className="text-base font-semibold text-primary">
               Borrowed By
@@ -154,6 +149,6 @@ export default function BookDetails() {
       </ScrollView>
 
       <Toast />
-    </View>
+    </SafeAreaView>
   );
 }

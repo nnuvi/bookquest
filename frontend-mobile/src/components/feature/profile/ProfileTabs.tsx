@@ -10,20 +10,22 @@ type TabType = "list" | "borrowed" | "lent";
 
 type ProfileTabsProps = {
   activeTab: TabType;
-  onChange: (tab: TabType) => void;
+  onChange?: (tab: TabType) => void;
   onAddPress?: () => void;
+  currentUser?: boolean;
 };
 
 export default function ProfileTabs({
   activeTab,
   onChange,
   onAddPress,
+  currentUser = true,
 }: ProfileTabsProps) {
   return (
     <View className="flex-row justify-around items-center bg-primary p-2 mt-2">
       <TouchableOpacity
         className="px-3 items-center justify-center"
-        onPress={() => onChange("list")}
+        onPress={() => onChange?.("list")}
       >
         <Ionicons
           name="list-outline"
@@ -46,9 +48,9 @@ export default function ProfileTabs({
         </AppText>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      { currentUser && (<TouchableOpacity
         className="px-3 items-center justify-center"
-        onPress={() => onChange("borrowed")}
+        onPress={() => onChange?.("borrowed")}
       >
         <MaterialCommunityIcons
           name="book-plus-multiple"
@@ -70,10 +72,11 @@ export default function ProfileTabs({
           Borrowed
         </AppText>
       </TouchableOpacity>
+      )}
 
-      <TouchableOpacity
+      { currentUser && ( <TouchableOpacity
         className="px-3 items-center justify-center"
-        onPress={() => onChange("lent")}
+        onPress={() => onChange?.("lent")}
       >
         <MaterialCommunityIcons
           name="book-minus-multiple"
@@ -95,8 +98,9 @@ export default function ProfileTabs({
           Lent
         </AppText>
       </TouchableOpacity>
+      )}
 
-      <TouchableOpacity
+      { currentUser && ( <TouchableOpacity
         className="px-3 items-center justify-center"
         onPress={onAddPress}
       >
@@ -110,6 +114,7 @@ export default function ProfileTabs({
           Add
         </AppText>
       </TouchableOpacity>
+      )}
     </View>
   );
 }

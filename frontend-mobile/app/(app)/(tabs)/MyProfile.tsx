@@ -6,19 +6,51 @@ import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
 import ProfileTabs from "@/components/feature/profile/ProfileTabs";
 import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
 import { useMyProfile } from "@/hooks/user";
+import Loading from "@/components/common/Loading";
 
 const ProfileScreen = () => {
   type TabType = "list" | "borrowed" | "lent";
 
   const [activeTab, setActiveTab] = useState<TabType>("list");
-  const { data: user } = useMyProfile();
-  const { data: userBooks = [] } = useMyBooks();
-  const { data: borrowedBooks = [] } = useBorrowedBooks();
-  const { data: lentBooks = [] } = useLentBooks();
+  const {
+    data: user,
+    refetch: refetchUser,
+    isRefetching: refreshingUser,
+    isLoading,
+  } = useMyProfile();
 
-  // console.log("My Books:", userBooks);
-  // console.log("Borrowed Books:", borrowedBooks);
-  // console.log("Lent Books:", lentBooks);
+  const {
+    data: userBooks = [],
+    refetch: refetchUserBooks,
+    isRefetching: refreshingUserBooks,
+  } = useMyBooks();
+
+  const {
+    data: borrowedBooks = [],
+    refetch: refetchBorrowedBooks,
+    isRefetching: refreshingBorrowedBooks,
+  } = useBorrowedBooks();
+
+  const {
+    data: lentBooks = [],
+    refetch: refetchLentBooks,
+    isRefetching: refreshingLentBooks,
+  } = useLentBooks();
+
+  const onRefresh = async () => {
+    await Promise.allSettled([
+      refetchUser(),
+      refetchUserBooks(),
+      refetchBorrowedBooks(),
+      refetchLentBooks(),
+    ]);
+  };
+
+  const refreshing =
+    refreshingUser ||
+    refreshingUserBooks ||
+    refreshingBorrowedBooks ||
+    refreshingLentBooks;
 
   const currentData =
     activeTab === "list"
@@ -29,17 +61,22 @@ const ProfileScreen = () => {
 
   console.log("activeTab: ", activeTab);
 
-  return (
-    <SafeAreaView style={{flex: 1}}>
-      <ProfileHeader user={user} bookNo={userBooks?.length ?? 0} />
+  if (isLoading) return <Loading />;
 
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ProfileHeader user={user} bookNo={userBooks?.length ?? 0} />
       <ProfileTabs
         activeTab={activeTab}
         onChange={setActiveTab}
         // onAddPress={() => setModalVisible(true)}
       />
 
-      <BookList data={currentData} />
+      <BookList
+        data={currentData}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
     </SafeAreaView>
   );
 };

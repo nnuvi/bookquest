@@ -9,3 +9,8 @@ export const getMFriendList = async () => {
   const { data } = await api.get("/user/friends");
   return data;
 };
+
+export const getUserProfile = async (id: string) => {
+  const { data } = await api.get(`/user/profile/${id}`);
+  return data;
+};

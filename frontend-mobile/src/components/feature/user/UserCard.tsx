@@ -2,6 +2,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/common/AppText";
 import { User } from "@/types/user";
+import { router } from "expo-router";
 
 type UserCardProps = {
   user: User;
@@ -17,7 +18,7 @@ export default function UserCard({
     console.log(user)
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => {router.push(`profile/ProfileView/${user._id}`)}}
       className="flex-row items-center px-4 py-3 border-b border-gray-300"
     >
       <Image

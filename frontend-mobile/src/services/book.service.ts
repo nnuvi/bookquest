@@ -17,6 +17,16 @@ export const getLentBooks = async () => {
   return data.map((book) => mapBorrowRecord(book, "lent"));
 };
 
+export const getUserBooks = async (id: string) => {
+  const { data } = await api.get(`/book/${id}`);
+  return data.map(mapUserBook);
+};
+
+export const getBookDeatails = async (id: string) => {
+  const { data } = await api.get(`/book/details/${id}`);
+  return data;
+};
+
 export const returnBook = async (bookId: string) => {
   const { data } = await api.post(`/book/return/${bookId}`);
   return data;
