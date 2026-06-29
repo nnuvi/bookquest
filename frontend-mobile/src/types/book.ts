@@ -16,11 +16,11 @@ export type Book = {
     count: number;
   };
 
-  bookType?: string;
+  bookType?: Date;
   bookAdded?: string;
 };
 
-export type availability = "available"| "borrowed" | "lent" | "unavailable";
+export type availability = "available" | "borrowed" | "lent" | "unavailable";
 export type condition = "new" | "good" | "fair" | "poor";
 
 export type UserBook = {
@@ -44,16 +44,37 @@ export type UserBook = {
   };
 };
 
-export type bookType = "userBook" | "borrowed" | "lent";
+export type bookType = "userBook" | "borrowed" | "lent" | "book";
 
 export type BookCardItem = {
-  _id: string;
-  userBook: UserBook;
-  owner: User;
-  borrower?: User;
+  id: string;
+  bookId?: string;
+  userBookId?: string;
+
+  title: string;
+  author: string[];
+  coverImage: string;
+
+  type: "book" | "userBook" | "borrowed" | "lent";
+
+  availability?: availability;
+
   addedAt?: Date;
   borrowDate?: Date;
-  availability?: availability;
-  status?: "borrowed" | "returned" | "overdue";
-  type: bookType;
 };
+// export type BookCardItem = {
+//   _id: string;
+//   bookId?: string;
+//   userBookId?: string;
+//   title: string;
+//   author: string[];
+//   coverImage: string;
+//   userBook?: UserBook;
+//   owner?: User;
+//   borrower?: User;
+//   addedAt?: Date;
+//   borrowDate?: Date;
+//   availability?: availability;
+//   status?: "borrowed" | "returned" | "overdue";
+//   type?: bookType;
+// };

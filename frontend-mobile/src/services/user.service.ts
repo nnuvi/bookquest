@@ -1,4 +1,4 @@
-import {api }from "@/lib/api";
+import { api } from "@/lib/api";
 
 export const getMyProfile = async () => {
   const { data } = await api.get("/user/me");
@@ -12,5 +12,14 @@ export const getMFriendList = async () => {
 
 export const getUserProfile = async (id: string) => {
   const { data } = await api.get(`/user/profile/${id}`);
+  return data;
+};
+
+export const getUsers = async (search?: string) => {
+  const { data } = await api.get(`/user`, {
+    params: {
+      search,
+    },
+  });
   return data;
 };

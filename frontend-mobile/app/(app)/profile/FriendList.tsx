@@ -16,20 +16,21 @@ import UserList from "@/components/feature/user/UserList";
 import AppText from "@/components/common/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
-
-type Friends = {
-  _id: string;
-  fullName: string;
-  username: string;
-  bio: string;
-};
+import Screen from "@/components/common/Screen";
+import Loading from "@/components/common/Loading";
 
 export default function FriendListScreen() {
-  //const { userId } = useUser();
-  const { data: friendList = [] } = useFriendList();
+  const {
+    data: friendList = [],
+    refetch,
+    isRefetching,
+    isLoading,
+  } = useFriendList();
+
+  if (isLoading) return <Loading />;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <Screen>
       <HeaderTitle text={"Friends"} />
       <UserList
         users={friendList}
@@ -38,7 +39,9 @@ export default function FriendListScreen() {
             <AppText className="text-white">Unfriend</AppText>
           </TouchableOpacity>
         )}
+        refreshing={isRefetching}
+        onRefresh={refetch}
       />
-    </SafeAreaView>
+    </Screen>
   );
 }

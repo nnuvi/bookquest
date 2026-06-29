@@ -1,9 +1,9 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import Loading from "@/components/common/Loading";
 import BookList from "@/components/feature/book/BookList";
 import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
 import ProfileTabs from "@/components/feature/profile/ProfileTabs";
+import Screen from "@/components/common/Screen";
 import { useUserBooks } from "@/hooks/books";
 import { useUserProfile } from "@/hooks/user";
 import { useGlobalSearchParams } from "expo-router";
@@ -22,7 +22,7 @@ const ProfileScreen = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <Screen>
       <ProfileHeader
         user={user}
         bookNo={userBooks?.length ?? 0}
@@ -41,7 +41,7 @@ const ProfileScreen = () => {
         refreshing={isRefetching}
         onRefresh={refetch}
       />
-    </SafeAreaView>
+    </Screen>
   );
 };
 

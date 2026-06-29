@@ -127,12 +127,39 @@ export const friendList = async (req: Request, res: Response) => {
   res.status(200).json(friends);
 };
 
-export const searchProfile = async (req: Request, res: Response) => {
-  const search = req.query.q;
-  console.log(search);
-  const users = await User.find({
-    $or: [{ username: { $regex: search, $options: "i" } }],
-  });
-  console.log(users);
-  res.status(200).json(users);
+// export const searchProfile = async (req: Request, res: Response) => {
+//   const search = req.query.q;
+//   console.log(search);
+//   const users = await User.find({
+//     $or: [{ username: { $regex: search, $options: "i" } }],
+//   });
+//   console.log(users);
+//   res.status(200).json(users);
+// };
+
+export const getUsers = async (req: Request, res: Response) => {
+    const { search } = req.query;
+    console.log('search:', search)
+    const query: any = {};
+
+    if (search) {
+      query.$or = [
+        {
+          username: {
+            $regex: search as string,
+            $options: "i",
+          },
+        },
+        {
+          fullName: {
+            $regex: search as string,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    const users = await User.find(query).limit(5);
+    console.log('search users', users)
+    res.status(200).json(users);
 };

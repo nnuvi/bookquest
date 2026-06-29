@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
-import { api } from "@/lib/api";
-import Toast from "react-native-toast-message";
-import LogoText from "@/components/common/LogoText";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import DropdownModal from "@/components/common/DropdownModal";
-import StatusBar from "@/components/common/StatusBar";
-import { useMyBooks } from "@/hooks/books";
-import { BookCardItem } from "@/types/book";
 import Loading from "@/components/common/Loading";
+import LogoText from "@/components/common/LogoText";
+import Screen from "@/components/common/Screen";
+import { useMyBooks } from "@/hooks/books";
+import { api } from "@/lib/api";
+import { BookCardItem } from "@/types/book";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { router } from "expo-router";
+import { useState } from "react";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -30,14 +27,11 @@ const HomeScreen = () => {
     <TouchableOpacity
       className="w-[33%] h-48 p-3 items-center "
       onPress={() =>
-        router.push({
-          pathname: "(app)/books/UserBookDetails/[bookId]",
-          params: { bookId: item.userBook._id },
-        })
+        router.push(`/books/UserBookDetails/${item.userBookId}`)
       }
     >
       <Image
-        source={{ uri: item.userBook.book.coverImage }}
+        source={{ uri: item.coverImage }}
         className="w-full h-35 mb-2 bg-gray-200 rounded"
       />
       <Text
@@ -45,7 +39,7 @@ const HomeScreen = () => {
         numberOfLines={2}
         ellipsizeMode="tail"
       >
-        {item.userBook.book.title}
+        {item.title}
       </Text>
     </TouchableOpacity>
   );
@@ -55,7 +49,7 @@ const HomeScreen = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <SafeAreaView className="flex-1">
+    <Screen>
       {/* Header */}
       <View className="px-5 pt-3 pb-2 bg-primary">
         <View className="flex-row justify-between items-center">
@@ -84,7 +78,7 @@ const HomeScreen = () => {
       <FlatList
         data={books}
         numColumns={3}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={renderBookItem}
         refreshing={isRefetching}
         onRefresh={refetch}
@@ -99,7 +93,7 @@ const HomeScreen = () => {
           </Text>
         }
       />
-    </SafeAreaView>
+    </Screen>
   );
 };
 

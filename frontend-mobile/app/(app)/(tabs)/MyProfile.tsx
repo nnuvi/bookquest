@@ -7,6 +7,8 @@ import ProfileTabs from "@/components/feature/profile/ProfileTabs";
 import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
 import { useMyProfile } from "@/hooks/user";
 import Loading from "@/components/common/Loading";
+import Screen from "@/components/common/Screen";
+import { router } from "expo-router";
 
 const ProfileScreen = () => {
   type TabType = "list" | "borrowed" | "lent";
@@ -64,7 +66,7 @@ const ProfileScreen = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <Screen>
       <ProfileHeader user={user} bookNo={userBooks?.length ?? 0} />
       <ProfileTabs
         activeTab={activeTab}
@@ -74,10 +76,13 @@ const ProfileScreen = () => {
 
       <BookList
         data={currentData}
+        onItemPress={(item) =>
+          router.push(`/books/UserBookDetails/${item.userBookId}`)
+        }
         refreshing={refreshing}
         onRefresh={onRefresh}
       />
-    </SafeAreaView>
+    </Screen>
   );
 };
 

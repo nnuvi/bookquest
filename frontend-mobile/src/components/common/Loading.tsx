@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 export default function Loading() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center bg-transparent">
         <Circle size={48} color={Colors.primary} />
       </View>
     </SafeAreaView>

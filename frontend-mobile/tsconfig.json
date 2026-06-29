@@ -6,12 +6,14 @@
     "paths": {
       // "@*": ["./*"],
       "@/*": ["./src/*"],
-      "@app/*": ["./app/*"]
+      "@app/*": ["./app/*"],
+      "@assets/*": ["./assets/*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.d.ts",
     "nativewind-env.d.ts"
   ]
 }

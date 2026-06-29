@@ -9,7 +9,7 @@ import { HeaderTitle } from "@/components/common/HeaderTitle";
 // import { UserBook } from "@/types/book";
 import Loading from "@/components/common/Loading";
 import Screen from "@/components/common/Screen";
-import { useBookDetails, useUserBookDetails } from "@/hooks/books";
+import { useBookDetails } from "@/hooks/books";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BookMetadata from "@/components/feature/book/BookMetadata";
 import BookDescription from "@/components/feature/book/BookDescription";
@@ -22,15 +22,15 @@ export default function BookDetails() {
   const options = ["Option 1", "Option 2", "Option 3"];
 
   const {
-    data: userBook,
+    data: book,
     refetch,
     isRefetching,
     isLoading,
-  } = useUserBookDetails(bookId);
+  } = useBookDetails(bookId);
 
   if (isLoading) return <Loading />;
 
-  if (!userBook) {
+  if (!book) {
     return <AppText>Book not found.</AppText>;
   }
 
@@ -63,47 +63,49 @@ export default function BookDetails() {
       >
         {/* Top section */}
         <BookHeader
-          title={userBook.book.title}
-          author={userBook.book.author}
-          coverImage={userBook.book.coverImage}
+          title={book.title}
+          author={book.author}
+          coverImage={ book.coverImage}
         />
         {/* Mid Details */}
         <BookMetadata
           items={[
             {
               label: "Genre",
-              value: userBook?.book?.genres.join(", "),
+              value:  book?.genres.join(", "),
             },
             {
               label: "Pages",
-              value: userBook?.book?.pageCount,
-            },
-            {
-              label: "Condition",
-              value: userBook?.condition,
+              value:  book?.pageCount,
             },
             {
               label: "ISBN",
-              value: userBook?.book?.isbn,
+              value:  book?.isbn,
             },
             {
               label: "Publisher",
-              value: userBook?.book?.publisher,
-            },
-            {
-              label: "Added",
-              value: userBook?.addedAt
-                ? new Date(userBook.addedAt).toLocaleDateString()
-                : undefined,
+              value:  book?.publisher,
             },
           ]}
         />
 
         {/* Description */}
         <BookDescription
-          description={userBook.book.description}
-          notes={userBook.notes}
+          description={ book?.description}
         />
+
+        {/* Borrowed by */}
+        {/* {book?.availability === "borrowed" && username && (
+          <View className="mt-5">
+            <AppText className="text-base font-semibold text-primary">
+              Borrowed By
+            </AppText>
+
+            <AppText>
+              {username === "None" ? "None" : `@${username}`}
+            </AppText>
+          </View>
+        )} */}
       </ScrollView>
 
       <Toast />

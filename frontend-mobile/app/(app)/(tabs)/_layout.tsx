@@ -13,12 +13,14 @@ export default function HomeLayout() {
         tabBarActiveTintColor: Colors.selection,
         headerShown: false,
         tabBarStyle: {
+          position: "absolute",
           borderTopWidth: 0,
           elevation: 0,
           height: 65,
           paddingTop: 10,
           backgroundColor: Colors.primary,
         },
+        // tabBarHideOnKeyboard: true,
       }}
     >
       <Tabs.Screen

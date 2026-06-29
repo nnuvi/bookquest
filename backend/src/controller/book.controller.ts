@@ -66,3 +66,44 @@ export const getBookDetails = async (req: Request, res: Response) => {
 
   res.status(200).json(bookDetails);
 };
+
+export const getBooks = async (req: Request, res: Response) => {
+  const { sort, genre, search, limit } = req.query;
+
+  const query: any = {};
+
+  // Search
+  if (search) {
+    query.$or = [
+      { title: { $regex: search as string, $options: "i" } },
+      { author: { $regex: search as string, $options: "i" } },
+      { publisher: { $regex: search as string, $options: "i" } },
+    ];
+  }
+
+  // Genre
+  if (genre) {
+    query.genres = genre;
+  }
+
+  let booksQuery = Book.find(query);
+
+  // Sort
+  if (sort === "latest") {
+    booksQuery = booksQuery.sort({ createdAt: -1 });
+  } else if (sort === "oldest") {
+    booksQuery = booksQuery.sort({ createdAt: 1 });
+  } else if (sort === "title") {
+    booksQuery = booksQuery.sort({ title: 1 });
+  }
+
+  // Limit
+  if (limit) {
+    booksQuery = booksQuery.limit(Number(limit) || 5);
+  }
+
+  const books = await booksQuery.limit(5);
+  console.log('search books', books)
+
+  res.status(200).json(books);
+};

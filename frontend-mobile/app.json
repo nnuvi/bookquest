@@ -19,7 +19,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bookquest.app"
+
+      "package": "com.bookquest.app",
+      "softwareKeyboardLayoutMode": "pan"
+    },
+
+    "web": {
+      "favicon": "./assets/images/favicon.png"
     },
 
     "androidStatusBar": {

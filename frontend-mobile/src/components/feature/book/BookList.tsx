@@ -1,11 +1,12 @@
 import { FlatList } from "react-native";
 
 import AppText from "@/components/common/AppText";
+import { BookCardItem } from "@/types/book";
 import BookCard from "../book/BookCard";
-import { BookCardItem, UserBook } from "@/types/book";
 
 type BookListProps = {
   data: BookCardItem[];
+  onItemPress?: (item: BookCardItem) => void;
   refreshing?: boolean;
   onRefresh?: () => void;
   returnBook?: (id: string) => void;
@@ -14,14 +15,15 @@ type BookListProps = {
 
 export default function BookList({
   data,
+  onItemPress,
   refreshing = false,
   onRefresh,
 }: BookListProps) {
   return (
     <FlatList
       data={data}
-      keyExtractor={(item) => item._id.toString()}
-      renderItem={({ item }) => <BookCard item={item} />}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => <BookCard item={item} onPress={onItemPress}/>}
       refreshing={refreshing}
       onRefresh={onRefresh}
       contentContainerStyle={{
