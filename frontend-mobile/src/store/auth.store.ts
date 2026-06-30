@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { AuthUser } from "@/types/user"
+import { AuthUser, User } from "@/types/user";
 
 type AuthState = {
-  user: AuthUser | null;
+  user: User | null;
   loading: boolean;
 
-  login: (user: AuthUser) => void;
+  setUser: (user: User | null) => void;
   logout: () => void;
   setLoading: (loading: boolean) => void;
 };
@@ -19,22 +19,25 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       loading: true,
 
-      login: (user) => {
-        set({
-          user,
-        });
-      },
-      setLoading: (loading) => set({ loading }),
+      setUser: (user) => set({ user }),
 
-      logout: () => {
-        set({
-          user: null,
-        });
-      },
+      logout: () => set({ user: null }),
+
+      setLoading: (loading) => set({ loading }),
     }),
     {
-      name: "auth-storage", // key in AsyncStorage
+      name: "auth-storage",
       storage: createJSONStorage(() => AsyncStorage),
+
+      onRehydrateStorage: () => {
+        return (state, error) => {
+          if (error) {
+            console.error("Failed to rehydrate auth store:", error);
+          }
+
+          state?.setLoading(false);
+        };
+      },
     }
   )
 );

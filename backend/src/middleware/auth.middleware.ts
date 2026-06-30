@@ -1,49 +1,39 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User from "../model/user.model.js";
-import { Authtoken } from "../types/auth.js";
 
-export const protectRoute = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+import User from "../model/user.model.js";
+import ApiError from "../lib/apiError.js";
+import { asyncHandler } from "../lib/asyncHandler.js";
+import { Authtoken } from "../types/auth.js";
+import { HTTP_STATUS } from "../constant/httpStatus.js";
+
+export const protectRoute = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies?.jwt;
-    
+
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required. No token provided.",
-      });
+      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "Authentication required. No token provided.");
     }
-    console.log(token)
 
     let decoded: Authtoken;
 
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET!) as Authtoken;
-    } catch (err) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid or expired token",
-      });
+      decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET!
+      ) as Authtoken;
+    } catch {
+      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "Invalid or expired token.");
     }
 
-    if (!decoded?.userID) {
-      return res.status(401).json({
-        success: false,
-        message: "Token payload invalid",
-      });
+    if (!decoded.userID) {
+      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "Invalid token payload.");
     }
 
     const user = await User.findById(decoded.userID).select("-password");
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
     }
 
     req.user = {
@@ -52,15 +42,6 @@ export const protectRoute = async (
       email: user.email,
     };
 
-    console.log("Authenticated user:", user.username);
-
     next();
-  } catch (error) {
-    console.error("ProtectRoute error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
   }
-};
+);

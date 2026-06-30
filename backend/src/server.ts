@@ -1,63 +1,28 @@
-import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-
-import authRoutes from "./routes/auth.route.js";
-import userRoutes from "./routes/user.route.js";
-import bookRoutes from "./routes/book.route.js";
-import recordRoutes from "./routes/record.route.js";
-import requestRoutes from "./routes/request.route.js";
-import notificationRoutes from "./routes/notification.route.js";
-
-import connectMongoDB from "./db/connectMongoDB.js";
 
 dotenv.config();
 
-const app = express();
+import app from "./app.js";
+import connectMongoDB from "./config/connectMongoDB.js";
+import logger from "./config/logger.js";
 
-const allowedOrigins = new Set([
-  process.env.CLIENT_LOCAL_URL,
-  process.env.CLIENT_MOBILE_URL,
-  process.env.CLIENT_BASE_URL,
-]);
+const PORT = Number(process.env.PORT) || 5000;
 
-const corsOptions = {
-  origin: (origin: string | undefined, callback: Function) => {
-    if (!origin || allowedOrigins.has(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ["GET", "POST", "PUT"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+const startServer = async () => {
+  try {
+    await connectMongoDB();
+
+    app.listen(PORT, () => {
+      logger.info(`Server started on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error({
+      message: "Failed to start server",
+      error,
+    });
+
+    process.exit(1);
+  }
 };
-app.use(cors(corsOptions));
 
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieParser());
-
-app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/book", bookRoutes);
-app.use("/api/record", recordRoutes);
-app.use("/api/request", requestRoutes);
-app.use("/api/notifications", notificationRoutes);
-
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  return res
-    .status(err.status || 500)
-    .json({ message: err.message || "Internal Server Error!" });
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  connectMongoDB();
-});
+startServer();

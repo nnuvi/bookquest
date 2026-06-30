@@ -1,25 +1,33 @@
 import { api } from "@/lib/api";
+import { ApiResponse } from "@/types/api";
+import { User } from "@/types/user"; // adjust to your types
 
-export const getMyProfile = async () => {
-  const { data } = await api.get("/user/me");
-  return data;
+export const getMyProfile = async (): Promise<User> => {
+  const { data } = await api.get<ApiResponse<User>>("/api/user/me");
+  console.log('user mf: ', data)
+  return data.data;
 };
 
-export const getMFriendList = async () => {
-  const { data } = await api.get("/user/friends");
-  return data;
+export const getMyFriendList = async (): Promise<User[]> => {
+  const { data } = await api.get<ApiResponse<User[]>>(
+    "/api/user/friends"
+  );
+  return data.data;
 };
 
-export const getUserProfile = async (id: string) => {
-  const { data } = await api.get(`/user/profile/${id}`);
-  return data;
+export const getUserProfile = async (id: string): Promise<User> => {
+  const { data } = await api.get<ApiResponse<User>>(
+    `/api/user/profile/${id}`
+  );
+  return data.data;
 };
 
-export const getUsers = async (search?: string) => {
-  const { data } = await api.get(`/user`, {
+export const getUsers = async (search?: string): Promise<User[]> => {
+  const { data } = await api.get<ApiResponse<User[]>>("/api/user", {
     params: {
       search,
     },
   });
-  return data;
+
+  return data.data;
 };

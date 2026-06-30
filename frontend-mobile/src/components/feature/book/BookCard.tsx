@@ -4,6 +4,8 @@ import AppText from "@/components/common/AppText";
 import { calculateDaysSinceAdded } from "@/lib/misc";
 import { BookCardItem } from "@/types/book";
 
+import BookPlaceholder from "@assets/images/placeholder-book.png";
+
 type BookCardProps = {
   item: BookCardItem;
   onPress?: (item: BookCardItem) => void;
@@ -17,7 +19,7 @@ export default function BookCard({ item, onPress }: BookCardProps) {
   return (
     <View className="flex-row items-center p-4 py-3 border-0.1  border-primary">
       <View className="w-12.5 h-18.75 rounded-md mr-3 border-primary bg-gray-200">
-        <Image source={{ uri: item?.coverImage }} />
+        <Image source={item.coverImage ? { uri: item?.coverImage } : BookPlaceholder} />
       </View>
 
       <TouchableOpacity className="flex-1" onPress={() => onPress?.(item)}>

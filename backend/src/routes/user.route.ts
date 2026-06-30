@@ -4,7 +4,7 @@ import {
   getMyProfile,
   getUserProfile,
   editProfile,
-  friendsRequestSendUnsend,
+  // friendsRequestSendUnsend,
   friendList,
   // searchProfile,
   getUsers,
@@ -15,7 +15,7 @@ const router = express.Router();
 router.get("/", protectRoute, getUsers);
 router.get("/me", protectRoute, getMyProfile);
 router.get("/profile/:id", protectRoute, getUserProfile);
-router.post("/friends/:id", protectRoute, friendsRequestSendUnsend);
+// router.post("/friends/:id", protectRoute, friendsRequestSendUnsend);
 router.get("/friends", protectRoute, friendList);
 router.post("/editProfile", protectRoute, editProfile);
 // router.get("/searchProfile", protectRoute, searchProfile);

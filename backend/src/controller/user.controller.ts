@@ -1,165 +1,245 @@
 import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
-import User from "../model/user.model.js";
+import User, { UserSchemaType } from "../model/user.model.js";
 
-export const getMyProfile = async (req: Request, res: Response) => {
-  const userId = req.user._id;
-  const user = await User.findById(userId).select("-password");
+import ApiError from "../lib/apiError.js";
+import { asyncHandler } from "../lib/asyncHandler.js";
+import { HTTP_STATUS } from "../constant/httpStatus.js";
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+import { FilterQuery } from "mongoose";
+
+export const getMyProfile = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      throw new ApiError(
+        HTTP_STATUS.NOT_FOUND,
+        "User not found."
+      );
+    }
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: user,
+    });
   }
+);
 
-  res.status(200).json(user);
-};
+export const getUserProfile = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await User.findById(req.params.id).select("-password");
 
-export const getUserProfile = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  console.log("id: ", id);
-  const user = await User.findById(id).select("-password");
-  console.log("auth user");
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      throw new ApiError(
+        HTTP_STATUS.NOT_FOUND,
+        "User not found."
+      );
+    }
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: user,
+    });
   }
-  res.json(user);
-};
+);
 
-export const editProfile = async (req: Request, res: Response) => {
-  const { fullName, username, email, currentPassword, newPassword, bio } =
-    req.body;
-  let { profileImg, coverImg } = req.body;
-
-  const userId = req.user._id;
-
-  let user = await User.findById(userId);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  if ((!currentPassword && newPassword) || (!currentPassword && !newPassword)) {
-    return res
-      .status(400)
-      .json({ error: "Please enter current password or new password" });
-  }
-  if (currentPassword && newPassword) {
-    const isValidPassword = await bcrypt.compare(
+export const editProfile = asyncHandler(
+  async (req: Request, res: Response) => {
+    const {
+      fullName,
+      username,
+      email,
       currentPassword,
-      user.password,
-    );
-    if (!isValidPassword) {
-      return res.status(401).json({ error: "Invalid current password" });
+      newPassword,
+      bio,
+      profileImg,
+      coverImg,
+    } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      throw new ApiError(
+        HTTP_STATUS.NOT_FOUND,
+        "User not found."
+      );
     }
-    if (newPassword.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
+
+    if (newPassword) {
+      if (!currentPassword) {
+        throw new ApiError(
+          HTTP_STATUS.BAD_REQUEST,
+          "Current password is required."
+        );
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+
+      if (!isPasswordValid) {
+        throw new ApiError(
+          HTTP_STATUS.UNAUTHORIZED,
+          "Current password is incorrect."
+        );
+      }
+
+      if (newPassword.length < 6) {
+        throw new ApiError(
+          HTTP_STATUS.BAD_REQUEST,
+          "Password must be at least 6 characters long."
+        );
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
     }
-  }
-  if (newPassword) {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-  }
 
-  user.fullName = fullName || user.fullName;
-  user.username = username || user.username;
-  user.email = email || user.email;
-  user.bio = bio || user.bio;
-  user.profileImg = profileImg || user.profileImg;
-
-  await user.save();
-  //   user.password = null;
-
-  res.status(200).json({ message: "Profile updated successfully" });
-};
-
-export const friendsRequestSendUnsend = async (req: Request, res: Response) => {
-  const userId = req.user?._id;
-
-  if (!userId) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const friendId = req.params.id;
-
-  if (!friendId) {
-    return res.status(400).json({ message: "Friend ID missing" });
-  }
-
-  const user = await User.findById(userId);
-  const friend = await User.findById(friendId);
-
-  if (!user || !friend) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const friendExists = user.friends
-    .map((id) => id.toString())
-    .includes(friendId);
-
-  if (!friendExists) {
-    user.friends.push(friend._id);
-    friend.friends.push(user._id);
+    user.fullName = fullName ?? user.fullName;
+    user.username = username ?? user.username;
+    user.email = email ?? user.email;
+    user.bio = bio ?? user.bio;
+    user.profileImg = profileImg ?? user.profileImg;
+    // user.coverImg = coverImg ?? user.coverImg;
 
     await user.save();
-    await friend.save();
 
-    return res.status(200).json({ message: "Friend added" });
-  } else {
-    await User.findByIdAndUpdate(userId, {
-      $pull: { friends: friendId },
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Profile updated successfully.",
+      data: {
+        _id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        profileImg: user.profileImg,
+        // coverImg: user.coverImg,
+      },
     });
-
-    await User.findByIdAndUpdate(friendId, {
-      $pull: { friends: userId },
-    });
-
-    return res.status(200).json({ message: "Friend removed" });
   }
-};
+);
 
-export const friendList = async (req: Request, res: Response) => {
-  const userId = req.user._id.toString();
-  //console.log( req.user );
-  const user = await User.findById(userId);
-  if (!user) return res.status(400).json({ message: "User not Found" });
+// export const friendsRequestSendUnsend = asyncHandler(
+//   async (req: Request, res: Response) => {
+//     const userId = req.user._id;
+//     const friendId = req.params.id;
 
-  const friends = await User.find({ _id: { $in: user.friends } });
-  console.log(friends);
-  res.status(200).json(friends);
-};
+//     const [user, friend] = await Promise.all([
+//       User.findById(userId),
+//       User.findById(friendId),
+//     ]);
 
-// export const searchProfile = async (req: Request, res: Response) => {
-//   const search = req.query.q;
-//   console.log(search);
-//   const users = await User.find({
-//     $or: [{ username: { $regex: search, $options: "i" } }],
-//   });
-//   console.log(users);
-//   res.status(200).json(users);
-// };
+//     if (!user || !friend) {
+//       throw new ApiError(
+//         HTTP_STATUS.NOT_FOUND,
+//         "User not found."
+//       );
+//     }
 
-export const getUsers = async (req: Request, res: Response) => {
-    const { search } = req.query;
-    console.log('search:', search)
-    const query: any = {};
+//     if (user._id.equals(friend._id)) {
+//       throw new ApiError(
+//         HTTP_STATUS.BAD_REQUEST,
+//         "You cannot add yourself as a friend."
+//       );
+//     }
 
-    if (search) {
+//     const isFriend = user.friends.some((id) =>
+//       id.equals(friend._id)
+//     );
+
+//     if (!isFriend) {
+//       user.friends.push(friend._id);
+//       friend.friends.push(user._id);
+
+//       await Promise.all([
+//         user.save(),
+//         friend.save(),
+//       ]);
+
+//       return res.status(HTTP_STATUS.OK).json({
+//         success: true,
+//         message: "Friend added successfully.",
+//       });
+//     }
+
+//     await Promise.all([
+//       User.findByIdAndUpdate(userId, {
+//         $pull: { friends: friend._id },
+//       }),
+//       User.findByIdAndUpdate(friendId, {
+//         $pull: { friends: user._id },
+//       }),
+//     ]);
+
+//     res.status(HTTP_STATUS.OK).json({
+//       success: true,
+//       message: "Friend removed successfully.",
+//     });
+//   }
+// );
+
+export const friendList = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      throw new ApiError(
+        HTTP_STATUS.NOT_FOUND,
+        "User not found."
+      );
+    }
+
+    const friends = await User.find({
+      _id: { $in: user.friends },
+    }).select("-password");
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      count: friends.length,
+      data: friends,
+    });
+  }
+);
+
+export const getUsers = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { search, limit } = req.query;
+
+    const query: FilterQuery<UserSchemaType> = {};
+
+    if (typeof search === "string" && search.trim()) {
       query.$or = [
         {
           username: {
-            $regex: search as string,
+            $regex: search,
             $options: "i",
           },
         },
         {
           fullName: {
-            $regex: search as string,
+            $regex: search,
             $options: "i",
           },
         },
       ];
     }
 
-    const users = await User.find(query).limit(5);
-    console.log('search users', users)
-    res.status(200).json(users);
-};
+    const pageLimit =
+      typeof limit === "string"
+        ? Number(limit) || 5
+        : 5;
+
+    const users = await User.find(query)
+      .select("-password")
+      .limit(pageLimit)
+      .exec();
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  }
+);

@@ -21,6 +21,8 @@ const ProfileScreen = () => {
 
   if (isLoading) return <Loading />;
 
+  if (!user ) return <Loading />
+
   return (
     <Screen>
       <ProfileHeader

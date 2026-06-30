@@ -65,6 +65,11 @@ const ProfileScreen = () => {
 
   if (isLoading) return <Loading />;
 
+  if (!user) {
+    console.log('user', user)
+  return <Loading />;
+}
+
   return (
     <Screen>
       <ProfileHeader user={user} bookNo={userBooks?.length ?? 0} />

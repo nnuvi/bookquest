@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import Notification from "../model/notificationModel.js";
 import User from "../model/user.model.js";
-import Books from "../model/book.model.js";
+import Books from "../model/Book.model.js";
 import moment from "moment";
 import { BookType } from "../types/types.js";
 
@@ -10,7 +10,7 @@ export const allNotifications = async (req: Request, res: Response) => {
   const notifications = await Notification.find({ to: userId }).sort({
     createdAt: -1,
   });
-  console.log(notifications.length);
+  // console.log(notifications.length);
   if (!notifications) {
     return res.status(404).json({ message: "No notifications found" });
   }

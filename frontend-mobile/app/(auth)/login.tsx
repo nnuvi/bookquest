@@ -1,22 +1,17 @@
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Alert,
-} from "react-native";
-import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  View
+} from "react-native";
 
-import { Colors } from "@/constants/Colors";
-import { retroFont } from "@/lib/fontAdd";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import Button from "@/components/ui/Button";
-import LogoText from "@/components/common/LogoText";
 import ErrorMessageModal from "@/components/common/ErrorMessageModal";
+import LogoText from "@/components/common/LogoText";
+import Button from "@/components/ui/Button";
+import { Colors } from "@/constants/Colors";
+import { api } from "@/lib/api";
 import { getUser } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 
@@ -31,25 +26,25 @@ const Page = () => {
   });
   console.log("Current Form Data:", formData);
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.login);
+  const setUser = useAuthStore((s) => s.setUser);
 
   const login = async (username: string, password: string) => {
     try {
-      console.log("fdata", { username, password });
-      const res = await api.post("/auth/login", { username, password });
-      console.log("res data", res.data);
-      console.log("status", res.status);
-      if (res.status === 200 && res.data) {
-        const user = await getUser();
-        setUser(user);
-        router.replace("(app)/(tabs)/Homepage");
-      } else {
-        console.log("Invalid username or password");
-      }
-    } catch (error: any) {
-      setErrorVisible(true);
-      setErrorMessage("Invalid username or password");
-      console.error("Error during login:", error);
+      // send credentials - backend sets cookie
+      await api.post("/api/auth/login", { username, password });
+
+      // DO NOT trust login response alone
+      // verify session via /me 
+      const user = await getUser();
+
+      // STEP 2: store verified user in state
+      setUser(user);
+
+      // navigate only AFTER auth is confirmed
+      router.replace("(app)/(tabs)/Homepage");
+    } catch (error) {
+      // any failure means login OR cookie failed
+      console.error("Login error:", error);
     }
   };
 

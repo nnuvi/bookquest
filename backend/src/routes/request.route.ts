@@ -1,14 +1,14 @@
-import express from "express";
-import {
-    approveDeclineBorrowBook,
-    borrowBookRequest
-} from "../controller/request.controller.js";
-import { protectRoute } from "../middleware/auth.middleware.js";
+// import express from "express";
+// import {
+//     approveDeclineBorrowBook,
+//     borrowBookRequest
+// } from "../controller/request.controller.js";
+// import { protectRoute } from "../middleware/auth.middleware.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.post("/:profileUserId/:bookId/request", protectRoute, borrowBookRequest);
+// router.post("/:profileUserId/:bookId/request", protectRoute, borrowBookRequest);
 
-router.put("/request/decision", protectRoute, approveDeclineBorrowBook);
+// router.put("/request/decision", protectRoute, approveDeclineBorrowBook);
 
-export default router;
+// export default router;

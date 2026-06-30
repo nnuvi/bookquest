@@ -38,7 +38,7 @@ const Page = () => {
     try {
       console.log("fsdata", { fullName, username, email, password });
 
-      const res = await api.post("/auth/signup", {
+      const res = await api.post("/api/auth/signup", {
         fullName,
         username,
         email,

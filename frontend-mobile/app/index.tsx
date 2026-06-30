@@ -1,9 +1,8 @@
-import { useEffect } from "react";
-import { useRouter } from "expo-router";
+import Loading from "@/components/common/Loading";
 import { useAuthStore } from "@/store/auth.store";
-import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { View } from "react-native";
-import { useAuth } from "@/hooks/auth";
 
 export default function Index() {
   const router = useRouter();
@@ -14,7 +13,15 @@ export default function Index() {
   useEffect(() => {
     if (loading) return;
 
-    if (user) {
+    //   if (user) {
+    //     router.replace("/(app)/(tabs)/Homepage");
+    //   } else {
+    //     router.replace("/(auth)/landing");
+    //   }
+    // }, [user, loading]);
+  
+    // user object might exist but be invalid/stale
+    if (user?._id) {
       router.replace("/(app)/(tabs)/Homepage");
     } else {
       router.replace("/(auth)/landing");
@@ -24,7 +31,7 @@ export default function Index() {
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center">
-        <PageLoadingIndicator />
+        <Loading />
       </View>
     );
   }

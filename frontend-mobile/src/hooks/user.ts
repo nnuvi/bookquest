@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  getMFriendList,
+  getMyFriendList,
   getMyProfile,
   getUserProfile,
   getUsers,
@@ -16,7 +16,7 @@ export const useMyProfile = () => {
 export const useFriendList = () => {
   return useQuery({
     queryKey: ["friends"],
-    queryFn: getMFriendList,
+    queryFn: getMyFriendList,
   });
 };
 

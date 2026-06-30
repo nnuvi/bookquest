@@ -10,6 +10,8 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
+import BookPlaceholder from "@assets/images/placeholder-book.png";
+
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -18,7 +20,7 @@ const HomeScreen = () => {
 
   const handleOptionActions = (option: string) => {
     if (option === "Log out") {
-      api.post("/auth/logout");
+      api.post("/api/auth/logout");
       router.replace("/");
     }
   };
@@ -31,7 +33,7 @@ const HomeScreen = () => {
       }
     >
       <Image
-        source={{ uri: item.coverImage }}
+        source={item.coverImage ? { uri: item?.coverImage } : BookPlaceholder}
         className="w-full h-35 mb-2 bg-gray-200 rounded"
       />
       <Text

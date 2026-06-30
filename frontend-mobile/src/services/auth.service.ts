@@ -1,6 +1,8 @@
-import { api } from "../lib/api";
+import { api } from "@/lib/api";
+import { ApiResponse } from "@/types/api";
+import { User } from "@/types/user";
 
-export const getUser = async () => {
-  const res = await api.get("auth/me");
-  return res.data;
+export const getUser = async (): Promise<User> => {
+  const { data } = await api.get<ApiResponse<User>>("/api/auth/me");
+  return data.data;
 };

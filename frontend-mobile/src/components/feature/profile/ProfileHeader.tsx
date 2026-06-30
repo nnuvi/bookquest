@@ -6,6 +6,8 @@ import { User } from "@/types/user";
 import { router } from "expo-router";
 import Button from "@/components/ui/Button";
 
+import userPlaceHolder from '@assets/images/placeholder-user.png'
+
 type ProfileHeaderProps = {
   user: User;
   bookNo: number;
@@ -40,22 +42,24 @@ export const ProfileHeader = ({
         </View>
       </View>
 
-        {/* Profile Section */}
+      {/* Profile Section */}
       <View className="justify-between p-2 px-8">
         <View className="flex-row items-center w-full">
           {/* Image */}
           <View className="mt-2 bg-gray rounded-full overflow-hidden mb-2">
             <Image
-              source={{ uri: "https://example.com/profile-pic.jpg" }}
+              source={
+                user.profieImage
+                  ? { uri: user.profieImage}
+                  : userPlaceHolder
+              }
               className="w-24 h-24"
             />
           </View>
           {/** Book and Friends */}
           <View className="flex-row justify-end w-[70%] mt-2 mr-2">
             <View className="items-center justify-center mx-2 py-2 px-5">
-              <AppText className="font-bold text-text-light">
-                {bookNo}
-              </AppText>
+              <AppText className="font-bold text-text-light">{bookNo}</AppText>
               <AppText className="text-lg text-text-light">Books</AppText>
             </View>
 

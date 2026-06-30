@@ -1,109 +1,122 @@
 import { Request, Response } from "express";
-// import "../model/Book.model.js";
+
 import Book, { BookSchemaType } from "../model/Book.model.js";
-import UserBook, { UserBookSchemaType } from "../model/UserBook.model.js";
-import User, { UserSchemaType } from "../model/user.model.js";
+import UserBook from "../model/UserBook.model.js";
 
-export const getMyBooks = async (req: Request, res: Response) => {
-  const userId = req.user._id.toString();
+import ApiError from "../lib/apiError.js";
+import { asyncHandler } from "../lib/asyncHandler.js";
+import { HTTP_STATUS } from "../constant/httpStatus.js";
 
-  const user = await User.findById(userId);
-  if (!user) return res.status(400).json({ message: "User not Found" });
+import { FilterQuery } from "mongoose";
 
-  const userBooks = await UserBook.find({ owner: userId }).populate<{
+export const getMyBooks = asyncHandler(async (req: Request, res: Response) => {
+  const userBooks = await UserBook.find({
+    owner: req.user._id,
+  }).populate<{
     book: BookSchemaType;
   }>("book");
 
-  if (!userBooks) {
-    return res.status(404).json({ message: "No books found" });
-  }
-  console.log(userBooks);
-  res.status(200).json(userBooks);
-};
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    data: userBooks,
+  });
+});
 
-export const getUserBooks = async (req: Request, res: Response) => {
-  const profileUserId = req.params.id;
-
-  const userBooks = await UserBook.find({ owner: profileUserId })
-    .populate<{
+export const getUserBooks = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userBooks = await UserBook.find({
+      owner: req.params.id,
+    }).populate<{
       book: BookSchemaType;
-    }>("book")
-    .exec();
+    }>("book");
 
-  if (!userBooks) {
-    return res.status(404).json({ message: "No books found for this user." });
-  }
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: userBooks,
+    });
+  },
+);
 
-  console.log(
-    "Book Titles (user):",
-    userBooks.map((b) => b.book.title),
-  );
+export const getUserBookDetails = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userBook = await UserBook.findById(req.params.id)
+      .populate<{
+        book: BookSchemaType;
+      }>("book")
+      .populate("owner", "fullName username");
 
-  res.status(200).json(userBooks);
-};
+    if (!userBook) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, "User book not found.");
+    }
 
-export const getUserBookDetails = async (req: Request, res: Response) => {
-  const bookId = req.params.id;
-  console.log("bookid", bookId);
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: userBook,
+    });
+  },
+);
 
-  const userBookDetails = await UserBook.findById(bookId)
-    .populate<{
-      book: BookSchemaType;
-    }>("book")
-    .populate<{
-      User: UserSchemaType;
-    }>("owner", "fullName username");
-  console.log("get book details", userBookDetails);
+export const getBookDetails = asyncHandler(
+  async (req: Request, res: Response) => {
+    const book = await Book.findById(req.params.id);
 
-  res.status(200).json(userBookDetails);
-};
+    if (!book) {
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, "Book not found.");
+    }
 
-export const getBookDetails = async (req: Request, res: Response) => {
-  const bookId = req.params.id;
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: book,
+    });
+  },
+);
 
-  const bookDetails = await Book.findById(bookId);
-  console.log("get book details", bookDetails);
-
-  res.status(200).json(bookDetails);
-};
-
-export const getBooks = async (req: Request, res: Response) => {
+export const getBooks = asyncHandler(async (req: Request, res: Response) => {
   const { sort, genre, search, limit } = req.query;
 
-  const query: any = {};
+  const query: FilterQuery<BookSchemaType> = {};
 
   // Search
-  if (search) {
+  if (typeof search === "string" && search.trim()) {
     query.$or = [
-      { title: { $regex: search as string, $options: "i" } },
-      { author: { $regex: search as string, $options: "i" } },
-      { publisher: { $regex: search as string, $options: "i" } },
+      { title: { $regex: search, $options: "i" } },
+      { author: { $regex: search, $options: "i" } },
+      { publisher: { $regex: search, $options: "i" } },
     ];
   }
 
   // Genre
-  if (genre) {
+  if (typeof genre === "string" && genre.trim()) {
     query.genres = genre;
   }
 
   let booksQuery = Book.find(query);
 
   // Sort
-  if (sort === "latest") {
-    booksQuery = booksQuery.sort({ createdAt: -1 });
-  } else if (sort === "oldest") {
-    booksQuery = booksQuery.sort({ createdAt: 1 });
-  } else if (sort === "title") {
-    booksQuery = booksQuery.sort({ title: 1 });
+  switch (sort) {
+    case "latest":
+      booksQuery = booksQuery.sort({ createdAt: -1 });
+      break;
+
+    case "oldest":
+      booksQuery = booksQuery.sort({ createdAt: 1 });
+      break;
+
+    case "title":
+      booksQuery = booksQuery.sort({ title: 1 });
+      break;
   }
 
-  // Limit
-  if (limit) {
-    booksQuery = booksQuery.limit(Number(limit) || 5);
-  }
+  // Limit (default = 5)
+  const pageLimit = typeof limit === "string" ? Number(limit) || 5 : 5;
 
-  const books = await booksQuery.limit(5);
-  console.log('search books', books)
+  booksQuery = booksQuery.limit(pageLimit);
 
-  res.status(200).json(books);
-};
+  const books = await booksQuery.exec();
+
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    count: books.length,
+    data: books,
+  });
+});
