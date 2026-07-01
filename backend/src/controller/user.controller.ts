@@ -13,17 +13,14 @@ export const getMyProfile = asyncHandler(
     const user = await User.findById(req.user._id).select("-password");
 
     if (!user) {
-      throw new ApiError(
-        HTTP_STATUS.NOT_FOUND,
-        "User not found."
-      );
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
     }
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       data: user,
     });
-  }
+  },
 );
 
 export const getUserProfile = asyncHandler(
@@ -31,95 +28,87 @@ export const getUserProfile = asyncHandler(
     const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
-      throw new ApiError(
-        HTTP_STATUS.NOT_FOUND,
-        "User not found."
-      );
+      throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
     }
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       data: user,
     });
-  }
+  },
 );
 
-export const editProfile = asyncHandler(
-  async (req: Request, res: Response) => {
-    const {
-      fullName,
-      username,
-      email,
-      currentPassword,
-      newPassword,
-      bio,
-      profileImg,
-      coverImg,
-    } = req.body;
+export const editProfile = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    fullName,
+    username,
+    email,
+    currentPassword,
+    newPassword,
+    bio,
+    profileImg,
+    coverImg,
+  } = req.body;
 
-    const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
 
-    if (!user) {
+  if (!user) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
+  }
+
+  if (newPassword) {
+    if (!currentPassword) {
       throw new ApiError(
-        HTTP_STATUS.NOT_FOUND,
-        "User not found."
+        HTTP_STATUS.BAD_REQUEST,
+        "Current password is required.",
       );
     }
 
-    if (newPassword) {
-      if (!currentPassword) {
-        throw new ApiError(
-          HTTP_STATUS.BAD_REQUEST,
-          "Current password is required."
-        );
-      }
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
 
-      const isPasswordValid = await bcrypt.compare(
-        currentPassword,
-        user.password
+    if (!isPasswordValid) {
+      throw new ApiError(
+        HTTP_STATUS.UNAUTHORIZED,
+        "Current password is incorrect.",
       );
-
-      if (!isPasswordValid) {
-        throw new ApiError(
-          HTTP_STATUS.UNAUTHORIZED,
-          "Current password is incorrect."
-        );
-      }
-
-      if (newPassword.length < 6) {
-        throw new ApiError(
-          HTTP_STATUS.BAD_REQUEST,
-          "Password must be at least 6 characters long."
-        );
-      }
-
-      user.password = await bcrypt.hash(newPassword, 10);
     }
 
-    user.fullName = fullName ?? user.fullName;
-    user.username = username ?? user.username;
-    user.email = email ?? user.email;
-    user.bio = bio ?? user.bio;
-    user.profileImg = profileImg ?? user.profileImg;
-    // user.coverImg = coverImg ?? user.coverImg;
+    if (newPassword.length < 6) {
+      throw new ApiError(
+        HTTP_STATUS.BAD_REQUEST,
+        "Password must be at least 6 characters long.",
+      );
+    }
 
-    await user.save();
-
-    res.status(HTTP_STATUS.OK).json({
-      success: true,
-      message: "Profile updated successfully.",
-      data: {
-        _id: user._id,
-        fullName: user.fullName,
-        username: user.username,
-        email: user.email,
-        bio: user.bio,
-        profileImg: user.profileImg,
-        // coverImg: user.coverImg,
-      },
-    });
+    user.password = await bcrypt.hash(newPassword, 10);
   }
-);
+
+  user.fullName = fullName ?? user.fullName;
+  user.username = username ?? user.username;
+  user.email = email ?? user.email;
+  user.bio = bio ?? user.bio;
+  user.profileImg = profileImg ?? user.profileImg;
+  // user.coverImg = coverImg ?? user.coverImg;
+
+  await user.save();
+
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    message: "Profile updated successfully.",
+    data: {
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profileImg: user.profileImg,
+      // coverImg: user.coverImg,
+    },
+  });
+});
 
 // export const friendsRequestSendUnsend = asyncHandler(
 //   async (req: Request, res: Response) => {
@@ -180,66 +169,82 @@ export const editProfile = asyncHandler(
 //   }
 // );
 
-export const friendList = asyncHandler(
-  async (req: Request, res: Response) => {
-    const user = await User.findById(req.user._id);
+export const friendList = asyncHandler(async (req: Request, res: Response) => {
+  const user = await User.findById(req.user._id);
 
-    if (!user) {
-      throw new ApiError(
-        HTTP_STATUS.NOT_FOUND,
-        "User not found."
-      );
-    }
+  if (!user) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
+  }
 
-    const friends = await User.find({
-      _id: { $in: user.friends },
-    }).select("-password");
+  const friends = await User.find({
+    _id: { $in: user.friends },
+  }).select("-password");
 
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    count: friends.length,
+    data: friends,
+  });
+});
+
+export const getUsers = asyncHandler(async (req: Request, res: Response) => {
+  const { limit } = req.query;
+
+  const pageLimit =
+    typeof limit === "string" ? Math.max(1, Number(limit) || 5) : 5;
+
+  const users = await User.find()
+    .select("-password")
+    .sort({ createdAt: -1 })
+    .limit(pageLimit)
+    .lean();
+
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    count: users.length,
+    data: users,
+  });
+});
+
+export const searchUsers = asyncHandler(async (req: Request, res: Response) => {
+  const { query } = req.query;
+
+  if (typeof query !== "string" || query.trim().length < 2) {
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      count: friends.length,
-      data: friends,
+      count: 0,
+      data: [],
     });
+
+    return;
   }
-);
 
-export const getUsers = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { search, limit } = req.query;
+  const keyword = query.trim();
 
-    const query: FilterQuery<UserSchemaType> = {};
-
-    if (typeof search === "string" && search.trim()) {
-      query.$or = [
-        {
-          username: {
-            $regex: search,
-            $options: "i",
-          },
+  const users = await User.find({
+    $or: [
+      {
+        username: {
+          $regex: keyword,
+          $options: "i",
         },
-        {
-          fullName: {
-            $regex: search,
-            $options: "i",
-          },
+      },
+      {
+        fullName: {
+          $regex: keyword,
+          $options: "i",
         },
-      ];
-    }
+      },
+    ],
+  })
+    .select("-password")
+    .sort({ username: 1 })
+    .limit(20)
+    .lean();
 
-    const pageLimit =
-      typeof limit === "string"
-        ? Number(limit) || 5
-        : 5;
-
-    const users = await User.find(query)
-      .select("-password")
-      .limit(pageLimit)
-      .exec();
-
-    res.status(HTTP_STATUS.OK).json({
-      success: true,
-      count: users.length,
-      data: users,
-    });
-  }
-);
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    count: users.length,
+    data: users,
+  });
+});

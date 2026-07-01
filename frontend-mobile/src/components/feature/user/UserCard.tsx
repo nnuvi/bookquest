@@ -18,17 +18,21 @@ export default function UserCard({ user, action, onPress }: UserCardProps) {
       onPress={() => {
         router.push(`profile/ProfileView/${user._id}`);
       }}
-      className="flex-row items-center px-4 py-3 border-b border-gray-300"
+      className="flex-row items-center px-4 py-3"
     >
       <Image
-        source={user.profieImage ? { uri: user.profieImage } : userPlaceHolder}
+        source={
+          user.profileImage ? { uri: user.profileImage } : userPlaceHolder
+        }
         className="w-14 h-14 rounded-full bg-gray-300"
       />
 
       <View className="flex-1 ml-3">
-        <AppText className="font-semibold text-base">{user.fullName}</AppText>
+        <AppText size="lg" weight="semibold">
+          {user.fullName}
+        </AppText>
 
-        <AppText className="text-gray-500">@{user.username}</AppText>
+        <AppText size="md">@{user.username}</AppText>
       </View>
 
       {action}

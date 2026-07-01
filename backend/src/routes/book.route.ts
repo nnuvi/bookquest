@@ -5,12 +5,14 @@ import {
   getUserBooks,
   getBooks,
   getBookDetails,
+  searchBooks,
 } from "../controller/book.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
 router.get("/", protectRoute, getBooks);
+router.get("/search", protectRoute, searchBooks);
 router.get("/me", protectRoute, getMyBooks);
 router.get("/details/user/:id", protectRoute, getUserBookDetails);
 router.get("/details/:id", protectRoute, getBookDetails);

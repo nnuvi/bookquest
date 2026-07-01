@@ -34,6 +34,7 @@ export default function BookList({
       contentContainerStyle={[
         {
           paddingBottom: 20,
+          paddingVertical: 4,
         },
         contentContainerStyle,
       ]}

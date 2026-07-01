@@ -7,7 +7,7 @@ import {
   View
 } from "react-native";
 
-import ErrorMessageModal from "@/components/common/ErrorMessageModal";
+// import ErrorMessageModal from "@/components/common/ErrorMessageModal";
 import LogoText from "@/components/common/LogoText";
 import Button from "@/components/ui/Button";
 import { Colors } from "@/constants/Colors";
@@ -101,13 +101,13 @@ const Page = () => {
       </View>
 
       <Button title="Login" onPress={handleLogin}></Button>
-      {isErrorVisible && (
+      {/* {isErrorVisible && (
         <ErrorMessageModal
           visible={isErrorVisible}
           onClose={() => setErrorVisible(false)}
           message={errorMessage}
         />
-      )}
+      )} */}
     </View>
   );
 };

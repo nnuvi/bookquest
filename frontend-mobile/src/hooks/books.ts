@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getUserBookDetails,
-  getBooks,
+  // getBooks,
   getBorrowedBooks,
   getLentBooks,
   getMyBooks,
   getUserBooks,
   returnBook,
   getBookDetails,
+  getSearchBooks,
 } from "@/services/book.service";
 
 export const useMyBooks = () =>
@@ -42,22 +43,26 @@ export const useUserBookDetails = (bookId: string) =>
     enabled: !!bookId,
   });
 
-  export const useBookDetails = (bookId: string) =>
+export const useBookDetails = (bookId: string) =>
   useQuery({
     queryKey: ["bookDetails", bookId],
     queryFn: () => getBookDetails(bookId),
     enabled: !!bookId,
   });
 
-export const useBooks = (
-  search?: string,
+export const useSearchBooks = (
+  search: string,
   genre?: string,
   sort?: string,
-  limit?: number
+  limit?: number,
 ) =>
   useQuery({
-    queryKey: ["books", search, genre, sort, limit],
-    queryFn: () => getBooks(search, genre, sort, limit),
+    queryKey: ["searchBooks", search, genre, sort, limit],
+    queryFn: () => getSearchBooks(search, genre, sort, limit),
+    enabled: search.trim().length >= 2,
+    staleTime: 0,
+    gcTime: 60 * 1000,
+    retry: false,
   });
 
 export const useReturnBook = () => {

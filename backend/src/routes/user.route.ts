@@ -8,11 +8,13 @@ import {
   friendList,
   // searchProfile,
   getUsers,
+  searchUsers,
 } from "../controller/user.controller.js";
 
 const router = express.Router();
 
 router.get("/", protectRoute, getUsers);
+router.get("/search", protectRoute, searchUsers);
 router.get("/me", protectRoute, getMyProfile);
 router.get("/profile/:id", protectRoute, getUserProfile);
 // router.post("/friends/:id", protectRoute, friendsRequestSendUnsend);

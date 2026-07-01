@@ -16,8 +16,8 @@ type BookCardProps = {
 export default function BookCard({ item, onPress }: BookCardProps) {
   return (
     <View className="flex-1">
-      <View className="flex-row items-center p-4">
-        <View className="w-12.5 h-18.75 rounded-md mr-3">
+      <View className="flex-row items-center px-6 py-3">
+        <View className="w-13.5 h-19.5 rounded-md mr-3">
           <Image
             source={
               item?.coverImage ? { uri: item?.coverImage } : BookPlaceholder
@@ -28,20 +28,21 @@ export default function BookCard({ item, onPress }: BookCardProps) {
         </View>
 
         <View className="flex-1 h-full">
-          <TouchableOpacity onPress={() => onPress?.(item)}>
-            {/* <View className="justify-between"> */}
-            <AppText
-              weight="semibold"
-              size="lg"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {item?.title ?? "N/A"}
-            </AppText>
+          <TouchableOpacity className="gap-1" onPress={() => onPress?.(item)}>
+            <View>
+              <AppText
+                weight="semibold"
+                size="lg"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item?.title ?? "N/A"}
+              </AppText>
 
-            <AppText size="md" numberOfLines={1} ellipsizeMode="tail">
-              {item?.author.join(", ") ?? "N/A"}
-            </AppText>
+              <AppText size="md" numberOfLines={1} ellipsizeMode="tail">
+                {item?.author.join(",") ?? "N/A"}
+              </AppText>
+            </View>
 
             {item?.type === "userBook" ? (
               <AppText size="sm" className="mt-1" numberOfLines={1}>
@@ -53,7 +54,6 @@ export default function BookCard({ item, onPress }: BookCardProps) {
                 {calculateDaysSinceAdded(item?.borrowDate)}
               </AppText>
             ) : null}
-            {/* </View> */}
           </TouchableOpacity>
         </View>
 

@@ -10,6 +10,6 @@ export type User = {
   fullName: string;
   email: string;
   friends: User[];
-  profieImage: string;
+  profileImage: string;
   bio: string;
 };

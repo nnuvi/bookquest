@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getMyFriendList,
   getMyProfile,
+  getSearchUsers,
   getUserProfile,
-  getUsers,
+  // getUsers,
 } from "@/services/user.service";
 
 export const useMyProfile = () => {
@@ -24,12 +25,17 @@ export const useUserProfile = (userId: string) => {
   return useQuery({
     queryKey: ["userProfile", userId],
     queryFn: () => getUserProfile(userId),
+    enabled: !!userId,
   });
 };
 
-export const useUsers = (search?: string) => {
+export const useSearchUsers = (search: string) => {
   return useQuery({
-    queryKey: ["books", search],
-    queryFn: () => getUsers(search),
+    queryKey: ["searchUsers", search],
+    queryFn: () => getSearchUsers(search),
+    enabled: search.trim().length >= 2,
+    staleTime: 0,
+    gcTime: 60 * 1000,
+    retry: false,
   });
 };

@@ -72,27 +72,20 @@ export const getBookDetails = asyncHandler(
 );
 
 export const getBooks = asyncHandler(async (req: Request, res: Response) => {
-  const { sort, genre, search, limit } = req.query;
+  const { sort, genre, limit } = req.query;
 
-  const query: FilterQuery<BookSchemaType> = {};
+  const filter: FilterQuery<BookSchemaType> = {};
 
-  // Search
-  if (typeof search === "string" && search.trim()) {
-    query.$or = [
-      { title: { $regex: search, $options: "i" } },
-      { author: { $regex: search, $options: "i" } },
-      { publisher: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  // Genre
+  // Filter by genre
   if (typeof genre === "string" && genre.trim()) {
-    query.genres = genre;
+    filter.genres = genre.trim();
   }
 
-  let booksQuery = Book.find(query);
+  const pageLimit =
+    typeof limit === "string" ? Math.max(1, Number(limit) || 5) : 5;
 
-  // Sort
+  let booksQuery = Book.find(filter);
+
   switch (sort) {
     case "latest":
       booksQuery = booksQuery.sort({ createdAt: -1 });
@@ -105,14 +98,67 @@ export const getBooks = asyncHandler(async (req: Request, res: Response) => {
     case "title":
       booksQuery = booksQuery.sort({ title: 1 });
       break;
+
+    default:
+      booksQuery = booksQuery.sort({ createdAt: -1 });
   }
 
-  // Limit (default = 5)
-  const pageLimit = typeof limit === "string" ? Number(limit) || 5 : 5;
+  const books = await booksQuery.limit(pageLimit).lean();
 
-  booksQuery = booksQuery.limit(pageLimit);
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    count: books.length,
+    data: books,
+  });
+});
 
-  const books = await booksQuery.exec();
+export const searchBooks = asyncHandler(async (req: Request, res: Response) => {
+  const { query, genre, sort, limit } = req.query;
+
+  const filter: FilterQuery<BookSchemaType> = {};
+
+  // Keyword search
+  if (typeof query === "string" && query.trim().length >= 2) {
+    const keyword = query.trim();
+
+    filter.$or = [
+      { title: { $regex: keyword, $options: "i" } },
+      { author: { $regex: keyword, $options: "i" } },
+      { publisher: { $regex: keyword, $options: "i" } },
+      { isbn: { $regex: keyword } }, 
+    ];
+  }
+
+  // Genre filter
+  if (typeof genre === "string" && genre.trim()) {
+    filter.genres = genre.trim();
+  }
+
+  const pageLimit =
+    typeof limit === "string"
+      ? Math.max(1, Number(limit) || 20)
+      : 20;
+
+  let booksQuery = Book.find(filter);
+
+  switch (sort) {
+    case "latest":
+      booksQuery = booksQuery.sort({ createdAt: -1 });
+      break;
+
+    case "oldest":
+      booksQuery = booksQuery.sort({ createdAt: 1 });
+      break;
+
+    case "title":
+      booksQuery = booksQuery.sort({ title: 1 });
+      break;
+
+    default:
+      booksQuery = booksQuery.sort({ title: 1 });
+  }
+
+  const books = await booksQuery.limit(pageLimit).lean();
 
   res.status(HTTP_STATUS.OK).json({
     success: true,

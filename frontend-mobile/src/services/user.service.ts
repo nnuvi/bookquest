@@ -22,10 +22,10 @@ export const getUserProfile = async (id: string): Promise<User> => {
   return data.data;
 };
 
-export const getUsers = async (search?: string): Promise<User[]> => {
-  const { data } = await api.get<ApiResponse<User[]>>("/api/user", {
+export const getSearchUsers = async (search?: string): Promise<User[]> => {
+  const { data } = await api.get<ApiResponse<User[]>>("/api/user/search", {
     params: {
-      search,
+      query: search,
     },
   });
 

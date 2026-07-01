@@ -32,75 +32,9 @@ export default function BookDetails() {
     isError,
   } = useBookDetails(bookId);
 
-  // if (isPending) {
-  //   return (
-  //     <Screen>
-  //       <HeaderTitle
-  //         text="Book Information"
-  //         threeDotsVisible
-  //         // onPress={() => setModalVisible(true)}
-  //       />
-  //       <BookDetailsSkeleton />
-  //     </Screen>
-  //   );
-  // }
-
-  // if (isError) {
-  //   return (
-  //     <Screen>
-  //       <HeaderTitle
-  //         text="Book Information"
-  //         threeDotsVisible
-  //         // onPress={() => setModalVisible(true)}
-  //       />
-  //       <ErrorScreen
-  //         title="Unable to load Book Information."
-  //         description="Please try again."
-  //         retryText="Retry"
-  //         onRetry={refetch}
-  //       />
-  //     </Screen>
-  //   );
-  // }
-
-  // if (!book) {
-  //   return (
-  //     <Screen>
-  //       <HeaderTitle
-  //         text="Book Information"
-  //         threeDotsVisible
-  //         // onPress={() => setModalVisible(true)}
-  //       />
-  //       <NotFoundScreen
-  //         title="Book Not Found."
-  //         description="We couldn't find this book."
-  //       />
-  //     </Screen>
-  //   );
-  // }
-
   const handleOptionActions = (option: string) => {
     console.log(option);
   };
-
-  // return (
-  //   <Screen>
-  //     {/* Header */}
-  //     <HeaderTitle
-  //       text="Book Information"
-  //       threeDotsVisible
-  //       onPress={() => setModalVisible(true)}
-  //     />
-
-  //     <DropdownModal
-  //       visible={modalVisible}
-  //       options={options}
-  //       onSelect={handleOptionActions}
-  //       onClose={() => setModalVisible(false)}
-  //     />
-
-  //     <Toast />
-  //   </Screen>
 
   return (
     <Screen>

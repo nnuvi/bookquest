@@ -48,15 +48,15 @@ export const getBookDetails = async (
   return data.data;
 };
 
-export const getBooks = async (
+export const getSearchBooks = async (
   search?: string,
   genre?: string,
   sort?: string,
   limit?: number
 ): Promise<BookCardItem[]> => {
-  const { data } = await api.get<ApiResponse<Book[]>>("/api/book", {
+  const { data } = await api.get<ApiResponse<Book[]>>("/api/book/search", {
     params: {
-      search,
+      query: search,
       genre,
       sort,
       limit,

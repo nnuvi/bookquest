@@ -28,7 +28,7 @@ export default function HomeLayout() {
           alignItems: "center",
         },
         tabBarLabelStyle: {
-          fontSize: 13,
+          fontSize: 12.5,
           fontWeight: "600",
         },
         // tabBarHideOnKeyboard: true,
@@ -57,7 +57,7 @@ export default function HomeLayout() {
         options={{
           title: "Scan",
           tabBarIcon: ({ color }) => (
-            <Octicons name="search" size={24} color={color} />
+            <MaterialCommunityIcons name="data-matrix-scan" size={24} color={color} />
           ),
         }}
       />
