@@ -10,15 +10,26 @@ export default function HomeLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.selection,
         headerShown: false,
         tabBarStyle: {
           position: "absolute",
           borderTopWidth: 0,
           elevation: 0,
           height: 65,
-          paddingTop: 10,
+          paddingTop: 6,
           backgroundColor: Colors.primary,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        tabBarActiveTintColor: Colors.selection,
+        tabBarInactiveTintColor: Colors.background,
+        tabBarItemStyle: {
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        tabBarLabelStyle: {
+          fontSize: 13,
+          fontWeight: "600",
         },
         // tabBarHideOnKeyboard: true,
       }}
@@ -53,7 +64,7 @@ export default function HomeLayout() {
       <Tabs.Screen
         name="Notifications"
         options={{
-          title: "Notifications",
+          title: "Notification",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="notifications" size={24} color={color} />
           ),

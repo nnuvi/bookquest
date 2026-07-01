@@ -1,12 +1,48 @@
 const isDev = __DEV__;
 
+export const isDevelopment = isDev;
+
+export const LOG_SCOPE = {
+  auth: "AUTH",
+  api: "API",
+  router: "ROUTER",
+
+  user: "USER",
+  store: "STORE",
+
+  book: "BOOK",
+  request: "REQUEST",
+  notification: "NOTIFICATION",
+  record: "RECORD",
+
+  image: "IMAGE",
+  upload: "UPLOAD",
+
+  query: "QUERY", // React Query
+  cache: "CACHE", // caching/persistence
+
+  system: "SYSTEM",
+} as const;
+
 const formatTime = () =>
-  new Date().toLocaleTimeString("en-US", {
+  new Date().toLocaleString("en-GB", {
     hour12: false,
   });
 
 const formatData = (data: unknown) => {
   if (data === undefined) return "";
+
+  if (data instanceof Error) {
+    return JSON.stringify(
+      {
+        name: data.name,
+        message: data.message,
+        stack: data.stack?.split("\n").map((line) => line.trim()),
+      },
+      null,
+      2,
+    );
+  }
 
   try {
     return JSON.stringify(data, null, 2);
@@ -16,44 +52,54 @@ const formatData = (data: unknown) => {
 };
 
 const output = (
-  level: "LOG" | "INFO" | "WARN" | "ERROR",
+  scope: string,
+  level: "LOG" | "INFO" | "WARN" | "ERROR" | "DEBUG",
   title: string,
-  data?: unknown
+  data?: unknown,
 ) => {
-  if (!isDev && level !== "ERROR") return;
+  if (!isDev && (level === "DEBUG" || level === "LOG")) {
+    return;
+  }
 
   const logger =
     level === "ERROR"
       ? console.error
       : level === "WARN"
-      ? console.warn
-      : console.log;
+        ? console.warn
+        : level === "DEBUG"
+          ? console.debug
+          : level === "INFO"
+            ? console.info
+            : console.log;
 
-  logger(`[${formatTime()}] ${level} :: ${title}`);
+  logger(`[${formatTime()}] [${scope}] ${level} :: ${title}`);
 
   if (data !== undefined) {
     logger(formatData(data));
   }
 
-  logger(""); // blank line
+  logger("────────────────────────────────────────"); // blank line
 };
 
 export const Logger = {
-  log(title: string, data?: unknown) {
-    output("LOG", title, data);
+  log(scope: string, title: string, data?: unknown) {
+    output(scope, "LOG", title, data);
   },
 
-  info(title: string, data?: unknown) {
-    output("INFO", title, data);
+  debug(scope: string, title: string, data?: unknown) {
+    output(scope, "DEBUG", title, data);
   },
 
-  warn(title: string, data?: unknown) {
-    output("WARN", title, data);
+  info(scope: string, title: string, data?: unknown) {
+    output(scope, "INFO", title, data);
   },
 
-  error(title: string, data?: unknown) {
-    output("ERROR", title, data);
+  warn(scope: string, title: string, data?: unknown) {
+    output(scope, "WARN", title, data);
   },
 
-  json: formatData,
+  error(scope: string, title: string, data?: unknown) {
+    output(scope, "ERROR", title, data);
+  },
+  // json: formatData,
 };

@@ -1,4 +1,4 @@
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
 import { View, Image } from "react-native";
 import BookPlaceholder from "@assets/images/placeholder-book.png";
 
@@ -27,11 +27,11 @@ export default function BookHeader({
 
       <View className="flex-1 justify-between py-2">
         <View>
-          <AppText className="text-2xl font-bold" numberOfLines={2}>
+          <AppText size="2xl" weight="bold"  className="text-2xl font-bold" numberOfLines={2}>
             {title ?? "N/A"}
           </AppText>
 
-          <AppText className="text-lg mt-2 text-midgray-dark" numberOfLines={2}>
+          <AppText size="lg" color="midGray" className="mt-2" numberOfLines={2}>
             by {author?.join(", ") ?? "N/A"}
           </AppText>
         </View>

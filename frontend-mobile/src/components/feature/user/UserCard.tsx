@@ -1,6 +1,6 @@
 import { Image, TouchableOpacity, View } from "react-native";
 
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
 import { User } from "@/types/user";
 import { router } from "expo-router";
 
@@ -13,7 +13,6 @@ type UserCardProps = {
 };
 
 export default function UserCard({ user, action, onPress }: UserCardProps) {
-  console.log(user);
   return (
     <TouchableOpacity
       onPress={() => {

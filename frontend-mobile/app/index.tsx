@@ -1,4 +1,5 @@
 import Loading from "@/components/common/Loading";
+import LoadingScreen from "@/components/feedback/LoadingScreen";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
@@ -31,7 +32,7 @@ export default function Index() {
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center">
-        <Loading />
+        <LoadingScreen />
       </View>
     );
   }

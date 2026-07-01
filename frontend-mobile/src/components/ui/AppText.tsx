@@ -4,23 +4,25 @@ type AppTextProps = TextProps & {
   color?:
     | "default"
     | "light"
-    | "secondary"
     | "primary"
-    | "success"
-    | "warning"
-    | "danger";
+    | "secondary"
+    | "selection"
+    | "black"
+    | "text"
+    | "midGray"
+    | "yellow"
+    | "red"
+    | "green"
+    | "gray"
+    | "choco"
+    | "savoy"
+    | "blue";
 
   weight?: "regular" | "medium" | "semibold" | "bold";
 
-  size?:
-    | "xs"
-    | "sm"
-    | "base"
-    | "lg"
-    | "xl"
-    | "2xl"
-    | "3xl"
-    | "4xl";
+  size?: "xs" | "sm" | "md" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+
+  center?: boolean;
 
   className?: string;
 };
@@ -28,11 +30,20 @@ type AppTextProps = TextProps & {
 const colorStyles = {
   default: "text-text-light",
   light: "text-background",
-  secondary: "text-midgray-dark",
   primary: "text-primary",
-  success: "text-green-600",
-  warning: "text-yellow-600",
-  danger: "text-red-600",
+  secondary: "text-secondary",
+  selection: "text-selection",
+
+  black: "text-black",
+  text: "text-text",
+  midGray: "text-midGray",
+  yellow: "text-yellow",
+  red: "text-red",
+  green: "text-green",
+  gray: "text-gray",
+  choco: "text-choco",
+  savoy: "text-savoy",
+  blue: "text-blue",
 };
 
 const weightStyles = {
@@ -45,6 +56,7 @@ const weightStyles = {
 const sizeStyles = {
   xs: "text-xs",
   sm: "text-sm",
+  md: "text-md",
   base: "text-base",
   lg: "text-lg",
   xl: "text-xl",
@@ -58,6 +70,7 @@ export default function AppText({
   weight = "regular",
   size = "base",
   className = "",
+  center,
   ...props
 }: AppTextProps) {
   return (
@@ -66,6 +79,7 @@ export default function AppText({
         ${sizeStyles[size]}
         ${colorStyles[color]}
         ${weightStyles[weight]}
+        ${center ? "text-center" : ""}
         ${className}
       `}
       {...props}

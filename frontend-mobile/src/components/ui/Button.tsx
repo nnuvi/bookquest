@@ -1,6 +1,6 @@
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
 
 type ButtonProps = TouchableOpacityProps & {
   title: string;
@@ -10,6 +10,8 @@ type ButtonProps = TouchableOpacityProps & {
   size?: "sm" | "md" | "lg";
 
   fullWidth?: boolean;
+
+  // rounded?: "sm" | "md" | "lg" | "full";
 
   className?: string;
 

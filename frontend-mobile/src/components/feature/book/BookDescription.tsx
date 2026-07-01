@@ -1,4 +1,4 @@
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
 import { View } from "react-native";
 
 type BookDescriptionProps = {
@@ -10,18 +10,16 @@ export default function BookDescription({
   description,
   notes,
 }: BookDescriptionProps) {
-  console.log("description:", description);
-  console.log("notes:", notes);
 
   return (
     <View className="mt-5">
-      <AppText className="text-2xl font-semibold mb-1">Description</AppText>
+      <AppText size="2xl" weight="semibold" className="mb-1">Description</AppText>
 
       <AppText className="leading-5">{description}</AppText>
 
       {notes && (
         <View className="mt-5">
-          <AppText className="text-xl font-semibold mb-1">Note</AppText>
+          <AppText size="xl" weight="semibold"  className="mb-1">Note</AppText>
 
           <AppText className="leading-5">{notes || "N/A"}</AppText>
         </View>

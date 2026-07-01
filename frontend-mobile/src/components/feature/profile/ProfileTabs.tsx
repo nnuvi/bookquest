@@ -3,8 +3,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TouchableOpacity, View } from "react-native";
 
-import AppText from "@/components/common/AppText";
-import {Colors} from "@/constants/Colors";
+import AppText from "@/components/ui/AppText";
+import { Colors } from "@/constants/Colors";
 
 type TabType = "list" | "borrowed" | "lent";
 
@@ -30,90 +30,77 @@ export default function ProfileTabs({
         <Ionicons
           name="list-outline"
           size={20}
-          color={
-            activeTab === "list"
-              ? Colors.selection
-              : Colors.background
-          }
+          color={activeTab === "list" ? Colors.selection : Colors.background}
         />
 
         <AppText
-          className={`mb-1 ${
-            activeTab === "list"
-              ? "font-bold text-selection"
-              : "text-background"
-          }`}
+          weight={activeTab === "list" ? "bold" : "regular"}
+          color={activeTab === "list" ? "selection" : "light"}
+          // className="mb-1"
         >
           List
         </AppText>
       </TouchableOpacity>
 
-      { currentUser && (<TouchableOpacity
-        className="px-3 items-center justify-center"
-        onPress={() => onChange?.("borrowed")}
-      >
-        <MaterialCommunityIcons
-          name="book-plus-multiple"
-          size={19}
-          color={
-            activeTab === "borrowed"
-              ? Colors.selection
-              : Colors.background
-          }
-        />
-
-        <AppText
-          className={`mb-1 ${
-            activeTab === "borrowed"
-              ? "font-bold text-selection"
-              : "text-background"
-          }`}
+      {currentUser && (
+        <TouchableOpacity
+          className="px-3 items-center justify-center"
+          onPress={() => onChange?.("borrowed")}
         >
-          Borrowed
-        </AppText>
-      </TouchableOpacity>
+          <MaterialCommunityIcons
+            name="book-plus-multiple"
+            size={19}
+            color={
+              activeTab === "borrowed" ? Colors.selection : Colors.background
+            }
+          />
+
+          <AppText
+            weight={activeTab === "borrowed" ? "bold" : "regular"}
+            color={activeTab === "borrowed" ? "selection" : "light"}
+            // className="mb-1"
+          >
+            Borrowed
+          </AppText>
+        </TouchableOpacity>
       )}
 
-      { currentUser && ( <TouchableOpacity
-        className="px-3 items-center justify-center"
-        onPress={() => onChange?.("lent")}
-      >
-        <MaterialCommunityIcons
-          name="book-minus-multiple"
-          size={19}
-          color={
-            activeTab === "lent"
-              ? Colors.selection
-              : Colors.background
-          }
-        />
-
-        <AppText
-          className={`mb-1 ${
-            activeTab === "lent"
-              ? "font-bold text-selection"
-              : "text-background"
-          }`}
+      {currentUser && (
+        <TouchableOpacity
+          className="px-3 items-center justify-center"
+          onPress={() => onChange?.("lent")}
         >
-          Lent
-        </AppText>
-      </TouchableOpacity>
+          <MaterialCommunityIcons
+            name="book-minus-multiple"
+            size={19}
+            color={activeTab === "lent" ? Colors.selection : Colors.background}
+          />
+
+          <AppText
+            weight={activeTab === "lent" ? "bold" : "regular"}
+            color={activeTab === "lent" ? "selection" : "light"}
+            // className="mb-1"
+          >
+            Lent
+          </AppText>
+        </TouchableOpacity>
       )}
 
-      { currentUser && ( <TouchableOpacity
-        className="px-3 items-center justify-center"
-        onPress={onAddPress}
-      >
-        <MaterialIcons
-          name="library-add"
-          size={19}
-          color={Colors.background}
-        />
+      {currentUser && (
+        <TouchableOpacity
+          className="px-3 items-center justify-center"
+          onPress={onAddPress}
+        >
+          <MaterialIcons
+            name="library-add"
+            size={19}
+            color={Colors.background}
+          />
 
-        <AppText className="text-background">
-          Add
-        </AppText>
-      </TouchableOpacity>
+          <AppText color="light">
+            Add
+          </AppText>
+        </TouchableOpacity>
       )}
     </View>
   );

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Image, RefreshControl, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
 import DropdownModal from "@/components/common/DropdownModal";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 // import { UserBook } from "@/types/book";
@@ -14,6 +14,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BookMetadata from "@/components/feature/book/BookMetadata";
 import BookDescription from "@/components/feature/book/BookDescription";
 import BookHeader from "@/components/feature/book/BookHeader";
+import BookDetailsSkeleton from "@/components/skeleton/BookDetailsSkeleton";
+import ErrorScreen from "@/components/feedback/ErrorScreen";
+import NotFoundScreen from "@/components/feedback/NotFoundScreen";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId: string }>();
@@ -25,77 +28,146 @@ export default function BookDetails() {
     data: book,
     refetch,
     isRefetching,
-    isLoading,
+    isPending,
+    isError,
   } = useBookDetails(bookId);
 
-  if (isLoading) return <Loading />;
+  // if (isPending) {
+  //   return (
+  //     <Screen>
+  //       <HeaderTitle
+  //         text="Book Information"
+  //         threeDotsVisible
+  //         // onPress={() => setModalVisible(true)}
+  //       />
+  //       <BookDetailsSkeleton />
+  //     </Screen>
+  //   );
+  // }
 
-  if (!book) {
-    return <AppText>Book not found.</AppText>;
-  }
+  // if (isError) {
+  //   return (
+  //     <Screen>
+  //       <HeaderTitle
+  //         text="Book Information"
+  //         threeDotsVisible
+  //         // onPress={() => setModalVisible(true)}
+  //       />
+  //       <ErrorScreen
+  //         title="Unable to load Book Information."
+  //         description="Please try again."
+  //         retryText="Retry"
+  //         onRetry={refetch}
+  //       />
+  //     </Screen>
+  //   );
+  // }
+
+  // if (!book) {
+  //   return (
+  //     <Screen>
+  //       <HeaderTitle
+  //         text="Book Information"
+  //         threeDotsVisible
+  //         // onPress={() => setModalVisible(true)}
+  //       />
+  //       <NotFoundScreen
+  //         title="Book Not Found."
+  //         description="We couldn't find this book."
+  //       />
+  //     </Screen>
+  //   );
+  // }
 
   const handleOptionActions = (option: string) => {
     console.log(option);
   };
 
+  // return (
+  //   <Screen>
+  //     {/* Header */}
+  //     <HeaderTitle
+  //       text="Book Information"
+  //       threeDotsVisible
+  //       onPress={() => setModalVisible(true)}
+  //     />
+
+  //     <DropdownModal
+  //       visible={modalVisible}
+  //       options={options}
+  //       onSelect={handleOptionActions}
+  //       onClose={() => setModalVisible(false)}
+  //     />
+
+  //     <Toast />
+  //   </Screen>
+
   return (
     <Screen>
-      {/* Header */}
       <HeaderTitle
         text="Book Information"
-        threeDotsVisible
+        threeDotsVisible={!isPending && !isError && !!book}
         onPress={() => setModalVisible(true)}
       />
 
-      <DropdownModal
-        visible={modalVisible}
-        options={options}
-        onSelect={handleOptionActions}
-        onClose={() => setModalVisible(false)}
-      />
-
-      {/* Body */}
-      <ScrollView
-        className="flex-1 px-4 py-4"
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-        }
-      >
-        {/* Top section */}
-        <BookHeader
-          title={book.title}
-          author={book.author}
-          coverImage={ book.coverImage}
+      {isPending ? (
+        <BookDetailsSkeleton />
+      ) : isError ? (
+        <ErrorScreen
+          title="Unable to load book"
+          description="Please try again."
+          retryText="Retry"
+          onRetry={refetch}
         />
-        {/* Mid Details */}
-        <BookMetadata
-          items={[
-            {
-              label: "Genre",
-              value:  book?.genres.join(", "),
-            },
-            {
-              label: "Pages",
-              value:  book?.pageCount,
-            },
-            {
-              label: "ISBN",
-              value:  book?.isbn,
-            },
-            {
-              label: "Publisher",
-              value:  book?.publisher,
-            },
-          ]}
+      ) : !book ? (
+        <NotFoundScreen
+          title="Book not found"
+          description="We couldn't find this book."
         />
+      ) : (
+        <>
+          {/* ScrollView */}
+          {/* Body */}
+          <ScrollView
+            className="flex-1 px-4 py-4"
+            refreshControl={
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            }
+          >
+            {/* Top section */}
+            <BookHeader
+              title={book.title}
+              author={book.author}
+              coverImage={book.coverImage}
+              // availability={book.a}
+            />
+            {/* Mid Details */}
+            <BookMetadata
+              items={[
+                {
+                  label: "Genre",
+                  value: book?.genres.join(", "),
+                },
+                {
+                  label: "Pages",
+                  value: book?.pageCount,
+                },
+                {
+                  label: "ISBN",
+                  value: book?.isbn,
+                },
+                {
+                  label: "Publisher",
+                  value: book?.publisher,
+                },
+              ]}
+            />
 
-        {/* Description */}
-        <BookDescription
-          description={ book?.description}
-        />
+            {/* Description */}
+            <BookDescription description={book?.description} />
 
-        {/* Borrowed by */}
-        {/* {book?.availability === "borrowed" && username && (
+            {/* Borrowed by */}
+            {/* {book?.availability === "borrowed" && username && (
           <View className="mt-5">
             <AppText className="text-base font-semibold text-primary">
               Borrowed By
@@ -106,9 +178,9 @@ export default function BookDetails() {
             </AppText>
           </View>
         )} */}
-      </ScrollView>
-
-      <Toast />
+          </ScrollView>
+        </>
+      )}
     </Screen>
   );
 }

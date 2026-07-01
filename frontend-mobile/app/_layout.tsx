@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
 import { useAuth } from "@/hooks/auth";
+import LoadingScreen from "@/components/feedback/LoadingScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +27,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return <PageLoadingIndicator />;
+    return <LoadingScreen />;
   }
 
   return (

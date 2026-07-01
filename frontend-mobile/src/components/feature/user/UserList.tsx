@@ -1,14 +1,17 @@
-import { FlatList } from "react-native";
+import { FlatList, StyleProp, ViewStyle } from "react-native";
 
 import UserCard from "./UserCard";
 import { User } from "@/types/user";
-import AppText from "@/components/common/AppText";
+import AppText from "@/components/ui/AppText";
+import { ReactElement } from "react";
 
 type UserListProps = {
   users: User[];
   refreshing?: boolean;
   onRefresh?: () => void;
   renderAction?: (user: User) => React.ReactNode;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  listEmptyComponent?: ReactElement;
 };
 
 export default function UserList({
@@ -16,6 +19,8 @@ export default function UserList({
   refreshing = false,
   onRefresh,
   renderAction,
+  contentContainerStyle,
+  listEmptyComponent,
 }: UserListProps) {
   return (
     <FlatList
@@ -26,8 +31,14 @@ export default function UserList({
       )}
       refreshing={refreshing}
       onRefresh={onRefresh}
+      contentContainerStyle={{
+        paddingBottom: 20,
+        ...contentContainerStyle,
+      }}
       ListEmptyComponent={
-        <AppText className="text-center mt-5">No user found.</AppText>
+        listEmptyComponent ?? (
+          <AppText className="text-center mt-5">No users found.</AppText>
+        )
       }
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}

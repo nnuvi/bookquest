@@ -1,22 +1,26 @@
 import { useGlobalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Image, RefreshControl, ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 
-import AppText from "@/components/common/AppText";
+import Screen from "@/components/common/Screen";
 import DropdownModal from "@/components/common/DropdownModal";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
-// import { UserBook } from "@/types/book";
-import Loading from "@/components/common/Loading";
-import Screen from "@/components/common/Screen";
-import { useBookDetails, useUserBookDetails } from "@/hooks/books";
-import { SafeAreaView } from "react-native-safe-area-context";
-import BookMetadata from "@/components/feature/book/BookMetadata";
+
 import BookDescription from "@/components/feature/book/BookDescription";
 import BookHeader from "@/components/feature/book/BookHeader";
+import BookMetadata from "@/components/feature/book/BookMetadata";
+
+import BookDetailsSkeleton from "@/components/skeleton/BookDetailsSkeleton";
+
+import ErrorScreen from "@/components/feedback/ErrorScreen";
+import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+
+import { useUserBookDetails } from "@/hooks/books";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId: string }>();
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const options = ["Option 1", "Option 2", "Option 3"];
@@ -25,86 +29,100 @@ export default function BookDetails() {
     data: userBook,
     refetch,
     isRefetching,
-    isLoading,
+    isPending,
+    isError,
   } = useUserBookDetails(bookId);
-
-  if (isLoading) return <Loading />;
-
-  if (!userBook) {
-    return <AppText>Book not found.</AppText>;
-  }
 
   const handleOptionActions = (option: string) => {
     console.log(option);
+    setModalVisible(false);
   };
 
   return (
     <Screen>
-      {/* Header */}
       <HeaderTitle
         text="Book Information"
-        threeDotsVisible
+        threeDotsVisible={!!userBook}
         onPress={() => setModalVisible(true)}
       />
 
-      <DropdownModal
-        visible={modalVisible}
-        options={options}
-        onSelect={handleOptionActions}
-        onClose={() => setModalVisible(false)}
-      />
+      {userBook && (
+        <DropdownModal
+          visible={modalVisible}
+          options={options}
+          onSelect={handleOptionActions}
+          onClose={() => setModalVisible(false)}
+        />
+      )}
 
-      {/* Body */}
-      <ScrollView
-        className="flex-1 px-4 py-4"
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
-        }
-      >
-        {/* Top section */}
-        <BookHeader
-          title={userBook.book.title}
-          author={userBook.book.author}
-          coverImage={userBook.book.coverImage}
+      {isPending ? (
+        <BookDetailsSkeleton />
+      ) : isError ? (
+        <ErrorScreen
+          title="Unable to load book"
+          description="Please try again."
+          retryText="Retry"
+          onRetry={refetch}
         />
-        {/* Mid Details */}
-        <BookMetadata
-          items={[
-            {
-              label: "Genre",
-              value: userBook?.book?.genres.join(", "),
-            },
-            {
-              label: "Pages",
-              value: userBook?.book?.pageCount,
-            },
-            {
-              label: "Condition",
-              value: userBook?.condition,
-            },
-            {
-              label: "ISBN",
-              value: userBook?.book?.isbn,
-            },
-            {
-              label: "Publisher",
-              value: userBook?.book?.publisher,
-            },
-            {
-              label: "Added",
-              value: userBook?.addedAt
-                ? new Date(userBook.addedAt).toLocaleDateString()
-                : undefined,
-            },
-          ]}
+      ) : !userBook ? (
+        <NotFoundScreen
+          title="Book not found"
+          description="We couldn't find this book."
         />
+      ) : (
+        <ScrollView
+          className="flex-1 px-4 py-4"
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
+            />
+          }
+        >
+          <BookHeader
+            title={userBook.book.title}
+            author={userBook.book.author}
+            coverImage={userBook.book.coverImage}
+            availability={userBook.availability}
+          />
 
-        {/* Description */}
-        <BookDescription
-          description={userBook.book.description}
-          notes={userBook.notes}
-        />
-      </ScrollView>
+          <BookMetadata
+            items={[
+              {
+                label: "Genre",
+                value: userBook.book.genres.join(", "),
+              },
+              {
+                label: "Pages",
+                value: userBook.book.pageCount,
+              },
+              {
+                label: "Condition",
+                value: userBook.condition,
+              },
+              {
+                label: "ISBN",
+                value: userBook.book.isbn,
+              },
+              {
+                label: "Publisher",
+                value: userBook.book.publisher,
+              },
+              {
+                label: "Added",
+                value: new Date(
+                  userBook.addedAt
+                ).toLocaleDateString(),
+              },
+            ]}
+          />
+
+          <BookDescription
+            description={userBook.book.description}
+            notes={userBook.notes}
+          />
+        </ScrollView>
+      )}
 
       <Toast />
     </Screen>

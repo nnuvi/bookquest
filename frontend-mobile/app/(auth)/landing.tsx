@@ -6,13 +6,12 @@ import StatusBar from "@/components/common/StatusBar";
 import { Colors } from "@/constants/Colors";
 
 export default function Landing() {
-
   const router = useRouter();
 
   return (
     <View className="flex-1 justify-center items-center bg-background px-6">
-            <StatusBar />
-      <LogoText variant='dark'/>
+      <StatusBar />
+      <LogoText variant="dark" />
 
       <Text className="text-center text-midgray mb-10">
         Manage, borrow, and track your books easily.
@@ -33,4 +32,4 @@ export default function Landing() {
       </TouchableOpacity>
     </View>
   );
-} 
+}
