@@ -8,10 +8,8 @@ type Props = {
 
 export default function Screen({ children }: Props) {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View className="flex-1 bg-background">
-        {children}
-      </View>
+    <SafeAreaView style={{ flex: 1, width: "100%" }}>
+      <View className="flex-1 w-full bg-background">{children}</View>
     </SafeAreaView>
   );
 }

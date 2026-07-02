@@ -18,9 +18,18 @@ import { BookCardItem } from "@/types/book";
 
 import BookPlaceholder from "@assets/images/placeholder-book.png";
 import AppText from "@/components/ui/AppText";
+import BookCover from "@/components/ui/BookCover";
+import { useResponsive } from "@/hooks/useResponsive";
+import { LOG_SCOPE, Logger } from "@/lib/logger";
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
+  const { bookCardWidth, isDesktop, isTablet, numColumns } = useResponsive();
+
+  Logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
+  Logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
+  Logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
+  Logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
 
   const {
     data: books = [],
@@ -48,20 +57,20 @@ export default function HomeScreen() {
 
   const renderBookItem = ({ item }: { item: BookCardItem }) => (
     <TouchableOpacity
-      className="w-[33%] h-48 p-3 items-center"
+      style={{ width: bookCardWidth }}
+      className={`items-center px-2`}
       onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
     >
-      <Image
+      <BookCover
         source={item.coverImage ? { uri: item.coverImage } : BookPlaceholder}
-        className="w-full h-35 mb-2 rounded bg-gray-200"
       />
 
       <AppText
         size="sm"
         weight="semibold"
         center
-        // className="text-sm font-semibold text-text-light text-center"
         numberOfLines={2}
+        className="mt-2"
       >
         {item.title}
       </AppText>
@@ -104,16 +113,22 @@ export default function HomeScreen() {
         />
       ) : (
         <FlatList
+          key={numColumns}
           data={books}
-          numColumns={3}
+          style={{
+            flex: 1,
+            width: "100%",
+          }}
+          numColumns={numColumns}
           keyExtractor={(item) => item.id}
           renderItem={renderBookItem}
           refreshing={isRefetching}
           onRefresh={refetch}
-          contentContainerClassName="p-4"
+          contentContainerClassName="p-4 pb-70"
           columnWrapperStyle={{
-            justifyContent: "space-between",
-            marginBottom: 4,
+            justifyContent: "space-between", // Change to flex-start to prevent strange alignment gaps
+            gap: 8, // Adds even grid spacing between cards
+            marginBottom: 10,
           }}
           ListEmptyComponent={
             <EmptyState

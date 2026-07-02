@@ -5,6 +5,7 @@ import { User } from "@/types/user";
 import { router } from "expo-router";
 
 import userPlaceHolder from "@assets/images/placeholder-user.png";
+import Avatar from "@/components/ui/Avatar";
 
 type UserCardProps = {
   user: User;
@@ -20,11 +21,11 @@ export default function UserCard({ user, action, onPress }: UserCardProps) {
       }}
       className="flex-row items-center px-4 py-3"
     >
-      <Image
+      <Avatar
         source={
           user.profileImage ? { uri: user.profileImage } : userPlaceHolder
         }
-        className="w-14 h-14 rounded-full bg-gray-300"
+        size="xs"
       />
 
       <View className="flex-1 ml-3">

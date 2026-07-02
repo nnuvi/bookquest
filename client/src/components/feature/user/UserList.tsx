@@ -25,6 +25,7 @@ export default function UserList({
   return (
     <FlatList
       data={users}
+      style={{ flex: 1 }}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
         <UserCard user={item} action={renderAction?.(item)} />

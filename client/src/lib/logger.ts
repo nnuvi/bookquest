@@ -78,7 +78,7 @@ const output = (
     logger(formatData(data));
   }
 
-  logger("────────────────────────────────────────"); // blank line
+  // logger("────────────────────────────────────────"); // blank line
 };
 
 export const Logger = {

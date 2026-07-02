@@ -5,6 +5,7 @@ import { calculateDaysSinceAdded } from "@/lib/misc";
 import { BookCardItem } from "@/types/book";
 
 import BookPlaceholder from "@assets/images/placeholder-book.png";
+import BookCover from "@/components/ui/BookCover";
 
 type BookCardProps = {
   item: BookCardItem;
@@ -16,16 +17,14 @@ type BookCardProps = {
 export default function BookCard({ item, onPress }: BookCardProps) {
   return (
     <View className="flex-1">
-      <View className="flex-row items-center px-6 py-3">
-        <View className="w-13.5 h-19.5 rounded-md mr-3">
-          <Image
-            source={
-              item?.coverImage ? { uri: item?.coverImage } : BookPlaceholder
-            }
-            className="w-full h-full rounded-md"
-            resizeMode="cover"
-          />
-        </View>
+      <View className="flex-row items-center px-4 py-3">
+        <BookCover
+          source={
+            item?.coverImage ? { uri: item?.coverImage } : BookPlaceholder
+          }
+          size="xs"
+          className="mr-4"
+        />
 
         <View className="flex-1 h-full">
           <TouchableOpacity className="gap-1" onPress={() => onPress?.(item)}>
@@ -34,18 +33,19 @@ export default function BookCard({ item, onPress }: BookCardProps) {
                 weight="semibold"
                 size="lg"
                 numberOfLines={1}
+                className="mt-1"
                 ellipsizeMode="tail"
               >
                 {item?.title ?? "N/A"}
               </AppText>
 
-              <AppText size="md" numberOfLines={1} ellipsizeMode="tail">
+              <AppText size="md" className="mt-0.5" numberOfLines={1} ellipsizeMode="tail">
                 {item?.author.join(",") ?? "N/A"}
               </AppText>
             </View>
 
             {item?.type === "userBook" ? (
-              <AppText size="sm" className="mt-1" numberOfLines={1}>
+              <AppText size="sm" className="mt-2" numberOfLines={1}>
                 Added {calculateDaysSinceAdded(item.addedAt)}
               </AppText>
             ) : item?.type === "lent" || item?.type === "borrowed" ? (

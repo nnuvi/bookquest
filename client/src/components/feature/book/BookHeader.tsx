@@ -1,6 +1,7 @@
 import AppText from "@/components/ui/AppText";
 import { View, Image } from "react-native";
 import BookPlaceholder from "@assets/images/placeholder-book.png";
+import BookCover from "@/components/ui/BookCover";
 
 type BookHeaderProps = {
   title?: string;
@@ -17,17 +18,20 @@ export default function BookHeader({
 }: BookHeaderProps) {
   return (
     <View className="flex-row">
-      <View className="w-28 h-40 mr-4">
-        <Image
-          source={coverImage ? { uri: coverImage } : BookPlaceholder}
-          className="w-full h-full rounded-lg bg-gray-200"
-          resizeMode="cover"
-        />
-      </View>
+      <BookCover
+        source={coverImage ? { uri: coverImage } : BookPlaceholder}
+        size="lg"
+        className="mr-4"
+      />
 
       <View className="flex-1 justify-between py-2">
         <View>
-          <AppText size="2xl" weight="bold"  className="text-2xl font-bold" numberOfLines={2}>
+          <AppText
+            size="2xl"
+            weight="bold"
+            className="text-2xl font-bold"
+            numberOfLines={2}
+          >
             {title ?? "N/A"}
           </AppText>
 

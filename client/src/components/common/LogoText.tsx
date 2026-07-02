@@ -20,10 +20,10 @@ export default function Logo({
     <View className="p-2 pb-2 items-center">
       <Image
         source={source}
+        resizeMode="contain"
         style={{
           width,
           height: width * (360 / 1920), // keeps your exact ratio
-          resizeMode: "contain",
         }}
       />
     </View>

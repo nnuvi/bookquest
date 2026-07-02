@@ -27,6 +27,7 @@ export default function BookList({
   return (
     <FlatList
       data={data}
+      style={{ flex: 1 }}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => <BookCard item={item} onPress={onItemPress} />}
       refreshing={refreshing}
@@ -43,7 +44,6 @@ export default function BookList({
           <AppText className="text-center mt-5">No books available.</AppText>
         )
       }
-      style={{ flex: 1 }}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     />
