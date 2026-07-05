@@ -1,3 +1,4 @@
+import { BorrowRequestStatus } from "./borrow";
 import { User } from "./user";
 
 export type Book = {
@@ -55,12 +56,29 @@ export type BookCardItem = {
   author: string[];
   coverImage: string;
 
-  type: "book" | "userBook" | "borrowed" | "lent";
+  type?: bookType;
 
   availability?: availability;
 
   addedAt?: Date;
   borrowDate?: Date;
+
+  borrowRequestId?: string;
+  borrowRequestStatus?: BorrowRequestStatus;
+
+  requester?: {
+    id: string;
+    fullName: string;
+    username: string;
+    profileImage?: string;
+  };
+
+  owner?: {
+    id: string;
+    fullName: string;
+    username: string;
+    profileImage?: string;
+  };
 };
 // export type BookCardItem = {
 //   _id: string;

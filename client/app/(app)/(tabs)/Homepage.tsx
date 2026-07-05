@@ -20,16 +20,16 @@ import BookPlaceholder from "@assets/images/placeholder-book.png";
 import AppText from "@/components/ui/AppText";
 import BookCover from "@/components/ui/BookCover";
 import { useResponsive } from "@/hooks/useResponsive";
-import { LOG_SCOPE, Logger } from "@/lib/logger";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const { bookCardWidth, isDesktop, isTablet, numColumns } = useResponsive();
 
-  Logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
-  Logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
-  Logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
-  Logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
+  logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
+  logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
+  logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
+  logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
 
   const {
     data: books = [],

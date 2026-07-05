@@ -67,7 +67,7 @@ const output = (
       : level === "WARN"
         ? console.warn
         : level === "DEBUG"
-          ? console.debug
+          ? console.log
           : level === "INFO"
             ? console.info
             : console.log;
@@ -81,7 +81,7 @@ const output = (
   // logger("────────────────────────────────────────"); // blank line
 };
 
-export const Logger = {
+export const logger = {
   log(scope: string, title: string, data?: unknown) {
     output(scope, "LOG", title, data);
   },

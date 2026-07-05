@@ -6,15 +6,18 @@ import { BookCardItem } from "@/types/book";
 
 import BookPlaceholder from "@assets/images/placeholder-book.png";
 import BookCover from "@/components/ui/BookCover";
+import { ReactNode } from "react";
+import { User } from "@/types/user";
 
 type BookCardProps = {
   item: BookCardItem;
   onPress?: (item: BookCardItem) => void;
   returnBook?: (id: string) => void;
   daysSinceAdded?: (date: string) => string;
+  action?: ReactNode;
 };
 
-export default function BookCard({ item, onPress }: BookCardProps) {
+export default function BookCard({ item, onPress, action }: BookCardProps) {
   return (
     <View className="flex-1">
       <View className="flex-row items-center px-4 py-3">
@@ -39,7 +42,12 @@ export default function BookCard({ item, onPress }: BookCardProps) {
                 {item?.title ?? "N/A"}
               </AppText>
 
-              <AppText size="md" className="mt-0.5" numberOfLines={1} ellipsizeMode="tail">
+              <AppText
+                size="base"
+                className="mt-0.5"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {item?.author.join(",") ?? "N/A"}
               </AppText>
             </View>
@@ -53,30 +61,16 @@ export default function BookCard({ item, onPress }: BookCardProps) {
                 {item?.type === "lent" ? "Lent" : "Borrowed"}{" "}
                 {calculateDaysSinceAdded(item?.borrowDate)}
               </AppText>
+            ) : item?.requester ? (
+              <AppText size="sm" className="mb-2">
+                Requested by{" "}
+                <AppText weight="semibold">{item?.requester?.fullName}</AppText>
+              </AppText>
             ) : null}
           </TouchableOpacity>
         </View>
-
-        {/* {item.bookType !== "myBook" &&
-        (item.bookType === "lent" ||
-        item.bookType === "lentBook" ? (
-          <TouchableOpacity className="bg-primary px-3 py-2 rounded-lg">
-            <AppText className="text-background font-bold">
-              Ask Back
-            </AppText>
-          </TouchableOpacity>
-        ) : item.bookType === "borrow" ||
-          item.bookType === "borrowedBook" ? (
-          <TouchableOpacity
-            className="bg-primary px-3 py-2 rounded-lg"
-            onPress={() => returnBook(item._id)}
-          >
-            <AppText className="text-background font-bold">
-              Return
-            </AppText>
-          </TouchableOpacity>
-        ) : null)} */}
       </View>
+      {action}
     </View>
   );
 }

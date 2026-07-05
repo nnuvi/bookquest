@@ -13,3 +13,33 @@ export type User = {
   profileImage: string;
   bio: string;
 };
+
+export type FriendRequestStatus =
+  | "pending"
+  | "accepted"
+  | "declined";
+
+export type FriendRequestAction =
+  | "accepted"
+  | "declined";
+
+export interface FriendRequest {
+  _id: string;
+
+  from: User;
+  to: User;
+
+  status: FriendRequestStatus;
+
+  sentTime: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type FriendStatus =
+  | "self"
+  | "friend"
+  | "request_sent"
+  | "request_received"
+  | "none";

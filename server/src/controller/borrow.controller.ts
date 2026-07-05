@@ -1,3 +1,29 @@
+import { Request, Response } from "express";
+
+import { HTTP_STATUS } from "../constant/httpStatus.js";
+import { asyncHandler } from "../lib/asyncHandler.js";
+import { FriendRequestAction } from "../model/FriendRequest.model.js";
+import * as friendService from "../service/friend.service.js";
+import * as borrowService from "../service/borrow.service.js";
+
+export const getBorrowRequests = asyncHandler(
+  async (req: Request, res: Response) => {
+    const data = await borrowService.getBorrowRequests(req.user._id.toString());
+
+    res.status(HTTP_STATUS.OK).json(data);
+  },
+);
+
+export const getBorrowSentRequests = asyncHandler(
+  async (req: Request, res: Response) => {
+    const data = await borrowService.getBorrowSentRequests(
+      req.user._id.toString(),
+    );
+
+    res.status(HTTP_STATUS.OK).json(data);
+  },
+);
+
 // import { Request, Response } from "express";
 // import Books, { BookSchemaType } from "../model/Book.model.js";
 // import BookRequest from "../model/bookRequestModel.js";

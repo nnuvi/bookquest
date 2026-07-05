@@ -2,6 +2,16 @@ import mongoose, { InferSchemaType, model } from "mongoose";
 
 const { Schema } = mongoose;
 
+export const BorrowRequestStatusEnum = [
+  "pending",
+  "accepted",
+  "declined",
+  "cancelled",
+  "expired",
+] as const;
+
+export type BorrowRequestStatus = (typeof BorrowRequestStatusEnum)[number];
+
 const BorrowRequestSchema = new Schema(
   {
     requester: {
@@ -27,7 +37,7 @@ const BorrowRequestSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "approved", "declined", "cancelled", "expired"],
+      enum: BorrowRequestStatusEnum,
       default: "pending",
       index: true,
     },
@@ -45,13 +55,13 @@ const BorrowRequestSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // prevent duplicate active requests
 BorrowRequestSchema.index(
   { requester: 1, userBook: 1, status: 1 },
-  { unique: true }
+  { unique: true },
 );
 
 export type BorrowRequestSchemaType = InferSchemaType<
@@ -60,7 +70,7 @@ export type BorrowRequestSchemaType = InferSchemaType<
 
 const BorrowRequest = model<BorrowRequestSchemaType>(
   "BorrowRequest",
-  BorrowRequestSchema
+  BorrowRequestSchema,
 );
 
 export default BorrowRequest;

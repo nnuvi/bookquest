@@ -14,11 +14,7 @@ import NotFoundScreen from "@/components/feedback/NotFoundScreen";
 import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 
-import {
-  useBorrowedBooks,
-  useLentBooks,
-  useMyBooks,
-} from "@/hooks/books";
+import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
 import { useMyProfile } from "@/hooks/user";
 
 type TabType = "list" | "borrowed" | "lent";
@@ -71,16 +67,14 @@ export default function ProfileScreen() {
     isLentBooksRefetching;
 
   const booksPending =
-    isUserBooksPending ||
-    isBorrowedBooksPending ||
-    isLentBooksPending;
+    isUserBooksPending || isBorrowedBooksPending || isLentBooksPending;
 
   const currentData =
     activeTab === "list"
       ? userBooks
       : activeTab === "borrowed"
-      ? borrowedBooks
-      : lentBooks;
+        ? borrowedBooks
+        : lentBooks;
 
   const emptyState = {
     list: {
@@ -115,15 +109,9 @@ export default function ProfileScreen() {
         />
       ) : (
         <>
-          <ProfileHeader
-            user={user}
-            bookNo={userBooks.length}
-          />
+          <ProfileHeader user={user} bookNo={userBooks.length} />
 
-          <ProfileTabs
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+          <ProfileTabs activeTab={activeTab} onChange={setActiveTab} />
 
           {booksPending ? (
             <BookCardSkeleton />
@@ -131,9 +119,7 @@ export default function ProfileScreen() {
             <BookList
               data={currentData}
               onItemPress={(item) =>
-                router.push(
-                  `/books/UserBookDetails/${item.userBookId}`
-                )
+                router.push(`/books/UserBookDetails/${item.userBookId}`)
               }
               refreshing={refreshing}
               onRefresh={onRefresh}

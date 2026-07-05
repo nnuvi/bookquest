@@ -11,8 +11,9 @@ import authRoutes from "./routes/auth.route.js";
 import bookRoutes from "./routes/book.route.js";
 import notificationRoutes from "./routes/notification.route.js";
 import recordRoutes from "./routes/record.route.js";
-// import requestRoutes from "./routes/request.route.js";
 import userRoutes from "./routes/user.route.js";
+import friendRoutes from "./routes/friend.route.js";
+import borrowRoutes from "./routes/borrow.route.js";
 
 import env from "./config/env.js";
 
@@ -63,10 +64,11 @@ app.get("/health", (_, res) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/friend", friendRoutes);
+app.use("/api/borrow", borrowRoutes);
 app.use("/api/book", bookRoutes);
 app.use("/api/record", recordRoutes);
-// app.use("/api/request", requestRoutes);
-app.use("/api/notifications", notificationRoutes);
+app.use("/api/notification", notificationRoutes);
 
 // Error Middlewares
 

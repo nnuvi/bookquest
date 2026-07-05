@@ -5,55 +5,49 @@
 @import "nativewind/theme";
 
 @theme {
-  /* Primary */
-  --color-primary: #1B3C53;
+  /* Brand */
 
-  /* Secondary */
-  --color-secondary: #9BA1A6;
-  --color-secondary-dark: #BFC5C8;
+  --color-primary: #1b3c53;
+  --color-primary-light: #456882;
 
-  /* Background */
-  --color-background: #FDF6ED;
+  /* Background / Surface */
+
+  --color-background: #fdf6ed;
   --color-background-dark: #121212;
 
-  /* Text Input */
-  --color-textinput: #F1F1F1;
-  --color-textinput-dark: #1E1E1E;
-
-  /* Card Background */
-  --color-card-bg: #F6F6F6;
-
-  /* Button */
-  --color-button: #456882;
-  --color-button-dark: #2E86C1;
-
-  /* Selection */
-  --color-selection: #CFECF3;
-  --color-selection-dark: #1F3A5F;
+  --color-surface: #f6f6f6;
+  --color-input: #f1f1f1;
 
   /* Text */
-  --color-text-light: #333333;
-  --color-text-dark: #F5F5F5;
 
-  /* Mid Gray */
-  --color-midgray: #666666;
-  --color-midgray-dark: #A0A0A0;
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-text-inverse: #f5f5f5;
 
-  /* Common Colors */
-  --color-yellow: #f1c40f;
-  --color-red: #ef0827;
-  --color-green: #2ecc71;
-  --color-gray: #cccccc;
+  /* Border / Divider */
 
-  /* Choco */
-  --color-choco: #433530;
-  --color-choco-dark: #7B5E57;
+  --color-border: #d8d8d8;
+  --color-border-dark: #444444;
 
-  /* Savoy */
-  --color-savoy: #6A4E37;
-  --color-savoy-dark: #A67C52;
+  /* Selection */
 
-  /* Blue */
-  --color-blue: #0047AB;
-  --color-blue-dark: #4A90E2;
+  --color-selection: #cfecf3;
+  --color-selection-dark: #1f3a5f;
+
+  /* Semantic */
+
+  --color-success: #3e6b61;
+  --color-warning: #c48a3a;
+  --color-danger: #b45b5b;
+  --color-info: #456882;
+
+  /* Neutral action */
+
+  --color-neutral: #e7e1d7;
+  --color-neutral-dark: #7a869a;
+  /* --color-neutral-text: #433530; */
+
+  /* Accent */
+
+  --color-accent: #6a4e37;
 }

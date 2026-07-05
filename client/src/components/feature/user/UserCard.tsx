@@ -11,9 +11,24 @@ type UserCardProps = {
   user: User;
   action?: React.ReactNode;
   onPress?: () => void;
+  primaryButton?: {
+    title: string;
+    onPress: () => void;
+  };
+
+  secondaryButton?: {
+    title: string;
+    onPress: () => void;
+  };
 };
 
-export default function UserCard({ user, action, onPress }: UserCardProps) {
+export default function UserCard({
+  user,
+  action,
+  onPress,
+  primaryButton,
+  secondaryButton,
+}: UserCardProps) {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -33,7 +48,7 @@ export default function UserCard({ user, action, onPress }: UserCardProps) {
           {user.fullName}
         </AppText>
 
-        <AppText size="md">@{user.username}</AppText>
+        <AppText size="base">@{user.username}</AppText>
       </View>
 
       {action}

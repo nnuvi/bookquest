@@ -7,3 +7,10 @@ export interface ReqUser {
   username: string;
   email: string;
 }
+
+export type FriendStatus =
+  | "self"
+  | "friend"
+  | "request_sent"
+  | "request_received"
+  | "none";

@@ -96,10 +96,10 @@ export const ProfileHeader = ({
           </View>
           {/* Edit Button */}
           {currentUser && (
-            <View className="justify-end pb-2 px-2">
+            <View className="justify-end pb-2 px-6">
               <Button
                 title={"Edit"}
-                size="sm"
+                size="base"
                 onPress={() => router.push("/profile/EditProfile")}
               />
             </View>

@@ -9,6 +9,19 @@ import connectMongoDB from "./connectMongoDB.js";
 import bcrypt from "bcryptjs";
 
 import dotenv from "dotenv";
+import FriendRequest from "../model/FriendRequest.model.js";
+import Notification, {
+  NotificationEvents,
+} from "../model/Notification.model.js";
+import {
+  connectFriends,
+  createFriendRequests,
+  createFriendRequestsIds,
+  createUsers,
+  getUserIdsByUsername,
+} from "./user.seed.js";
+import { createBooks, createBorrowRequests } from "./book.seed.js";
+import { createNotifications } from "./notification.seed.js";
 dotenv.config();
 
 const seed = async () => {
@@ -20,21 +33,39 @@ const seed = async () => {
 
     console.log("Start...");
 
-    const users = [
-      "6a3ab7ceb34b44bf27af2a27", // neve
-      "6717d21ce19ee353a8302cd3", // nuvi
-      "670fd9a1ec6b18e700a6f1f2",
-      "6728e3488dd68787b583316f",
-      "67189ad51b9ad794b47e866f",
-    ];
+    // Code
+    const user_1 = await User.findOne({ username: "neve" });
+    const user_2 = await User.findOne({ username: "nuvi11" });
 
-    for (const userId of users) {
-      await User.findByIdAndUpdate(userId, {
-        $addToSet: {
-          friends: { $each: users.filter((id) => id !== userId) },
-        },
-      });
+    if (!user_1 || !user_2) {
+      throw new Error("Seed users not found.");
     }
+
+    const user_1_id = user_1._id.toString();
+    const user_2_id = user_2._id.toString();
+
+    // const users = await createUsers();
+
+    // await connectFriends(users, user_1, user_2);
+
+    // await createBooks(users);
+
+    // await createFriendRequests(users, user_1, user_2);
+
+    // await createBorrowRequests(users, user_1, user_2);
+
+    // await createNotifications(users, user_1, user_2);
+
+    const ids = await getUserIdsByUsername([
+      "sara",
+      "sophia",
+      "meii",
+      "dazai",
+      "kate",
+      "senku",
+    ]);
+
+    await createFriendRequestsIds(ids, user_1_id, user_2_id);
 
     console.log("Seeding completed!");
 
@@ -46,7 +77,3 @@ const seed = async () => {
 };
 
 seed();
-
-
-
-

@@ -1,9 +1,78 @@
-// import { Request, Response } from "express";
-// import Books, { BookSchemaType } from "../model/Book.model.js";
-// import BookRequest from "../model/bookRequestModel.js";
-// import BorrowBooks from "../model/borrowLendModel.js";
-// import Notification from "../model/notificationModel.js";
-// import User from "../model/user.model.js";
+import { Request, Response } from "express";
+
+import { HTTP_STATUS } from "../constant/httpStatus.js";
+import { asyncHandler } from "../lib/asyncHandler.js";
+import { FriendRequestAction } from "../model/FriendRequest.model.js";
+import * as friendService from "../service/friend.service.js";
+
+export const getFriendStatus = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { targetUserId } = req.params;
+
+    const status = await friendService.getFriendStatus(
+      req.user._id.toString(),
+      targetUserId!,
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data: status,
+    });
+  },
+);
+
+export const getFriendRequests = asyncHandler(
+  async (req: Request, res: Response) => {
+    const data = await friendService.getFriendRequests(req.user._id.toString());
+
+    res.status(HTTP_STATUS.OK).json(data);
+  },
+);
+
+export const sendFriendRequest = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { receiverId } = req.params;
+
+    const data = await friendService.sendFriendRequest(
+      req.user._id.toString(),
+      receiverId!,
+      req.user.fullName,
+    );
+
+    res.status(HTTP_STATUS.CREATED).json(data);
+  },
+);
+
+export const respondFriendRequest = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { requestId } = req.params;
+    const { action } = req.body as {
+      action: FriendRequestAction;
+    };
+
+    const data = await friendService.respondFriendRequest(
+      req.user._id.toString(),
+      requestId!,
+      action,
+      req.user.fullName,
+    );
+
+    res.status(HTTP_STATUS.OK).json(data);
+  },
+);
+
+export const removeFriend = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { friendId } = req.params;
+
+    const data = await friendService.removeFriend(
+      req.user._id.toString(),
+      friendId!,
+    );
+
+    res.status(HTTP_STATUS.OK).json(data);
+  },
+);
 
 // export const borrowBookRequest = async (req: Request, res: Response) => {
 //   const userId = req.user._id.toString();
@@ -44,7 +113,7 @@
 //   const notification = new Notification({
 //     from: user._id,
 //     to: profileUser._id,
-//     message: `<b>${user.fullName}</b> Requested to Borrow the book ${book.title} 
+//     message: `<b>${user.fullName}</b> Requested to Borrow the book ${book.title}
 //                          by ${book.author} from you`,
 //     type: "request",
 //     book: bookId,
@@ -99,7 +168,7 @@
 //       const notificationToRequester = new Notification({
 //         from: user._id,
 //         to: requestedUser._id, //requester
-//         message: `Your request to borrow the book ${book.title} from <b>${user.fullName}</b> 
+//         message: `Your request to borrow the book ${book.title} from <b>${user.fullName}</b>
 //                                    has been declined `,
 //         bookId: bookId,
 //         type: "action",
@@ -154,7 +223,7 @@
 //       type: "action",
 //     });
 //     await notificationToRequester.save();
-//     notification.message = `Your declined the request from <b>${user.fullName}</b> to borrow 
+//     notification.message = `Your declined the request from <b>${user.fullName}</b> to borrow
 //                                        the book ${book.title}  by ${book.author}`;
 //     notification.type = "action";
 //     await notification.save();
@@ -210,7 +279,7 @@
 //   const notification = new Notification({
 //     from: user._id,
 //     to: bookOwner._id,
-//     message: `<b>${user.fullName}</b> Requested to Return the book ${book.title} 
+//     message: `<b>${user.fullName}</b> Requested to Return the book ${book.title}
 //                          by ${book.author} to you`,
 //     type: "request",
 //     book: bookId,

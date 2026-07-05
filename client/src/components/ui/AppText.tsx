@@ -1,6 +1,6 @@
 import { Text, TextProps } from "react-native";
 
-type AppTextProps = TextProps & {
+export type AppTextProps = TextProps & {
   color?:
     | "default"
     | "light"
@@ -28,8 +28,8 @@ type AppTextProps = TextProps & {
 };
 
 const colorStyles = {
-  default: "text-text-light",
-  light: "text-background",
+  default: "text-text",
+  light: "text-text-inverse",
   primary: "text-primary",
   secondary: "text-secondary",
   selection: "text-selection",

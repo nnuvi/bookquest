@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../model/user.model.js";
 import ApiError from "../lib/apiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
-import { Authtoken } from "../types/auth.js";
+import { Authtoken } from "../types/user.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 
 export const protectRoute = asyncHandler(
@@ -12,16 +12,16 @@ export const protectRoute = asyncHandler(
     const token = req.cookies?.jwt;
 
     if (!token) {
-      throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "Authentication required. No token provided.");
+      throw new ApiError(
+        HTTP_STATUS.UNAUTHORIZED,
+        "Authentication required. No token provided.",
+      );
     }
 
     let decoded: Authtoken;
 
     try {
-      decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET!
-      ) as Authtoken;
+      decoded = jwt.verify(token, process.env.JWT_SECRET!) as Authtoken;
     } catch {
       throw new ApiError(HTTP_STATUS.UNAUTHORIZED, "Invalid or expired token.");
     }
@@ -43,5 +43,5 @@ export const protectRoute = asyncHandler(
     };
 
     next();
-  }
+  },
 );

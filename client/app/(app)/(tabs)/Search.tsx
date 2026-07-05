@@ -18,8 +18,9 @@ import BookCard from "@/components/feature/book/BookCard";
 import UserCard from "@/components/feature/user/UserCard";
 import { useSearchBooks } from "@/hooks/books";
 import { useSearchUsers } from "@/hooks/user";
-import { LOG_SCOPE, Logger } from "@/lib/logger";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 import { useQueryClient } from "@tanstack/react-query";
+import FriendAction from "@/components/feature/user/FriendAction";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -31,7 +32,7 @@ export default function Search() {
     const timeout = setTimeout(() => {
       if (query.length >= 2 || query.length === 0) {
         setSearch(query);
-        Logger.info(LOG_SCOPE.query, "Search query:", query);
+        logger.info(LOG_SCOPE.query, "Search query:", query);
       }
     }, 400);
 
@@ -169,7 +170,13 @@ export default function Search() {
             }
           />
         ) : (
-          users.map((user) => <UserCard key={user._id} user={user} />)
+          users.map((user) => (
+            <UserCard
+              key={user._id}
+              user={user}
+              action={<FriendAction userId={user._id} />}
+            />
+          ))
         )}
       </ScrollView>
     </Screen>

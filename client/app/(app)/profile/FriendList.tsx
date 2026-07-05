@@ -8,6 +8,8 @@ import ErrorScreen from "@/components/feedback/ErrorScreen";
 import UserCardListSkeleton from "@/components/skeleton/UserCardSkeleton";
 import AppText from "@/components/ui/AppText";
 import { useFriendList } from "@/hooks/user";
+import { useRemoveFriend } from "@/hooks/friend";
+import Button from "@/components/ui/Button";
 
 export default function FriendListScreen() {
   const {
@@ -17,6 +19,8 @@ export default function FriendListScreen() {
     isPending,
     isError,
   } = useFriendList();
+
+  const removeFriendMutation = useRemoveFriend();
 
   return (
     <Screen>
@@ -42,9 +46,11 @@ export default function FriendListScreen() {
           refreshing={isRefetching}
           onRefresh={refetch}
           renderAction={(user) => (
-            <TouchableOpacity className="bg-red-500 px-3 py-2 rounded-lg">
-              <AppText className="text-white">Unfriend</AppText>
-            </TouchableOpacity>
+            <Button
+              title={"Unfriend"}
+              variant="neutral"
+              onPress={() => removeFriendMutation.mutate(user._id)}
+            />
           )}
         />
       )}

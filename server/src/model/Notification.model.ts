@@ -1,29 +1,30 @@
 import mongoose, { InferSchemaType, model } from "mongoose";
+// import { NotificationEvents } from "../constant/notification.js";
 
 const { Schema } = mongoose;
 
-export const NotificationEventEnum = [
-  // Borrow system
-  "borrow.request.sent",
-  "borrow.request.approved",
-  "borrow.request.declined",
+export const NotificationEvents = {
+  FRIEND_REQUEST_SENT: "friend.request.sent",
+  FRIEND_REQUEST_ACCEPTED: "friend.request.accepted",
+  FRIEND_REQUEST_DECLINED: "friend.request.declined",
 
-  // Book actions
-  "book.added.manual",
-  "book.added.isbn",
-  "book.added.scan",
-  "book.returned",
+  BORROW_REQUEST_SENT: "borrow.request.sent",
+  BORROW_REQUEST_APPROVED: "borrow.request.approved",
+  BORROW_REQUEST_DECLINED: "borrow.request.declined",
 
-  // Status
-  "book.overdue",
+  BOOK_ADDED_MANUAL: "book.added.manual",
+  BOOK_ADDED_ISBN: "book.added.isbn",
+  BOOK_ADDED_SCAN: "book.added.scan",
 
-  // Social
-  "friend.request.sent",
-  "friend.request.accepted",
+  BOOK_RETURNED: "book.returned",
+  BOOK_OVERDUE: "book.overdue",
 
-  // System
-  "system.message",
-] as const;
+  SYSTEM_MESSAGE: "system.message",
+} as const;
+
+export const NotificationEventEnum = Object.values(NotificationEvents);
+
+// export type NotificationEvent = (typeof NotificationEventEnum)[number];
 
 const NotificationSchema = new Schema(
   {

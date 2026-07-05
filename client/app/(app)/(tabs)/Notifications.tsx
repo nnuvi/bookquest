@@ -1,249 +1,100 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
-import { Colors } from "@/constants/Colors";
-import { api } from "@/lib/api";
-import StatusBar from "@/components/common/StatusBar";
+import { useEffect, useState } from "react";
+
+import Screen from "@/components/common/Screen";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
+import NotificationHeader from "@/components/feature/notification/NotificationHeader";
+import NotificationList from "@/components/feature/notification/NotificationList";
 
-type User = {
-  _id: string;
-  fullName: string;
-};
+import { api } from "@/lib/api";
+import { Notification, NotificationEvents } from "@/types/notification";
+import { useNotification } from "@/hooks/notification";
+import NotificationCardSkeleton from "@/components/skeleton/NotificationCardSkeleton";
+import ErrorScreen from "@/components/feedback/ErrorScreen";
+import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import { getNotificationActions } from "@/services/notification.service";
 
-type Notification = {
-  _id: string;
-  from: User;
-  to: User;
-  type: string;
-  message: string;
-  read: boolean;
-  request: string;
-  book: string;
-};
+export default function NotificationScreen() {
+  const {
+    data: notifications,
+    refetch,
+    isRefetching,
+    isPending,
+    isError,
+  } = useNotification();
 
-const NotificationScreen: React.FC = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unseenCount, setUnseenCount] = useState<number>(0);
+  // const markAsRead = async (id: string) => {
+  //   try {
+  //     await api.patch(`/notifications/${id}/read`);
 
-  const getAllNotifications = async () => {
-    try {
-      console.log("noti before api");
-      const res = await api.get("/notifications/");
-      const data = await res.data;
-      console.log("noti data");
-      setNotifications(data);
-      setUnseenCount(data.length);
-      console.log("noti after api");
-      console.log("noti statusstatus", res.status);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     setNotifications((prev) =>
+  //       prev.map((notification) =>
+  //         notification._id === id
+  //           ? { ...notification, isRead: true }
+  //           : notification,
+  //       ),
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const sendAction = async (action: string, notificationId: string) => {
-    try {
-      console.log("res action: ", action);
-      const res = await api.put(`/books/approveDecline/`, {
-        action,
-        notificationId,
-      });
-      console.log("send res");
-      console.log("send res status", res.status);
-      await getAllNotifications();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleNotificationAction = async (
+  //   notification: Notification,
+  //   action: string,
+  // ) => {
+  //   switch (notification.event) {
+  //     case NotificationEvents.BORROW_REQUEST_SENT:
+  //       await api.put("/books/approveDecline", {
+  //         notificationId: notification._id,
+  //         action,
+  //       });
+  //       break;
 
-  const getReminer = async () => {
-    try {
-      const res = await api.get("/notifications/reminder");
-      console.log("res reminder");
-      console.log("res reminder status", res.status);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     case NotificationEvents.FRIEND_REQUEST_SENT:
+  //       await api.put("/friends/respond", {
+  //         notificationId: notification._id,
+  //         action,
+  //       });
+  //       break;
 
-  useEffect(() => {
-    getAllNotifications();
-    getReminer();
-  }, []);
+  //     default:
+  //       return;
+  //   }
 
-  const renderNotification = ({ item }: { item: Notification }) => (
-    <View style={styles.notificationContainer}>
-      <Image
-        source={{ uri: "https://via.placeholder.com/50" }}
-        style={styles.profilePic}
-      />
-      <View style={styles.notificationContent}>
-        <Text style={styles.notificationText}>
-          {/*<Text style={styles.username}>{item.from.fullName}</Text> */}
-          {item.message}
-        </Text>
-        {item.type === "bookRequest" && (
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={styles.connectButton}
-              onPress={() => sendAction("approved", item._id)}
-            >
-              <Text style={styles.buttonText}>Accept</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={() => sendAction("declined", item._id)}
-            >
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    </View>
-  );
+  //   await getAllNotifications();
+  // };
 
   return (
-    <View style={styles.container}>
-      <StatusBar />
-      <HeaderTitle text={"Notification"} />
-      <View style={styles.containerBody}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Unread Notifications</Text>
-          {unseenCount > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{unseenCount}</Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.headerSpace}></View>
-        <FlatList
-          data={notifications}
-          keyExtractor={(item) => item._id.toString()}
-          renderItem={renderNotification}
-          ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20 }}>
-              No Notification available.
-            </Text>
-          }
-          //scrollEnabled={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
+    <Screen>
+      <HeaderTitle text="Notifications" />
+      {isPending ? (
+        <NotificationCardSkeleton />
+      ) : isError ? (
+        <ErrorScreen
+          title="Failed to load notifications"
+          description="There was an error while fetching notifications. Please try again later."
+          retryText="Retry"
+          onRetry={refetch}
         />
-      </View>
-    </View>
+      ) : (
+        <>
+          <NotificationHeader
+            title="Unread Notifications"
+            unreadCount={
+              notifications.filter((notification) => !notification.isRead)
+                .length
+            }
+          />
+
+          <NotificationList
+            notifications={notifications}
+            // onRead={markAsRead}
+            onAction={getNotificationActions}
+            refreshing={isRefetching}
+            onRefresh={refetch}
+          />
+        </>
+      )}
+    </Screen>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // Full height for the parent container
-    backgroundColor: Colors.background,
-  },
-  containerBody: {
-    flex: 1, // Allow containerBody to fill the rest of the screen
-    paddingHorizontal: 20,
-  },
-  bar: {
-    backgroundColor: Colors.primary,
-    padding: 20,
-    paddingTop: 10,
-    paddingBottom: 0,
-    paddingHorizontal: null,
-  },
-  barTitle: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: Colors.background,
-    //fontFamily: 'CustomFont',
-    textAlign: "left",
-    marginBottom: 10,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    margin: 4,
-  },
-  headerSpace: {
-    //height: 10,
-    borderBottomWidth: 3,
-    borderBottomColor: Colors.primary,
-  },
-  headerText: {
-    fontSize: 16,
-    color: Colors.selection,
-    fontWeight: "bold",
-  },
-  badge: {
-    backgroundColor: Colors.primary,
-    borderRadius: 15,
-    width: 20,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  badgeText: {
-    color: "#FFFFFF",
-    fontSize: 11,
-    fontWeight: "bold",
-  },
-  notificationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-    margin: 10,
-    borderRadius: 10,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-  },
-  profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  notificationContent: {
-    flex: 1,
-  },
-  notificationText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  username: {
-    fontWeight: "bold",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  connectButton: {
-    backgroundColor: Colors.savoy,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  deleteButton: {
-    backgroundColor: Colors.savoy,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-});
-
-export default NotificationScreen;
+}

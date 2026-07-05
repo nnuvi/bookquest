@@ -33,13 +33,8 @@ export default function ErrorScreen({
   onSecondaryPress,
 }: ErrorScreenProps) {
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors.background,
-      }}
-    >
-      <View className="flex-1 items-center justify-center px-8">
+    <View className="flex-1">
+      <View className=" flex-1 items-center justify-center px-8 pb-50">
         <View className="mb-6">
           {illustration ?? (
             <MaterialIcons name="error-outline" size={72} color={Colors.red} />
@@ -66,6 +61,6 @@ export default function ErrorScreen({
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

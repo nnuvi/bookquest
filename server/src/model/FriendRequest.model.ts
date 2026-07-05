@@ -2,7 +2,15 @@ import mongoose, { InferSchemaType, model } from "mongoose";
 
 const { Schema } = mongoose;
 
-export const FriendRequestStatusEnum = ["pending", "accepted"] as const;
+export const FriendRequestStatusEnum = [
+  "pending",
+  "accepted",
+  "declined",
+] as const;
+
+export type FriendRequestStatus = (typeof FriendRequestStatusEnum)[number];
+
+export type FriendRequestAction = Exclude<FriendRequestStatus, "pending">;
 
 const FriendRequestSchema = new Schema(
   {
@@ -29,14 +37,16 @@ const FriendRequestSchema = new Schema(
       default: "pending",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export type FriendRequestSchemaType = InferSchemaType<typeof FriendRequestSchema>;
+export type FriendRequestSchemaType = InferSchemaType<
+  typeof FriendRequestSchema
+>;
 
 const FriendRequest = model<FriendRequestSchemaType>(
   "FriendRequest",
-  FriendRequestSchema
+  FriendRequestSchema,
 );
 
 export default FriendRequest;

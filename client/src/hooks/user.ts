@@ -8,6 +8,7 @@ import {
 } from "@/services/user.service";
 
 export const useMyProfile = () => {
+   console.log("GET MY PROFILE");
   return useQuery({
     queryKey: ["myProfile"],
     queryFn: getMyProfile,

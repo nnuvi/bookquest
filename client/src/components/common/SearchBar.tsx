@@ -25,7 +25,7 @@ export default function SearchBar({
       <TouchableOpacity onPress={onSearchPress}>
         <Octicons name="search" size={22} color="black" />
       </TouchableOpacity>
-      <View className="flex-1 p-0.5 ml-3 rounded-full bg-textinput">
+      <View className="flex-1 p-0.5 ml-3 rounded-full bg-input">
       <TextInput
         style={{ paddingHorizontal: 16 }}
         value={value}

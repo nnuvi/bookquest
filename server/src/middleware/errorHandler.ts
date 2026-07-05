@@ -1,20 +1,46 @@
 import { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
+
 import logger from "../config/logger.js";
 import ApiError from "../lib/apiError.js";
+import { HTTP_STATUS } from "../constant/httpStatus.js";
 
 export const errorHandler = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
+  if (err instanceof ZodError) {
+    logger.warn({
+      requestId: req.requestId,
+      method: req.method,
+      url: req.originalUrl,
+      statusCode: HTTP_STATUS.BAD_REQUEST,
+      errors: err.issues,
+    });
+
+    res.status(HTTP_STATUS.BAD_REQUEST).json({
+      success: false,
+      statusCode: HTTP_STATUS.BAD_REQUEST,
+      message: "Validation failed.",
+      errors: err.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      })),
+      requestId: req.requestId,
+    });
+
+    return;
+  }
+
   const statusCode =
-    err instanceof ApiError ? err.statusCode : 500;
+    err instanceof ApiError
+      ? err.statusCode
+      : HTTP_STATUS.INTERNAL_SERVER_ERROR;
 
   const message =
-    err instanceof ApiError
-      ? err.message
-      : "Internal Server Error";
+    err instanceof ApiError ? err.message : "Internal Server Error";
 
   logger.error({
     requestId: req.requestId,

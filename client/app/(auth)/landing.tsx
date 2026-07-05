@@ -21,14 +21,14 @@ export default function Landing() {
         className="border bg-button border-primary px-6 py-3 rounded-full w-full mb-3"
         onPress={() => router.push("/(auth)/login")}
       >
-        <Text className="text-text-dark text-center">Log In</Text>
+        <Text className="text-text text-center">Log In</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         className="border bg-button border-primary px-6 py-3 rounded-full w-full"
         onPress={() => router.push("/(auth)/signup")}
       >
-        <Text className="text-text-dark text-center">Sign Up</Text>
+        <Text className="text-text text-center">Sign Up</Text>
       </TouchableOpacity>
     </View>
   );

@@ -1,5 +1,5 @@
 import { Book, BookCardItem, UserBook } from "@/types/book";
-import { BorrowRecord } from "@/types/borrow";
+import { BorrowRecord, BorrowRequest } from "@/types/borrow";
 
 export function mapBook(book: Book): BookCardItem {
   return {
@@ -27,7 +27,7 @@ export function mapUserBook(book: UserBook): BookCardItem {
 
 export function mapBorrowRecord(
   record: BorrowRecord,
-  type: "borrowed" | "lent"
+  type: "borrowed" | "lent",
 ): BookCardItem {
   return {
     id: record._id,
@@ -41,5 +41,37 @@ export function mapBorrowRecord(
     borrowDate: record.borrowDate,
     // status: record.status,
     type,
+  };
+}
+
+export function mapBorrowRequestBook(
+  request: BorrowRequest,
+): BookCardItem {
+  return {
+    id: request._id,
+
+    // borrowRequestId: request._id,
+
+    userBookId: request.userBook._id,
+
+    title: request.userBook.book.title,
+    author: request.userBook.book.author,
+    coverImage: request.userBook.book.coverImage,
+
+    borrowRequestStatus: request.status,
+
+    requester: {
+      id: request.requester._id,
+      fullName: request.requester.fullName,
+      username: request.requester.username,
+      profileImage: request.requester.profileImage,
+    },
+
+    owner: {
+      id: request.owner._id,
+      fullName: request.owner.fullName,
+      username: request.owner.username,
+      profileImage: request.owner.profileImage,
+    }, 
   };
 }
