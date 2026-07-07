@@ -9,6 +9,7 @@ type UserListProps = {
   users: User[];
   refreshing?: boolean;
   onRefresh?: () => void;
+  actionButton?: "bottom" | "right";
   renderAction?: (user: User) => React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   listEmptyComponent?: ReactElement;
@@ -18,6 +19,7 @@ export default function UserList({
   users,
   refreshing = false,
   onRefresh,
+  actionButton,
   renderAction,
   contentContainerStyle,
   listEmptyComponent,
@@ -28,7 +30,11 @@ export default function UserList({
       style={{ flex: 1 }}
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
-        <UserCard user={item} action={renderAction?.(item)} />
+        <UserCard
+          user={item}
+          action={renderAction?.(item)}
+          actionButton={actionButton}
+        />
       )}
       refreshing={refreshing}
       onRefresh={onRefresh}

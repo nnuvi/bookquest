@@ -9,8 +9,8 @@ import { api } from "@/lib/api";
 import { Notification, NotificationEvents } from "@/types/notification";
 import { useNotification } from "@/hooks/notification";
 import NotificationCardSkeleton from "@/components/skeleton/NotificationCardSkeleton";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
 import { getNotificationActions } from "@/services/notification.service";
 
 export default function NotificationScreen() {

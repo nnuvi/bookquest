@@ -2,7 +2,7 @@ import ApiError from "../lib/apiError.js";
 import FriendRequest from "../model/FriendRequest.model.js";
 import User, { UserSchemaType } from "../model/user.model.js";
 // import { FriendRequestAction } from "../validation/friend.validation.js";
-import type { FriendRequestAction } from "../model/FriendRequest.model.js";
+// import type { FriendRequestAction } from "../model/FriendRequest.model.js";
 import { createNotification } from "./notification.service.js";
 import { getUserOrThrow, ensureNotSelf } from "./user.service.js";
 // import { FriendRequestActionEvents } from "../types/notification.js";

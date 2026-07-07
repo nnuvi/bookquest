@@ -1,4 +1,4 @@
-import Skeleton from "@/components/skeleton/Skeleton";
+import Skeleton from "@/components/ui/Skeleton";
 import React from "react";
 import { View } from "react-native";
 

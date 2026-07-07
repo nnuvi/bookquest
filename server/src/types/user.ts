@@ -14,3 +14,8 @@ export type FriendStatus =
   | "request_sent"
   | "request_received"
   | "none";
+
+  export type FriendStatusDetails = {
+    status: FriendStatus;
+    requestId?: string;
+  }

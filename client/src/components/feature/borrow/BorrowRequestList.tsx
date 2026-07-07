@@ -1,6 +1,6 @@
 import { FlatList, View } from "react-native";
 
-import EmptyState from "@/components/feedback/EmptyState";
+import EmptyState from "@/components/common/EmptyState";
 import BookCard from "@/components/feature/book/BookCard";
 
 import { BorrowRequest } from "@/types/borrow";

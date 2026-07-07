@@ -9,18 +9,24 @@ import Button from "@/components/ui/Button";
 import userPlaceHolder from "@assets/images/placeholder-user.png";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 import Avatar from "@/components/ui/Avatar";
+import { ReactNode, useState } from "react";
+import AppModal from "@/components/ui/AppModal";
+import FriendAction from "../friend/FriendAction";
 
 type ProfileHeaderProps = {
   user: User;
   bookNo: number;
   currentUser?: boolean;
+  action?: ReactNode;
 };
 
 export const ProfileHeader = ({
   user,
   bookNo,
   currentUser = true,
+  action,
 }: ProfileHeaderProps) => {
+  const [visible, setVisible] = useState(false);
   return (
     <View>
       {/** Top Header */}
@@ -63,10 +69,13 @@ export const ProfileHeader = ({
                 Books
               </AppText>
             </View>
-
             <TouchableOpacity
               className="items-center justify-center mx-2 py-2 px-5"
-              onPress={() => router.push("/profile/FriendList")}
+              onPress={
+                currentUser
+                  ? () => router.push("/profile/FriendList")
+                  : () => {}
+              }
             >
               <AppText size="lg" weight="bold">
                 {user?.friends?.length ?? 0}
@@ -100,11 +109,28 @@ export const ProfileHeader = ({
               <Button
                 title={"Edit"}
                 size="base"
-                onPress={() => router.push("/profile/EditProfile")}
+                // onPress={() => router.push("/profile/EditProfile")}
+                onPress={() => setVisible(true)}
               />
             </View>
           )}
+          {visible ? (
+            <AppModal
+              visible={visible}
+              onClose={() => setVisible(false)}
+              title={<Text className="text-xl font-bold">Delete Book</Text>}
+              actions={
+                <View className="flex-row justify-end gap-3">
+                  <Button title="Cancel" />
+                  <Button title="Delete" />
+                </View>
+              }
+            >
+              <Text>Are you sure you want to delete this book?</Text>
+            </AppModal>
+          ) : null}
         </View>
+        {action && <View>{action}</View>}
       </View>
     </View>
   );

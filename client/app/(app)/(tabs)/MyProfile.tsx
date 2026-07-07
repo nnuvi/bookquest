@@ -7,9 +7,9 @@ import BookList from "@/components/feature/book/BookList";
 import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
 import ProfileTabs from "@/components/feature/profile/ProfileTabs";
 
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
 
 import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";

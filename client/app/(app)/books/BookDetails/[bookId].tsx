@@ -15,8 +15,8 @@ import BookMetadata from "@/components/feature/book/BookMetadata";
 import BookDescription from "@/components/feature/book/BookDescription";
 import BookHeader from "@/components/feature/book/BookHeader";
 import BookDetailsSkeleton from "@/components/skeleton/BookDetailsSkeleton";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId: string }>();

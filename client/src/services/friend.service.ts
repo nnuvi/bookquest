@@ -5,18 +5,16 @@ import {
   FriendRequest,
   FriendRequestAction,
   FriendStatus,
+  FriendStatusDetails,
   User,
 } from "@/types/user";
 
 export const getFriendStatus = async (
   userId: string,
-): Promise<FriendStatus> => {
-  const { data } = await api.get<ApiResponse<FriendStatus>>(
+): Promise<FriendStatusDetails> => {
+  const { data } = await api.get<ApiResponse<FriendStatusDetails>>(
     `/api/friend/status/${userId}`,
   );
-
-  logger.debug(LOG_SCOPE.request, "Friend status:", data.data);
-
   return data.data;
 };
 
@@ -59,4 +57,8 @@ export const removeFriend = async (friendId: string): Promise<User> => {
   );
   // logger.debug(LOG_SCOPE.request, "Remove friend");
   return data.data;
+};
+
+export const cancelFriendRequest = async (requestId: string): Promise<void> => {
+  await api.patch<ApiResponse<void>>(`/api/friend/request/${requestId}/cancel`);
 };

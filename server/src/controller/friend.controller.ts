@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
-import { FriendRequestAction } from "../model/FriendRequest.model.js";
+import { FriendRequestResponseAction } from "../model/FriendRequest.model.js";
 import * as friendService from "../service/friend.service.js";
+import logger from "../config/logger.js";
 
 export const getFriendStatus = asyncHandler(
   async (req: Request, res: Response) => {
@@ -24,8 +25,11 @@ export const getFriendStatus = asyncHandler(
 export const getFriendRequests = asyncHandler(
   async (req: Request, res: Response) => {
     const data = await friendService.getFriendRequests(req.user._id.toString());
-
-    res.status(HTTP_STATUS.OK).json(data);
+    logger.debug("data", data);
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      data,
+    });
   },
 );
 
@@ -33,13 +37,16 @@ export const sendFriendRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { receiverId } = req.params;
 
-    const data = await friendService.sendFriendRequest(
+    const friendRequests = await friendService.sendFriendRequest(
       req.user._id.toString(),
       receiverId!,
       req.user.fullName,
     );
 
-    res.status(HTTP_STATUS.CREATED).json(data);
+    res.status(HTTP_STATUS.CREATED).json({
+      success: true,
+      data: friendRequests,
+    });
   },
 );
 
@@ -47,7 +54,7 @@ export const respondFriendRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { requestId } = req.params;
     const { action } = req.body as {
-      action: FriendRequestAction;
+      action: FriendRequestResponseAction;
     };
 
     const data = await friendService.respondFriendRequest(
@@ -57,7 +64,10 @@ export const respondFriendRequest = asyncHandler(
       req.user.fullName,
     );
 
-    res.status(HTTP_STATUS.OK).json(data);
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Friend removed successfully.",
+    });
   },
 );
 
@@ -65,12 +75,31 @@ export const removeFriend = asyncHandler(
   async (req: Request, res: Response) => {
     const { friendId } = req.params;
 
-    const data = await friendService.removeFriend(
+    await friendService.removeFriend(
       req.user._id.toString(),
-      friendId!,
+      req.params.friendId!,
     );
 
-    res.status(HTTP_STATUS.OK).json(data);
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Friend removed successfully.",
+    });
+  },
+);
+
+export const cancelFriendRequest = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { requestId } = req.params;
+
+    await friendService.cancelFriendRequest(
+      req.user._id.toString(),
+      req.params.requestId!,
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Friend Request canceled successfully.",
+    });
   },
 );
 

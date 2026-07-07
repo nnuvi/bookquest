@@ -1,5 +1,5 @@
 import Loading from "@/components/common/Loading";
-import LoadingScreen from "@/components/feedback/LoadingScreen";
+import LoadingScreen from "@/components/common/LoadingScreen";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
@@ -20,7 +20,7 @@ export default function Index() {
     //     router.replace("/(auth)/landing");
     //   }
     // }, [user, loading]);
-  
+
     // user object might exist but be invalid/stale
     if (user?._id) {
       router.replace("/(app)/(tabs)/Homepage");

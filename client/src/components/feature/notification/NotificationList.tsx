@@ -1,6 +1,6 @@
 import { FlatList } from "react-native";
 
-import EmptyState from "@/components/feedback/EmptyState";
+import EmptyState from "@/components/common/EmptyState";
 import NotificationCard from "./NotificationCard";
 
 import { Notification } from "@/types/notification";
@@ -45,7 +45,7 @@ const NotificationList = ({
       contentContainerStyle={{
         flexGrow: 1,
         paddingVertical: 8,
-         paddingBottom: 150,
+        paddingBottom: 150,
       }}
       showsVerticalScrollIndicator={false}
       refreshing={refreshing}

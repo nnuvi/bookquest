@@ -2,14 +2,15 @@ import Screen from "@/components/common/Screen";
 import BookList from "@/components/feature/book/BookList";
 import { ProfileHeader } from "@/components/feature/profile/ProfileHeader";
 import ProfileTabs from "@/components/feature/profile/ProfileTabs";
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
 import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 import { useUserBooks } from "@/hooks/books";
 import { useUserProfile } from "@/hooks/user";
 import { useGlobalSearchParams } from "expo-router";
+import FriendAction from "@/components/feature/friend/FriendAction";
 
 export default function ProfileScreen() {
   const { profileId } = useGlobalSearchParams<{ profileId: string }>();
@@ -31,15 +32,10 @@ export default function ProfileScreen() {
   } = useUserBooks(profileId);
 
   const onRefresh = async () => {
-    await Promise.allSettled([
-      refetchProfile(),
-      refetchBooks(),
-    ]);
+    await Promise.allSettled([refetchProfile(), refetchBooks()]);
   };
 
-  const refreshing =
-    isProfileRefetching ||
-    isBooksRefetching;
+  const refreshing = isProfileRefetching || isBooksRefetching;
 
   return (
     <Screen>
@@ -63,12 +59,10 @@ export default function ProfileScreen() {
             user={user}
             bookNo={userBooks.length}
             currentUser={false}
+            action={<FriendAction userId={user._id} />}
           />
 
-          <ProfileTabs
-            activeTab="list"
-            currentUser={false}
-          />
+          <ProfileTabs activeTab="list" currentUser={false} />
 
           {isBooksPending ? (
             <BookCardSkeleton />

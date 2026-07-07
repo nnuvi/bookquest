@@ -6,11 +6,14 @@ export const FriendRequestStatusEnum = [
   "pending",
   "accepted",
   "declined",
+  "cancelled",
 ] as const;
 
 export type FriendRequestStatus = (typeof FriendRequestStatusEnum)[number];
 
-export type FriendRequestAction = Exclude<FriendRequestStatus, "pending">;
+export type FriendRequestResponseAction = "accepted" | "declined";
+
+export type FriendRequestCancelAction = "cancelled";
 
 const FriendRequestSchema = new Schema(
   {

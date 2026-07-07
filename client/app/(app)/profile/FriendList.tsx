@@ -3,8 +3,8 @@ import { TouchableOpacity } from "react-native";
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 import Screen from "@/components/common/Screen";
 import UserList from "@/components/feature/user/UserList";
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
 import UserCardListSkeleton from "@/components/skeleton/UserCardSkeleton";
 import AppText from "@/components/ui/AppText";
 import { useFriendList } from "@/hooks/user";
@@ -45,6 +45,7 @@ export default function FriendListScreen() {
           users={friendList}
           refreshing={isRefetching}
           onRefresh={refetch}
+          actionButton="right"
           renderAction={(user) => (
             <Button
               title={"Unfriend"}

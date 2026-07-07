@@ -11,8 +11,8 @@ import AppText from "@/components/ui/AppText";
 import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import UserCardListSkeleton from "@/components/skeleton/UserCardSkeleton";
 
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
 
 import BookCard from "@/components/feature/book/BookCard";
 import UserCard from "@/components/feature/user/UserCard";
@@ -20,7 +20,7 @@ import { useSearchBooks } from "@/hooks/books";
 import { useSearchUsers } from "@/hooks/user";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import { useQueryClient } from "@tanstack/react-query";
-import FriendAction from "@/components/feature/user/FriendAction";
+import FriendAction from "@/components/feature/friend/FriendAction";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -174,6 +174,7 @@ export default function Search() {
             <UserCard
               key={user._id}
               user={user}
+              actionButton="bottom"
               action={<FriendAction userId={user._id} />}
             />
           ))

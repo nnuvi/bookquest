@@ -1,30 +1,25 @@
 import { FlatList, View } from "react-native";
 
-import EmptyState from "@/components/feedback/EmptyState";
+import EmptyState from "@/components/common/EmptyState";
 import UserCard from "@/components/feature/user/UserCard";
 
 import { FriendRequest } from "@/types/user";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import Button from "@/components/ui/Button";
+import FriendRequestAction from "./FriendRequestAction";
+import FriendAction from "./FriendAction";
 
 interface FriendRequestListProps {
   requests: FriendRequest[];
-
-  onAccept: (id: string) => void;
-  onDecline: (id: string) => void;
-
   refreshing?: boolean;
   onRefresh?: () => void;
 }
 
 export default function FriendRequestList({
   requests,
-  onAccept,
-  onDecline,
   refreshing = false,
   onRefresh,
 }: FriendRequestListProps) {
-  //   logger.debug(LOG_SCOPE.query, "Fetched friend requests (item): ", requests);
   console.log(
     "FriendRequestList render:",
     requests.map((r) => r.from.username),
@@ -36,20 +31,9 @@ export default function FriendRequestList({
       renderItem={({ item }) => (
         <UserCard
           user={item.from}
+          actionButton="right"
           action={
-            <View className="flex-row gap-2 p-2">
-              <Button
-                title="Accept"
-                variant="secondary"
-                onPress={() => onAccept(item._id)}
-              />
-
-              <Button
-                title="Decline"
-                variant="neutral"
-                onPress={() => onDecline(item._id)}
-              />
-            </View>
+            <FriendRequestAction fullWidth={false} requestId={item._id} />
           }
         />
       )}

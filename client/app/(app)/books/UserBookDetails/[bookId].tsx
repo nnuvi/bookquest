@@ -13,8 +13,8 @@ import BookMetadata from "@/components/feature/book/BookMetadata";
 
 import BookDetailsSkeleton from "@/components/skeleton/BookDetailsSkeleton";
 
-import ErrorScreen from "@/components/feedback/ErrorScreen";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
 
 import { useUserBookDetails } from "@/hooks/books";
 
@@ -73,10 +73,7 @@ export default function BookDetails() {
         <ScrollView
           className="flex-1 px-4 py-4"
           refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={refetch}
-            />
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
           }
         >
           <BookHeader
@@ -110,9 +107,7 @@ export default function BookDetails() {
               },
               {
                 label: "Added",
-                value: new Date(
-                  userBook.addedAt
-                ).toLocaleDateString(),
+                value: new Date(userBook.addedAt).toLocaleDateString(),
               },
             ]}
           />

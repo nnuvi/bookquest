@@ -21,16 +21,24 @@ export const sendFriendRequestSchema = objectIdParams(
 
 export const removeFriendSchema = objectIdParams("friendId", "Friend ID");
 
-export const friendStatusSchema = objectIdParams("targetUserId", "Target User ID")
+export const friendStatusSchema = objectIdParams(
+  "targetUserId",
+  "Target User ID",
+);
 
 export const respondFriendRequestSchema = objectIdParams(
   "requestId",
-  "Request ID",
+  "Response Request ID",
 ).extend({
   body: z.object({
     action: FriendRequestActionSchema,
   }),
 });
+
+export const cancelFriendRequestSchema = objectIdParams(
+  "requestId",
+  "Cancel Request ID",
+);
 
 // export const respondFriendRequestSchema = z.object({
 //   params: z.object({

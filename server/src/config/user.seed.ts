@@ -3,6 +3,14 @@ import User from "../model/user.model.js";
 
 import FriendRequest from "../model/FriendRequest.model.js";
 
+import mongoose from "mongoose";
+import BorrowRecord from "../model/BorrowRecord.model.js";
+import UserBook from "../model/UserBook.model.js";
+import Notification from "../model/Notification.model.js";
+import BorrowRequest from "../model/BorrowRequest.model.js";
+
+import ApiError from "../lib/apiError.js";
+
 export async function getUserIdsByUsername(
   usernames: string[],
 ): Promise<string[]> {
@@ -28,25 +36,144 @@ export async function createUsers() {
 
   const users = [
     {
-      username: "dazai",
-      fullName: "Osamu Dazai",
-      email: "dazai@mail.com",
+      username: "boyd",
+      fullName: "Boyd Stevens",
+      email: "boyd@mail.com",
       password,
-      bio: "Novel writer",
+      bio: "Town sheriff and protector.",
     },
     {
-      username: "kate",
-      fullName: "Kate Emilyko",
-      email: "kate@mail.com",
+      username: "tabitha",
+      fullName: "Tabitha Matthews",
+      email: "tabitha@mail.com",
       password,
-      bio: "Fantasy reader",
+      bio: "Determined to uncover the town's secrets.",
     },
     {
-      username: "senku",
-      fullName: "Senku Ishigami",
-      email: "senku@mail.com",
+      username: "jim",
+      fullName: "Jim Matthews",
+      email: "jim@mail.com",
       password,
-      bio: "Science enthusiast",
+      bio: "Engineer searching for answers.",
+    },
+    {
+      username: "julie",
+      fullName: "Julie Matthews",
+      email: "julie@mail.com",
+      password,
+      bio: "Trying to adapt to the mysterious town.",
+    },
+    {
+      username: "ethan",
+      fullName: "Ethan Matthews",
+      email: "ethan@mail.com",
+      password,
+      bio: "A curious young boy with vivid imagination.",
+    },
+    {
+      username: "victor",
+      fullName: "Victor",
+      email: "victor@mail.com",
+      password,
+      bio: "Longtime resident who knows more than he says.",
+    },
+    {
+      username: "donna",
+      fullName: "Donna Raines",
+      email: "donna@mail.com",
+      password,
+      bio: "Leader of Colony House.",
+    },
+    {
+      username: "jade",
+      fullName: "Jade Herrera",
+      email: "jade@mail.com",
+      password,
+      bio: "Brilliant but skeptical tech entrepreneur.",
+    },
+    {
+      username: "kenny",
+      fullName: "Kenny Liu",
+      email: "kenny@mail.com",
+      password,
+      bio: "Deputy sheriff with a strong sense of duty.",
+    },
+    {
+      username: "kristi",
+      fullName: "Kristi Miller",
+      email: "kristi@mail.com",
+      password,
+      bio: "Town medic helping everyone survive.",
+    },
+    {
+      username: "mari",
+      fullName: "Marielle",
+      email: "mari@mail.com",
+      password,
+      bio: "Paramedic dealing with her past.",
+    },
+    {
+      username: "ellis",
+      fullName: "Ellis Stevens",
+      email: "ellis@mail.com",
+      password,
+      bio: "Boyd's son and an artist.",
+    },
+    {
+      username: "fatima",
+      fullName: "Fatima Hassan",
+      email: "fatima@mail.com",
+      password,
+      bio: "Optimistic resident of Colony House.",
+    },
+    {
+      username: "sara",
+      fullName: "Sara Myers",
+      email: "sara@mail.com",
+      password,
+      bio: "Haunted by mysterious voices.",
+    },
+    {
+      username: "tianchen",
+      fullName: "Tian-Chen Liu",
+      email: "tianchen@mail.com",
+      password,
+      bio: "Kind-hearted diner owner.",
+    },
+    {
+      username: "bakta",
+      fullName: "Bakta",
+      email: "bakta@mail.com",
+      password,
+      bio: "Bus driver stranded in town.",
+    },
+    {
+      username: "randall",
+      fullName: "Randall Kirkland",
+      email: "randall@mail.com",
+      password,
+      bio: "Hot-headed newcomer.",
+    },
+    {
+      username: "elgin",
+      fullName: "Elgin",
+      email: "elgin@mail.com",
+      password,
+      bio: "New arrival with strange dreams.",
+    },
+    {
+      username: "tillie",
+      fullName: "Tillie",
+      email: "tillie@mail.com",
+      password,
+      bio: "Cheerful elderly resident with secrets.",
+    },
+    {
+      username: "acosta",
+      fullName: "Dani Acosta",
+      email: "acosta@mail.com",
+      password,
+      bio: "Police officer caught in the town.",
     },
   ];
 
@@ -173,4 +300,78 @@ export async function removeFriendsAll(ids: string[]) {
       },
     },
   );
+}
+
+// user.service.t
+
+export async function deleteUserAndData(username: string) {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const user = await User.findOne({ username }).session(session);
+
+    if (!user) {
+      throw new ApiError(404, "User not found.");
+    }
+
+    const userId = user._id;
+
+    // Remove user from everyone's friend list
+    await User.updateMany(
+      {},
+      {
+        $pull: {
+          friends: userId,
+        },
+      },
+      { session },
+    );
+
+    // Delete friend requests
+    await FriendRequest.deleteMany(
+      {
+        $or: [{ from: userId }, { to: userId }],
+      },
+      { session },
+    );
+
+    // Delete borrow requests
+    await BorrowRequest.deleteMany(
+      {
+        $or: [{ borrower: userId }, { owner: userId }],
+      },
+      { session },
+    );
+
+    // Delete borrow records
+    await BorrowRecord.deleteMany(
+      {
+        $or: [{ borrower: userId }, { owner: userId }],
+      },
+      { session },
+    );
+
+    // Delete notifications
+    await Notification.deleteMany(
+      {
+        $or: [{ receiver: userId }, { actor: userId }],
+      },
+      { session },
+    );
+
+    // Delete user's books
+    await UserBook.deleteMany({ owner: userId }, { session });
+
+    // Delete the user
+    await User.deleteOne({ _id: userId }, { session });
+
+    await session.commitTransaction();
+  } catch (err) {
+    await session.abortTransaction();
+    throw err;
+  } finally {
+    session.endSession();
+  }
 }

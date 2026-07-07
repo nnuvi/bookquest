@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
-import { FriendRequestAction } from "../model/FriendRequest.model.js";
+// import { FriendRequestAction } from "../model/FriendRequest.model.js";
 import * as friendService from "../service/friend.service.js";
 import * as borrowService from "../service/borrow.service.js";
 

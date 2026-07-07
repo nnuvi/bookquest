@@ -7,8 +7,8 @@ import DropdownModal from "@/components/common/DropdownModal";
 import LogoText from "@/components/common/LogoText";
 import Screen from "@/components/common/Screen";
 
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
 
 import BookGridSkeleton from "@/components/skeleton/BookGridSkeleton";
 

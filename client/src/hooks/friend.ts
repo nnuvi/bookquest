@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  cancelFriendRequest,
   getFriendRequests,
   getFriendStatus,
   removeFriend,
@@ -24,13 +25,23 @@ export const useFriendStatus = (userId: string) => {
   });
 };
 
-export const useSendFriendRequest = (receiverId: string) => {
-  return useQuery({
-    queryKey: ["sentFriendRequest"],
-    queryFn: () => sendFriendRequest(receiverId),
-    enabled: !!receiverId,
+export function useSendFriendRequest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (receiverId: string) => sendFriendRequest(receiverId),
+
+    onSuccess: (_, receiverId) => {
+      queryClient.invalidateQueries({
+        queryKey: ["friendStatus", receiverId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+    },
   });
-};
+}
 
 export function useRespondFriendRequest() {
   const queryClient = useQueryClient();
@@ -44,15 +55,11 @@ export function useRespondFriendRequest() {
     }) => respondFriendRequest(requestId, action),
 
     onSuccess: () => {
-      logger.debug(LOG_SCOPE.request, "Mutation For Friend: ");
-      // console.log("queri keys: ", queryClient.getQueryCache().getAll());
-      console.log("Before", queryClient.getQueryCache().getAll());
-
       queryClient.refetchQueries({
         queryKey: ["friendRequests"],
       });
 
-      console.log("After", queryClient.getQueryCache().getAll());
+      // console.log("After", queryClient.getQueryCache().getAll());
       queryClient.invalidateQueries({
         queryKey: ["myProfile"],
       });
@@ -83,6 +90,40 @@ export function useRemoveFriend() {
       queryClient.invalidateQueries({ queryKey: ["myProfile"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useCancelFriendRequest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (requestId: string) => cancelFriendRequest(requestId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["friendRequests"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["friendStatus"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["friends"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["userProfile"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["myProfile"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
     },
   });
 }

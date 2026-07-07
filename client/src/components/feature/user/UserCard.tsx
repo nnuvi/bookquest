@@ -10,6 +10,7 @@ import Avatar from "@/components/ui/Avatar";
 type UserCardProps = {
   user: User;
   action?: React.ReactNode;
+  actionButton?: "bottom" | "right";
   onPress?: () => void;
   primaryButton?: {
     title: string;
@@ -25,6 +26,7 @@ type UserCardProps = {
 export default function UserCard({
   user,
   action,
+  actionButton,
   onPress,
   primaryButton,
   secondaryButton,
@@ -40,18 +42,19 @@ export default function UserCard({
         source={
           user.profileImage ? { uri: user.profileImage } : userPlaceHolder
         }
-        size="xs"
+        size={actionButton === "bottom" ? "sm" : "xs"}
+        // size="xs"
       />
 
       <View className="flex-1 ml-3">
-        <AppText size="lg" weight="semibold">
+        <AppText size="lg" weight="semibold" className="mr-1">
           {user.fullName}
         </AppText>
 
-        <AppText size="base">@{user.username}</AppText>
+        <AppText size="base" className="mr-1">@{user.username}</AppText>
+        {actionButton === "bottom" ? <>{action}</> : null}
       </View>
-
-      {action}
+      {actionButton === "right" ? <>{action}</> : null}
     </TouchableOpacity>
   );
 }

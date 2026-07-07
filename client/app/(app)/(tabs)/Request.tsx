@@ -9,18 +9,18 @@ import RequestTabs, {
 import UserList from "@/components/feature/user/UserList";
 import BookList from "@/components/feature/book/BookList";
 
-import EmptyState from "@/components/feedback/EmptyState";
-import ErrorScreen from "@/components/feedback/ErrorScreen";
+import EmptyState from "@/components/common/EmptyState";
+import ErrorScreen from "@/components/common/ErrorScreen";
 
 import UserListSkeleton from "@/components/skeleton/UserCardSkeleton";
 import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 
 import { useFriendRequest, useRespondFriendRequest } from "@/hooks/friend";
 import { useBorrowRequest, useBorrowSentRequest } from "@/hooks/borrow";
-import NotFoundScreen from "@/components/feedback/NotFoundScreen";
-import FriendRequestList from "@/components/feature/request/FriendRequestList";
-import BorrowRequestList from "@/components/feature/request/BorrowRequestList";
-import BorrowSentRequestList from "@/components/feature/request/BorrowSentRequestList";
+import NotFoundScreen from "@/components/common/NotFoundScreen";
+import FriendRequestList from "@/components/feature/friend/FriendRequestList";
+import BorrowRequestList from "@/components/feature/borrow/BorrowRequestList";
+import BorrowSentRequestList from "@/components/feature/borrow/BorrowSentRequestList";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -30,20 +30,6 @@ export default function Requests() {
   const friend = useFriendRequest();
   const received = useBorrowRequest();
   const sent = useBorrowSentRequest();
-
-  // useEffect(() => {
-  //   console.log(
-  //     "Cache:",
-  //     queryClient
-  //       .getQueryCache()
-  //       .getAll()
-  //       .map((q) => q.queryKey),
-  //   );
-  // }, [friend.status, received.status, sent.status]);
-
-  // useEffect(() => {
-  //   console.log("Requests screen data:", friend.data?.length);
-  // }, [friend.data]);
 
   const respondMutation = useRespondFriendRequest();
 
@@ -56,18 +42,18 @@ export default function Requests() {
           requests={friend.data ?? []}
           refreshing={friend.isRefetching}
           onRefresh={friend.refetch}
-          onAccept={(id) =>
-            respondMutation.mutate({
-              requestId: id,
-              action: "accepted",
-            })
-          }
-          onDecline={(id) =>
-            respondMutation.mutate({
-              requestId: id,
-              action: "declined",
-            })
-          }
+          // onAccept={(id) =>
+          //   respondMutation.mutate({
+          //     requestId: id,
+          //     action: "accepted",
+          //   })
+          // }
+          // onDecline={(id) =>
+          //   respondMutation.mutate({
+          //     requestId: id,
+          //     action: "declined",
+          //   })
+          // }
         />
       ),
     },

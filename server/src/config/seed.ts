@@ -18,6 +18,7 @@ import {
   createFriendRequests,
   createFriendRequestsIds,
   createUsers,
+  deleteUserAndData,
   getUserIdsByUsername,
 } from "./user.seed.js";
 import { createBooks, createBorrowRequests } from "./book.seed.js";
@@ -55,6 +56,9 @@ const seed = async () => {
     // await createBorrowRequests(users, user_1, user_2);
 
     // await createNotifications(users, user_1, user_2);
+
+    // await deleteUserAndData("sara")
+    // console.log(users)
 
     const ids = await getUserIdsByUsername([
       "sara",

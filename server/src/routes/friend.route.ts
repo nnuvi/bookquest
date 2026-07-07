@@ -6,6 +6,7 @@ import {
   sendFriendRequest,
   removeFriend,
   getFriendStatus,
+  cancelFriendRequest,
 } from "../controller/friend.controller.js";
 
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -16,6 +17,7 @@ import {
   respondFriendRequestSchema,
   removeFriendSchema,
   friendStatusSchema,
+  cancelFriendRequestSchema,
 } from "../validation/friend.validation.js";
 
 const router = express.Router();
@@ -29,13 +31,6 @@ router.put(
   sendFriendRequest,
 );
 
-router.delete(
-  "/:friendId",
-  protectRoute,
-  validate(removeFriendSchema),
-  removeFriend,
-);
-
 router.patch(
   "/request/:requestId",
   protectRoute,
@@ -43,11 +38,25 @@ router.patch(
   respondFriendRequest,
 );
 
+router.patch(
+  "/request/:requestId/cancel",
+  protectRoute,
+  validate(cancelFriendRequestSchema),
+  cancelFriendRequest,
+);
+
 router.get(
   "/status/:targetUserId",
   protectRoute,
   validate(friendStatusSchema),
   getFriendStatus,
+);
+
+router.delete(
+  "/:friendId",
+  protectRoute,
+  validate(removeFriendSchema),
+  removeFriend,
 );
 
 // router.post("/friend/:senderId/:receiverId", protectRoute, sendFriendRequest);
