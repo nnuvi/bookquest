@@ -42,6 +42,13 @@ const BorrowRequestSchema = new Schema(
       index: true,
     },
 
+    borrowDurationDays: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 365,
+    },
+
     message: {
       type: String,
       default: "",
@@ -59,10 +66,10 @@ const BorrowRequestSchema = new Schema(
 );
 
 // prevent duplicate active requests
-BorrowRequestSchema.index(
-  { requester: 1, userBook: 1, status: 1 },
-  { unique: true },
-);
+// BorrowRequestSchema.index(
+//   { requester: 1, userBook: 1, status: 1 },
+//   { unique: true },
+// );
 
 export type BorrowRequestSchemaType = InferSchemaType<
   typeof BorrowRequestSchema

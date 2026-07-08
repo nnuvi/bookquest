@@ -2,12 +2,22 @@ import mongoose, { InferSchemaType, model } from "mongoose";
 
 const { Schema } = mongoose;
 
+export const BorrowRecordStatusEnum = [
+  "borrowed",
+  "return_requested",
+  "returned",
+  "overdue",
+] as const;
+
+export type BorrowRecordStatus = (typeof BorrowRecordStatusEnum)[number];
+
 const BorrowRecordSchema = new Schema(
   {
     borrowRequest: {
       type: Schema.Types.ObjectId,
       ref: "BorrowRequest",
       required: true,
+      unique: true,
       index: true,
     },
 
@@ -32,38 +42,60 @@ const BorrowRecordSchema = new Schema(
       index: true,
     },
 
-    borrowDate: {
+    borrowAt: {
       type: Date,
       default: Date.now,
     },
 
-    dueDate: {
+    dueAt: {
       type: Date,
       required: true,
     },
 
-    returnDate: {
+    returnRequest: {
+      status: {
+        enum: ["none", "pending", "declined", "expired"],
+      },
+
+      requestedAt: Date,
+    },
+
+    returnAt: {
       type: Date,
       default: null,
     },
 
     status: {
       type: String,
-      enum: ["borrowed", "returned", "overdue"],
+      enum: BorrowRecordStatusEnum,
       default: "borrowed",
       index: true,
     },
+
+    lastReminderAt: {
+      type: Date,
+    }
   },
   {
     timestamps: true,
-  }
+  },
+);
+
+BorrowRecordSchema.index(
+  { userBook: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      status: "borrowed",
+    },
+  },
 );
 
 export type BorrowRecordSchemaType = InferSchemaType<typeof BorrowRecordSchema>;
 
 const BorrowRecord = model<BorrowRecordSchemaType>(
   "BorrowRecord",
-  BorrowRecordSchema
+  BorrowRecordSchema,
 );
 
 export default BorrowRecord;

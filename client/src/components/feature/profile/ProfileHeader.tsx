@@ -114,7 +114,7 @@ export const ProfileHeader = ({
               />
             </View>
           )}
-          {visible ? (
+          {visible && (
             <AppModal
               visible={visible}
               onClose={() => setVisible(false)}
@@ -128,7 +128,7 @@ export const ProfileHeader = ({
             >
               <Text>Are you sure you want to delete this book?</Text>
             </AppModal>
-          ) : null}
+          )}
         </View>
         {action && <View>{action}</View>}
       </View>

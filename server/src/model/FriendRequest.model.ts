@@ -29,7 +29,7 @@ const FriendRequestSchema = new Schema(
       required: true,
     },
 
-    sentTime: {
+    sentAt: {
       type: Date,
       default: Date.now,
     },

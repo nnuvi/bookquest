@@ -14,6 +14,7 @@ import recordRoutes from "./routes/record.route.js";
 import userRoutes from "./routes/user.route.js";
 import friendRoutes from "./routes/friend.route.js";
 import borrowRoutes from "./routes/borrow.route.js";
+import returnRoutes from "./routes/return.route.js";
 
 import env from "./config/env.js";
 
@@ -66,6 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/friend", friendRoutes);
 app.use("/api/borrow", borrowRoutes);
+app.use("/api/return", returnRoutes);
 app.use("/api/book", bookRoutes);
 app.use("/api/record", recordRoutes);
 app.use("/api/notification", notificationRoutes);

@@ -51,10 +51,12 @@ export default function UserCard({
           {user.fullName}
         </AppText>
 
-        <AppText size="base" className="mr-1">@{user.username}</AppText>
-        {actionButton === "bottom" ? <>{action}</> : null}
+        <AppText size="base" className="mr-1">
+          @{user.username}
+        </AppText>
+        {actionButton === "bottom" && <>{action}</>}
       </View>
-      {actionButton === "right" ? <>{action}</> : null}
+      {actionButton === "right" && <>{action}</>}
     </TouchableOpacity>
   );
 }

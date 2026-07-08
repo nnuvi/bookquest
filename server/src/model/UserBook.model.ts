@@ -2,6 +2,10 @@ import mongoose, { InferSchemaType, model } from "mongoose";
 
 const { Schema } = mongoose;
 
+export const UserBookAvailabilityEnum = ["available", "borrowed", "lent", "unavailable"];
+
+export type UserBookAvailability = (typeof UserBookAvailabilityEnum)[number]
+
 const UserBookSchema = new Schema(
   {
     owner: {
@@ -26,7 +30,7 @@ const UserBookSchema = new Schema(
 
     availability: {
       type: String,
-      enum: ["available", "borrowed", "lent", "unavailable"],
+      enum: UserBookAvailabilityEnum,
       default: "available",
     },
 
