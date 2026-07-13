@@ -39,7 +39,7 @@ export default function NotFoundScreen({
       <View className="flex-1 items-center justify-center px-8">
         <View className="mb-6">
           {icon ?? (
-            <MaterialIcons name="search-off" size={72} color={Colors.gray} />
+            <MaterialIcons name="search-off" size={72} color={Colors.neutral} />
           )}
         </View>
 

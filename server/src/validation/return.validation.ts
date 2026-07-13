@@ -22,9 +22,9 @@ export const respondReturnRequestSchema = z.object({
     requestId: objectId,
   }),
   body: z.object({
-    action: z.enum(["accepted", "declined"]),
+    status: z.enum(["accepted", "declined"]),
   }),
-});
+}); 
 
 export const cancelReturnRequestSchema = z.object({
   params: z.object({

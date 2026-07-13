@@ -1,8 +1,9 @@
 import { api } from "@/lib/api";
 import { ApiResponse } from "@/types/api";
 import { mapBook, mapBorrowRecord, mapUserBook } from "./book.mapper";
-import { BorrowRecord } from "@/types/borrow";
+import { BorrowRecord } from "@/types/return";
 import { Book, BookCardItem, UserBook } from "@/types/book";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 
 export const getMyBooks = async (): Promise<BookCardItem[]> => {
   const { data } = await api.get<ApiResponse<UserBook[]>>("/api/book/me");
@@ -13,6 +14,7 @@ export const getBorrowedBooks = async (): Promise<BookCardItem[]> => {
   const { data } = await api.get<ApiResponse<BorrowRecord[]>>(
     "/api/record/borrow"
   );
+    logger.debug(LOG_SCOPE.request, "borrowed request: ", {data})
   return data.data.map((record) => mapBorrowRecord(record, "borrowed"));
 };
 
@@ -20,6 +22,7 @@ export const getLentBooks = async (): Promise<BookCardItem[]> => {
   const { data } = await api.get<ApiResponse<BorrowRecord[]>>(
     "/api/record/lend"
   );
+  logger.debug(LOG_SCOPE.request, "lent request: ", {data})
   return data.data.map((record) => mapBorrowRecord(record, "lent"));
 };
 

@@ -33,7 +33,7 @@ const NotificationCard = ({
   };
 
   return (
-    <View className="mx-5 my-2 rounded-xl border border-gray-700 bg-neutral-900 p-4">
+    <View className="mx-5 my-2 rounded-xl border border-neutral bg-surface p-4">
       <View className="flex-row">
         <Image
           source={{
@@ -50,6 +50,7 @@ const NotificationCard = ({
           </Text>
 
           <Text className="mt-1 text-sm text-gray-300">
+            {notification.from?.fullName} {""}
             {notification.message}
           </Text>
 
@@ -75,7 +76,7 @@ const NotificationCard = ({
           </TouchableOpacity>
         )}
 
-        {actions.map((action) => (
+        {/* {actions.map((action) => (
           <TouchableOpacity
             key={action.action}
             className={`mr-2 mb-2 rounded-lg px-4 py-2 ${buttonColor(
@@ -87,7 +88,7 @@ const NotificationCard = ({
               {action.label}
             </Text>
           </TouchableOpacity>
-        ))}
+        ))} */}
       </View>
     </View>
   );

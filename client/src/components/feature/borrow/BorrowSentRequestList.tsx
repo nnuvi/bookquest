@@ -1,15 +1,14 @@
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 
 import EmptyState from "@/components/common/EmptyState";
 import BookCard from "@/components/feature/book/BookCard";
-import AppText from "@/components/ui/AppText";
 
-import { BorrowRequest, BorrowRequestStatus } from "@/types/borrow";
 import { BookCardItem } from "@/types/book";
+import { BorrowRequest } from "@/types/borrow";
 
-import Screen from "@/components/common/Screen";
 import { LOG_SCOPE, logger } from "@/lib/logger";
-import Button from "@/components/ui/Button";
+import BorrowRequestAction from "./BorrowActionButton";
+import { router } from "expo-router";
 
 interface BorrowSentRequestListProps {
   requests: BookCardItem[];
@@ -28,7 +27,11 @@ export default function BorrowRequestSentList({
   onCancel,
   onBookPress,
 }: BorrowSentRequestListProps) {
-  logger.debug(LOG_SCOPE.query, "Fetched borrow requests (item): ", requests);
+  logger.debug(
+    LOG_SCOPE.query,
+    "Fetched borrow requests sent (item): ",
+    requests,
+  );
   return (
     <FlatList
       data={requests}
@@ -50,28 +53,9 @@ export default function BorrowRequestSentList({
       renderItem={({ item }) => (
         <BookCard
           item={item}
-          action={
-            <View className="px-4 pb-3">
-              <AppText size="sm">
-                Owner{" "}
-                <AppText weight="semibold">{item.owner?.fullName}</AppText>
-              </AppText>
-
-              <AppText size="sm" className="mt-2">
-                Status: {item.borrowRequestStatus?.toUpperCase()}
-              </AppText>
-
-              {item.borrowRequestStatus === "pending" && (
-                <View className="mt-3">
-                  <Button
-                    title="Cancel Request"
-                    variant="danger"
-                    onPress={() => onCancel?.(item.borrowRequestId!)}
-                  />
-                </View>
-              )}
-            </View>
-          }
+            onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
+          actionButton="bottom"
+          action={<BorrowRequestAction mode="sent" requestId={item.id} />}
         />
       )}
     />

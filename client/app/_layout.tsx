@@ -1,17 +1,15 @@
 import "../global.css";
 
-import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-// import PageLoadingIndicator from "@/components/common/PageLoadingIndicator";
-import { useAuth } from "@/hooks/auth";
 import LoadingScreen from "@/components/common/LoadingScreen";
+import { useAuth } from "@/hooks/auth";
+import AppProvider from "@/providers/AppProvider";
+import { Host } from "@expo/ui";
 
 SplashScreen.preventAutoHideAsync();
-
-const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -31,8 +29,8 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <AppProvider>
       <Stack screenOptions={{ headerShown: false }} />
-    </QueryClientProvider>
+    </AppProvider>
   );
 }

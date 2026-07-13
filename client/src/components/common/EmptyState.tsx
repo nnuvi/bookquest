@@ -36,7 +36,7 @@ export default function EmptyState({
       <View className="flex-1 items-center justify-center px-8">
         <View className="mb-6">
           {illustration ?? (
-            <MaterialIcons name="inbox" size={72} color={Colors.gray} />
+            <MaterialIcons name="inbox" size={72} color={Colors.neutral} />
           )}
         </View>
 

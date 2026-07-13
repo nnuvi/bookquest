@@ -10,6 +10,7 @@ type ButtonProps = TouchableOpacityProps & {
     | "outline"
     | "success"
     | "danger"
+    | "lavendar"
     | "neutral";
 
   size?: "xs" | "sm" | "md" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
@@ -45,6 +46,11 @@ const variants = {
   neutral: {
     container: "bg-neutral",
     text: "text-text",
+  },
+
+  lavendar: {
+    container: "bg-neutral-dark",
+    text: "text-text-inverse",
   },
 
   outline: {
@@ -102,7 +108,7 @@ const sizes = {
 
 export default function Button({
   title,
-  variant = "primary",
+  variant = "secondary",
   size = "base",
   fullWidth = false,
   className = "",

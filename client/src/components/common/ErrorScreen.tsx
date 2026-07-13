@@ -37,7 +37,7 @@ export default function ErrorScreen({
       <View className=" flex-1 items-center justify-center px-8 pb-50">
         <View className="mb-6">
           {illustration ?? (
-            <MaterialIcons name="error-outline" size={72} color={Colors.red} />
+            <MaterialIcons name="error-outline" size={72} color={Colors.danger} />
           )}
         </View>
 

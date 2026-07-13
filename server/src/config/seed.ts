@@ -23,6 +23,7 @@ import {
 } from "./user.seed.js";
 import { createBooks, createBorrowRequests } from "./book.seed.js";
 import { createNotifications } from "./notification.seed.js";
+import ReturnRequest from "../model/ReturnRequest.model.js";
 dotenv.config();
 
 const seed = async () => {
@@ -60,17 +61,25 @@ const seed = async () => {
     // await deleteUserAndData("sara")
     // console.log(users)
 
-    const ids = await getUserIdsByUsername([
-      "sara",
-      "sophia",
-      "meii",
-      "dazai",
-      "kate",
-      "senku",
-    ]);
+    // const ids = await getUserIdsByUsername([
+    //   "sara",
+    //   "sophia",
+    //   "meii",
+    //   "dazai",
+    //   "kate",
+    //   "senku",
+    // ]);
 
-    await createFriendRequestsIds(ids, user_1_id, user_2_id);
+    // await createFriendRequestsIds(ids, user_1_id, user_2_id);
+    // await createNotifications(ids, user_1_id, user_2_id);
 
+    try {
+      await ReturnRequest.collection.dropIndex("borrowRecord_1");
+      console.log("Dropped borrowRecord_1 index");
+    } catch (err) {
+      console.log("Index does not exist");
+    }
+    
     console.log("Seeding completed!");
 
     await mongoose.disconnect();

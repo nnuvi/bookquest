@@ -12,9 +12,18 @@ export async function createNotification(input: CreateNotificationInput) {
 export async function getNotifications(userId: string) {
   const notifications = await Notification.find({
     to: userId,
-  }).sort({
-    createdAt: -1,
-  });
+  })
+    .populate("from", "fullName username profileImage")
+    .populate({
+      path: "userBook",
+      populate: {
+        path: "book",
+        select: "title author coverImage",
+      },
+    })
+    .sort({
+      createdAt: -1,
+    });
 
   await Notification.updateMany(
     {
@@ -28,7 +37,7 @@ export async function getNotifications(userId: string) {
   );
 
   logger.debug("getNotificatios: ", notifications);
-  
+
   return {
     success: true,
     data: notifications,

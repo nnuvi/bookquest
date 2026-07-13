@@ -64,7 +64,7 @@ export default function ConfirmationDialog({
               <MaterialIcons
                 name={variant === "danger" ? "warning-amber" : "help-outline"}
                 size={56}
-                color={variant === "danger" ? Colors.red : Colors.primary}
+                color={variant === "danger" ? Colors.danger : Colors.primary}
               />
             )}
 

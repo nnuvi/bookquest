@@ -19,7 +19,6 @@ const ReturnRequestSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "BorrowRecord",
       required: true,
-      unique: true,
       index: true,
     },
 

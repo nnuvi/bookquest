@@ -14,10 +14,16 @@ type BookCardProps = {
   onPress?: (item: BookCardItem) => void;
   returnBook?: (id: string) => void;
   daysSinceAdded?: (date: string) => string;
+  actionButton?: "bottom" | "right" | "none";
   action?: ReactNode;
 };
 
-export default function BookCard({ item, onPress, action }: BookCardProps) {
+export default function BookCard({
+  item,
+  onPress,
+  actionButton = "none",
+  action,
+}: BookCardProps) {
   return (
     <View className="flex-1">
       <View className="flex-row items-center px-4 py-3">
@@ -59,18 +65,21 @@ export default function BookCard({ item, onPress, action }: BookCardProps) {
             ) : item?.type === "lent" || item?.type === "borrowed" ? (
               <AppText size="sm" className="mt-1" numberOfLines={1}>
                 {item?.type === "lent" ? "Lent" : "Borrowed"}{" "}
-                {calculateDaysSinceAdded(item?.borrowDate)}
+                {calculateDaysSinceAdded(item?.borrowAt)} {" | "} 
+                {" Due"} {calculateDaysSinceAdded(item?.dueAt)}
               </AppText>
-            ) : item?.requester ? (
+            ) : (item?.requester?.id) ? (
               <AppText size="sm" className="mb-2">
                 Requested by{" "}
                 <AppText weight="semibold">{item?.requester?.fullName}</AppText>
               </AppText>
             ) : null}
+            
           </TouchableOpacity>
         </View>
+        {actionButton === "right" && <>{action}</>}
       </View>
-      {action}
+      {actionButton === "bottom" && <>{action}</>}
     </View>
   );
 }

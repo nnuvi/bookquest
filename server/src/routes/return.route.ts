@@ -52,7 +52,7 @@ router.patch(
 );
 
 // Cancel own request
-router.delete(
+router.patch(
   "/request/:requestId",
   protectRoute,
   validate(cancelReturnRequestSchema),
@@ -65,5 +65,12 @@ router.post(
   validate(sendReturnReminderSchema),
   sendReturnReminder,
 );
+
+// router.post(
+//   "/:borrowRecordId/askback",
+//   protectRoute,
+//   validate(sendReturnReminderSchema),
+//   sendReturnReminder,
+// );
 
 export default router;

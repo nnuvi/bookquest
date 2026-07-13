@@ -9,8 +9,9 @@ import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 import { useUserBooks } from "@/hooks/books";
 import { useUserProfile } from "@/hooks/user";
-import { useGlobalSearchParams } from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import FriendAction from "@/components/feature/friend/FriendAction";
+import BorrowAction from "@/components/feature/borrow/BorrowAction";
 
 export default function ProfileScreen() {
   const { profileId } = useGlobalSearchParams<{ profileId: string }>();
@@ -78,6 +79,9 @@ export default function ProfileScreen() {
               data={userBooks}
               refreshing={refreshing}
               onRefresh={onRefresh}
+              onItemPress={(item) => router.push(`books/UserBookDetails/${item.userBookId}`)}
+              actionButton="right"
+              action={(userBookId) => <BorrowAction bookId={userBookId} buttonClassName="w-27"/>}
               listEmptyComponent={
                 <EmptyState
                   title="No Books Yet"

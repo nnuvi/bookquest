@@ -4,6 +4,7 @@ import AppText from "@/components/ui/AppText";
 import { BookCardItem } from "@/types/book";
 import BookCard from "../book/BookCard";
 import { ReactElement, ReactNode } from "react";
+import BorrowAction from "../borrow/BorrowAction";
 
 type BookListProps = {
   data: BookCardItem[];
@@ -11,6 +12,8 @@ type BookListProps = {
   refreshing?: boolean;
   onRefresh?: () => void;
   returnBook?: (id: string) => void;
+  actionButton?: "bottom" | "right" | "none";
+  action?: (userBookId: string) => ReactNode;
   calculateDaysSinceAdded?: (date: string) => string;
   contentContainerStyle?: StyleProp<ViewStyle>;
   listEmptyComponent?: ReactElement;
@@ -21,6 +24,8 @@ export default function BookList({
   onItemPress,
   refreshing = false,
   onRefresh,
+  actionButton = "none",
+  action,
   contentContainerStyle,
   listEmptyComponent,
 }: BookListProps) {
@@ -29,7 +34,14 @@ export default function BookList({
       data={data}
       style={{ flex: 1 }}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => <BookCard item={item} onPress={onItemPress} />}
+      renderItem={({ item }) => (
+        <BookCard
+          item={item}
+          onPress={onItemPress}
+          action={action?.(item.userBookId!) }
+          actionButton={actionButton}
+        />
+      )}
       refreshing={refreshing}
       onRefresh={onRefresh}
       contentContainerStyle={[

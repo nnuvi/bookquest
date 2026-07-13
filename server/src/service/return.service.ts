@@ -1,8 +1,7 @@
+import logger from "../config/logger.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import ApiError from "../lib/apiError.js";
-import BorrowRecord, {
-  BorrowRecordSchemaType,
-} from "../model/BorrowRecord.model.js";
+import { BorrowRecordSchemaType } from "../model/BorrowRecord.model.js";
 import { NotificationEvents } from "../model/Notification.model.js";
 import ReturnRequest, {
   ReturnRequestSchemaType,
@@ -10,6 +9,13 @@ import ReturnRequest, {
 } from "../model/ReturnRequest.model.js";
 import { updateBookAvailability } from "./book.service.js";
 import { createNotification } from "./notification.service.js";
+import {
+  completeBorrowRecord,
+  ensureBorrowRecordOwner,
+  ensureBorrowRecordStatus,
+  getBorrowRecordOrThrow,
+  getPopulatedBorrowRecordOrThrow,
+} from "./record.service.js";
 
 export async function sendReturnRequest(
   borrowerId: string,
@@ -17,6 +23,15 @@ export async function sendReturnRequest(
   message = "",
 ) {
   const borrowRecord = await getBorrowRecordOrThrow(borrowRecordId);
+
+  logger.debug(
+    `Send return req service: ${borrowerId} : ${borrowRecordId} : ${message}`,
+    {
+      borrowerId,
+      borrowRecordId,
+      message,
+    },
+  );
 
   ensureBorrower(borrowRecord, borrowerId);
 
@@ -177,9 +192,28 @@ export async function sendReturnReminder(
     message: "reminded you to return the book.",
   });
 
+  borrowRecord.lastReminderAt = new Date();
+  await borrowRecord.save();
+
   return {
     success: true,
   };
+}
+
+export async function sendAskBackReminder(recordId: string, ownerId: string) {
+  const record = await getPopulatedBorrowRecordOrThrow(recordId);
+
+  ensureBorrowRecordOwner(record, ownerId);
+
+  ensureBorrowRecordStatus(record, "borrowed");
+
+  await createNotification({
+    from: record.owner.toString(),
+    to: record.borrower.toString(),
+    userBook: record.userBook.toString(),
+    event: NotificationEvents.RETURN_REMINDER_SENT,
+    message: "sent a reminder to ask back the book",
+  });
 }
 
 export async function getReturnRequestOrThrow(requestId: string) {
@@ -265,16 +299,6 @@ export async function ensureNoDuplicateReturnRequest(
   }
 }
 
-export async function getBorrowRecordOrThrow(borrowRecordId: string) {
-  const borrowRecord = await BorrowRecord.findById(borrowRecordId);
-
-  if (!borrowRecord) {
-    throw new ApiError(HTTP_STATUS.NOT_FOUND, "Borrow record not found.");
-  }
-
-  return borrowRecord;
-}
-
 export function ensureBorrower(
   borrowRecord: BorrowRecordSchemaType,
   borrowerId: string,
@@ -282,36 +306,4 @@ export function ensureBorrower(
   if (borrowRecord.borrower.toString() !== borrowerId) {
     throw new ApiError(HTTP_STATUS.FORBIDDEN, "You are not the borrower.");
   }
-}
-
-export function ensureBorrowRecordOwner(
-  borrowRecord: BorrowRecordSchemaType,
-  ownerId: string,
-): void {
-  if (borrowRecord.owner.toString() !== ownerId) {
-    throw new ApiError(HTTP_STATUS.FORBIDDEN, "You are not the owner.");
-  }
-}
-
-export function ensureBorrowRecordStatus(
-  borrowRecord: BorrowRecordSchemaType,
-  status: "borrowed" | "returned",
-): void {
-  if (borrowRecord.status !== status) {
-    throw new ApiError(HTTP_STATUS.CONFLICT, `Book is not ${status}.`);
-  }
-}
-
-export async function completeBorrowRecord(
-  borrowRecordId: string,
-): Promise<void> {
-  await BorrowRecord.updateOne(
-    { _id: borrowRecordId },
-    {
-      $set: {
-        status: "returned",
-        returnedAt: new Date(),
-      },
-    },
-  );
 }

@@ -7,12 +7,11 @@ import { BorrowRequest } from "@/types/borrow";
 import { BookCardItem } from "@/types/book";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import Button from "@/components/ui/Button";
+import BorrowRequestAction from "./BorrowActionButton";
+import { router } from "expo-router";
 
 interface BorrowRequestListProps {
   requests: BookCardItem[];
-
-  onApprove: (id: string) => void;
-  onDecline: (id: string) => void;
 
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -22,17 +21,15 @@ interface BorrowRequestListProps {
 
 export default function BorrowRequestList({
   requests,
-  onApprove,
-  onDecline,
+  // onApprove,
+  // onDecline,
   refreshing = false,
   onRefresh,
   onBookPress,
 }: BorrowRequestListProps) {
-  logger.debug(
-    LOG_SCOPE.query,
-    "Fetched borrow sent requests (item): ",
+  logger.debug(LOG_SCOPE.query, "Fetched borrow requests (item): ", {
     requests,
-  );
+  });
   return (
     <FlatList
       data={requests}
@@ -55,27 +52,9 @@ export default function BorrowRequestList({
         <BookCard
           item={item}
           //   onPress={() => onBookPress?.(item)}
-          action={
-            <View className="flex-row gap-3 px-4 pb-4">
-              <View className="flex-1">
-                <Button
-                  title="Approve"
-                  variant="secondary"
-                  size="base"
-                  onPress={() => onApprove(item.id)}
-                />
-              </View>
-
-              <View className="flex-1">
-                <Button
-                  title="Decline"
-                  variant="neutral"
-                  size="base"
-                  onPress={() => onDecline(item.id)}
-                />
-              </View>
-            </View>
-          }
+          actionButton="bottom"
+          action={<BorrowRequestAction requestId={item.id} fullWidth/>}
+          onPress={() => router.push(`/borrow/${item.id}`)}
         />
       )}
     />

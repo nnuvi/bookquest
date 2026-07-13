@@ -3,14 +3,20 @@ import { asyncHandler } from "../lib/asyncHandler.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 
 import * as returnService from "../service/return.service.js";
+import logger from "../config/logger.js";
 
 export const sendReturnRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { borrowRecordId } = req.params;
     const { message } = req.body;
 
+    logger.debug("Send return req: ", {
+      borrowRecordId,
+      message
+    })
+
     const result = await returnService.sendReturnRequest(
-      req.user.id,
+      req.user._id,
       borrowRecordId!,
       message,
     );
@@ -25,7 +31,7 @@ export const sendReturnRequest = asyncHandler(
 
 export const getReturnRequests = asyncHandler(
   async (req: Request, res: Response) => {
-    const result = await returnService.getReturnRequests(req.user.id);
+    const result = await returnService.getReturnRequests(req.user._id);
 
     res.status(HTTP_STATUS.OK).json(result);
   },
@@ -33,7 +39,7 @@ export const getReturnRequests = asyncHandler(
 
 export const getReturnSentRequests = asyncHandler(
   async (req: Request, res: Response) => {
-    const result = await returnService.getReturnSentRequests(req.user.id);
+    const result = await returnService.getReturnSentRequests(req.user._id);
 
     res.status(HTTP_STATUS.OK).json(result);
   },
@@ -42,17 +48,17 @@ export const getReturnSentRequests = asyncHandler(
 export const respondToReturnRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { requestId } = req.params;
-    const { action } = req.body;
+    const { status } = req.body;
 
     const result = await returnService.respondReturnRequest(
       requestId!,
-      req.user.id,
-      action,
+      req.user._id,
+      status,
     );
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Return request ${action}.`,
+      message: `Return request ${status}.`,
       data: result,
     });
   },
@@ -64,7 +70,7 @@ export const cancelReturnRequest = asyncHandler(
 
     const result = await returnService.cancelReturnRequest(
       requestId!,
-      req.user.id,
+      req.user._id,
     );
 
     res.status(HTTP_STATUS.OK).json({
@@ -79,8 +85,10 @@ export const sendReturnReminder = asyncHandler(
   async (req: Request, res: Response) => {
     const { borrowRecordId } = req.params;
 
+    logger.debug("borrorecordId remind: ", borrowRecordId)
+
     const result = await returnService.sendReturnReminder(
-      req.user.id,
+      req.user._id,
       borrowRecordId!,
     );
 

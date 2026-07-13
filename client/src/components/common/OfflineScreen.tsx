@@ -42,7 +42,7 @@ export default function OfflineScreen({
       <View className="flex-1 items-center justify-center px-8">
         <View className="mb-6">
           {illustration ?? (
-            <MaterialIcons name="wifi-off" size={72} color={Colors.gray} />
+            <MaterialIcons name="wifi-off" size={72} color={Colors.neutral} />
           )}
         </View>
 

@@ -14,13 +14,9 @@ import {
 import BorrowRecord from "../model/BorrowRecord.model.js";
 import { createNotification } from "./notification.service.js";
 import { NotificationEvents } from "../model/Notification.model.js";
-
-// sendBorrowRequest /
-// getBorrowRequests /
-// getSentBorrowRequests /
-// respondToBorrowRequest /
-// cancelBorrowRequest /
-// getBorrowStatus /
+import ReturnRequest from "../model/ReturnRequest.model.js";
+import { BorrowStatusResponse } from "../types/borrow.js";
+import { createBorrowRecord } from "./record.service.js";
 
 export async function getBorrowRequests(userId: string) {
   const borrowRequests = await BorrowRequest.find({
@@ -37,11 +33,15 @@ export async function getBorrowRequests(userId: string) {
     })
     .sort({ createdAt: -1 });
 
+  const validBorrowRequests = borrowRequests.filter(
+    (r) => r.requester && r.owner && r.userBook,
+  );
+
   logger.debug("getBorrowRequests: ", borrowRequests);
 
   return {
     success: true,
-    data: borrowRequests,
+    data: validBorrowRequests,
   };
 }
 
@@ -60,11 +60,15 @@ export async function getSentBorrowRequests(userId: string) {
     })
     .sort({ createdAt: -1 });
 
+  const validSentBorrowRequests = borrowSentRequests.filter(
+    (r) => r.requester && r.owner && r.userBook,
+  );
+
   logger.debug("getBorrowSentRequests: ", borrowSentRequests);
 
   return {
     success: true,
-    data: borrowSentRequests,
+    data: validSentBorrowRequests,
   };
 }
 
@@ -78,7 +82,7 @@ export async function sendBorrowRequest(
 
   ensureNotBookOwner(userBook, requesterId);
   ensureBookAvailability(userBook, "available");
-  ensureNoDuplicateBorrowRequest(requesterId, userBookId);
+  await ensureNoDuplicateBorrowRequest(requesterId, userBookId);
 
   // const pendingRequest = await getPendingBorrowRequest(requesterId, userBookId);
 
@@ -98,9 +102,14 @@ export async function respondBorrowRequest(
   ownerId: string,
   action: BorrowRequestStatus,
 ) {
+  logger.debug("status in respond service: ", {
+    requestId,
+    ownerId,
+    action,
+  });
   const request = await getBorrowRequestOrThrow(requestId);
-  const requesterId = request.requester._id.toString();
-  const userBookId = request.userBook._id.toString();
+  const requesterId = request.requester.toString();
+  const userBookId = request.userBook.toString();
 
   ensurePendingBorrowRequest(request);
 
@@ -110,7 +119,7 @@ export async function respondBorrowRequest(
     await createBorrowRecord(request);
     await createNotification({
       from: ownerId,
-      to: requestId,
+      to: requesterId,
       userBook: userBookId,
       event: NotificationEvents.BORROW_REQUEST_APPROVED,
       message: `acceped your Borrow Request`,
@@ -121,7 +130,7 @@ export async function respondBorrowRequest(
     await updateBorrowRequestStatus(requestId, "declined");
     await createNotification({
       from: ownerId,
-      to: requestId,
+      to: requesterId,
       userBook: userBookId,
       event: NotificationEvents.BORROW_REQUEST_DECLINED,
       message: `declined your Borrow Request`,
@@ -142,6 +151,14 @@ export async function createBorrowRequest(
   borrowDurationDays: number,
   message = "",
 ) {
+  logger.debug("Borrow request before createBorrowRequest", {
+    requester: requesterId,
+    owner: ownerId,
+    userBook: userBookId,
+    borrowDurationDays,
+    message,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+  });
   const borrowRequest = await BorrowRequest.create({
     requester: requesterId,
     owner: ownerId,
@@ -150,6 +167,8 @@ export async function createBorrowRequest(
     message,
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
   });
+
+  logger.debug("Borrow request after createBorrowRequest", borrowRequest);
 
   return borrowRequest;
 }
@@ -180,17 +199,224 @@ export async function cancelBorrowRequest(
   return request;
 }
 
-export async function getBorrowStatus(userId: string, userBookId: string) {
-  const userBook = await getUserBookOrThrow(userBookId);
+// export async function getBorrowStatus(userId: string, userBookId: string) {
+//   const userBook = await getUserBookOrThrow(userBookId);
+//   const ownerId = userBook.owner.toString();
 
-  // Owner of the book
-  if (userBook.owner.toString() === userId) {
+//   // User owns the book
+//   if (ownerId === userId) {
+//     const incomingRequest = await BorrowRequest.findOne({
+//       owner: userId,
+//       userBook: userBookId,
+//       status: "pending",
+//     });
+
+//     if (incomingRequest) {
+//       return {
+//         status: "incoming-request",
+//         requestId: incomingRequest._id.toString(),
+//       };
+//     }
+
+//     return {
+//       status: "owner",
+//     };
+//   }
+
+//   // User is currently borrowing this book
+//   const borrowRecord = await BorrowRecord.findOne({
+//     borrower: userId,
+//     userBook: userBookId,
+//     status: "borrowed",
+//   });
+
+//   if (borrowRecord) {
+//     return {
+//       status: "borrowed",
+//       borrowRecordId: borrowRecord._id.toString(),
+//     };
+//   }
+
+//   // User has already requested this book
+//   const pendingRequest = await BorrowRequest.findOne({
+//     requester: userId,
+//     userBook: userBookId,
+//     status: "pending",
+//   });
+
+//   if (pendingRequest) {
+//     return {
+//       status: "request-pending",
+//       requestId: pendingRequest._id.toString(),
+//     };
+//   }
+
+//   // Book is available
+//   if (userBook.availability === "available") {
+//     return {
+//       status: "available",
+//     };
+//   }
+
+//   // Someone else currently has the book
+//   return {
+//     status: "unavailable",
+//   };
+// }
+
+// export async function getBorrowStatus(userId: string, userBookId: string) {
+//   const userBook = await getUserBookOrThrow(userBookId);
+//   const ownerId = userBook.owner.toString();
+
+//   // ----------------------------------------------------
+//   // Owner
+//   // ----------------------------------------------------
+//   if (ownerId === userId) {
+//     const incomingRequest = await BorrowRequest.findOne({
+//       owner: userId,
+//       userBook: userBookId,
+//       status: "pending",
+//     });
+
+//     if (incomingRequest) {
+//       return {
+//         status: "incoming-request" as const,
+//         requestId: incomingRequest._id.toString(),
+//       };
+//     }
+
+//     // Someone is currently borrowing my book
+//     const lendingRecord = await BorrowRecord.findOne({
+//       owner: userId,
+//       userBook: userBookId,
+//       status: "borrowed",
+//     });
+
+//     if (lendingRecord) {
+//       return {
+//         status: "lending" as const,
+//         borrowRecordId: lendingRecord._id.toString(),
+//       };
+//     }
+
+//     return {
+//       status: "owner" as const,
+//     };
+//   }
+
+//   // ----------------------------------------------------
+//   // Borrower
+//   // ----------------------------------------------------
+//   const borrowingRecord = await BorrowRecord.findOne({
+//     borrower: userId,
+//     userBook: userBookId,
+//     status: "borrowed",
+//   });
+
+//   if (borrowingRecord) {
+//     return {
+//       status: "borrowing" as const,
+//       borrowRecordId: borrowingRecord._id.toString(),
+//     };
+//   }
+
+//   // ----------------------------------------------------
+//   // Pending request
+//   // ----------------------------------------------------
+//   const pendingRequest = await BorrowRequest.findOne({
+//     requester: userId,
+//     userBook: userBookId,
+//     status: "pending",
+//   });
+
+//   if (pendingRequest) {
+//     return {
+//       status: "request-pending" as const,
+//       requestId: pendingRequest._id.toString(),
+//     };
+//   }
+
+//   // ----------------------------------------------------
+//   // Available
+//   // ----------------------------------------------------
+//   if (userBook.availability === "available") {
+//     return {
+//       status: "available" as const,
+//     };
+//   }
+
+//   // ----------------------------------------------------
+//   // Borrowed by someone else
+//   // ----------------------------------------------------
+//   return {
+//     status: "unavailable" as const,
+//   };
+// }
+
+export async function getBorrowStatus(
+  userId: string,
+  userBookId: string,
+): Promise<BorrowStatusResponse> {
+  const userBook = await getUserBookOrThrow(userBookId);
+  const isOwner = userBook.owner.toString() === userId;
+
+  // <<<<<<<<<<<<<<<<<<<< OWNER >>>>>>>>>>>>>>>>>>>> //
+   
+  if (isOwner) {
+    const borrowRequest = await BorrowRequest.findOne({
+      owner: userId,
+      userBook: userBookId,
+      status: "pending",
+    });
+
+    if (borrowRequest) {
+      return {
+        role: "owner",
+        status: "borrow-request-received",
+        actions: ["accept-borrow-request", "decline-borrow-request"],
+        borrowRequestId: borrowRequest._id.toString(),
+      };
+    }
+
+    const borrowRecord = await BorrowRecord.findOne({
+      owner: userId,
+      userBook: userBookId,
+      status: "borrowed",
+    });
+
+    if (borrowRecord) {
+      const returnRequest = await ReturnRequest.findOne({
+        borrowRecord: borrowRecord._id,
+        status: "pending",
+      });
+
+      if (returnRequest) {
+        return {
+          role: "owner",
+          status: "return-request-received",
+          actions: ["accept-return-request", "decline-return-request"],
+          borrowRecordId: borrowRecord._id.toString(),
+          returnRequestId: returnRequest._id.toString(),
+        };
+      }
+
+      return {
+        role: "owner",
+        status: "lending",
+        actions: ["ask-back"],
+        borrowRecordId: borrowRecord._id.toString(),
+      };
+    }
+
     return {
+      role: "owner",
       status: "owner",
+      actions: [],
     };
   }
 
-  // Active borrow record (user currently borrowing this book)
+  // <<<<<<<<<<<<<<<<<<<< BORROWER >>>>>>>>>>>>>>>>>>>> //
+
   const borrowRecord = await BorrowRecord.findOne({
     borrower: userId,
     userBook: userBookId,
@@ -198,13 +424,43 @@ export async function getBorrowStatus(userId: string, userBookId: string) {
   });
 
   if (borrowRecord) {
+    const returnRequest = await ReturnRequest.findOne({
+      borrowRecord: borrowRecord._id,
+      status: "pending",
+    });
+
+    if (returnRequest) {
+      // I already requested to return
+      if (returnRequest.borrower.toString() === userId) {
+        return {
+          role: "borrower",
+          status: "return-request-sent",
+          actions: ["cancel-return-request"],
+          borrowRecordId: borrowRecord._id.toString(),
+          returnRequestId: returnRequest._id.toString(),
+        };
+      }
+
+      // Owner reminded me
+      return {
+        role: "borrower",
+        status: "return-reminder-received",
+        actions: ["return"],
+        borrowRecordId: borrowRecord._id.toString(),
+        returnRequestId: returnRequest._id.toString(),
+      };
+    }
+
     return {
-      status: "borrowed",
-      borrowRecordId: borrowRecord._id,
+      role: "borrower",
+      status: "borrowing",
+      actions: ["return"],
+      borrowRecordId: borrowRecord._id.toString(),
     };
   }
 
-  // Pending borrow request
+  // <<<<<<<<<<<<<<<<<<<< VISITOR >>>>>>>>>>>>>>>>>>>> //
+  
   const borrowRequest = await BorrowRequest.findOne({
     requester: userId,
     userBook: userBookId,
@@ -213,22 +469,45 @@ export async function getBorrowStatus(userId: string, userBookId: string) {
 
   if (borrowRequest) {
     return {
-      status: "pending",
-      requestId: borrowRequest._id,
+      role: "visitor",
+      status: "borrow-request-sent",
+      actions: ["cancel-borrow-request"],
+      borrowRequestId: borrowRequest._id.toString(),
     };
   }
 
-  // Book available to request
   if (userBook.availability === "available") {
     return {
+      role: "visitor",
       status: "available",
+      actions: ["borrow"],
     };
   }
 
-  // Book currently lent to someone else
   return {
+    role: "visitor",
     status: "unavailable",
+    actions: [],
   };
+}
+
+export async function getBorrowRequestDetails(requestId: string) {
+  const request = await BorrowRequest.findById(requestId)
+    .populate("requester", "fullName username profileImage")
+    .populate("owner", "fullName username profileImage")
+    .populate({
+      path: "userBook",
+      populate: {
+        path: "book",
+        select: "title author coverImage",
+      },
+    });
+
+  if (!request) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, "Borrow request not found.");
+  }
+
+  return request;
 }
 
 // HEPER FUNCTIONS
@@ -315,30 +594,24 @@ export async function cancelPendingBorrowRequests(
 export async function updateBorrowRequestStatus(
   requestId: string,
   status: BorrowRequestStatus,
-): Promise<void> {
-  await BorrowRequest.updateOne({ _id: requestId }, { status });
-}
-
-export async function createBorrowRecord(
-  borrowRequest: BorrowRequestSchemaType,
 ) {
-  const borrowAt = new Date();
+  logger.debug("Updated borrow request", {
+    requestId,
+    status,
+  });
 
-  const DAY = 24 * 60 * 60 * 1000;
-
-  const dueAt = new Date(
-    borrowAt.getTime() + borrowRequest.borrowDurationDays * DAY,
+  const result = await BorrowRequest.findByIdAndUpdate(
+    requestId,
+    { status },
+    { new: true },
   );
 
-  return BorrowRecord.create({
-    borrowRequest: borrowRequest,
-    borrower: borrowRequest.requester,
-    owner: borrowRequest.owner,
-    userBook: borrowRequest.userBook,
-    borrowAt,
-    dueAt,
-  });
+  logger.debug("Updated borrow request", { result });
+
+  return result;
 }
+
+
 
 export async function ensureNoDuplicateBorrowRequest(
   requesterId: string,

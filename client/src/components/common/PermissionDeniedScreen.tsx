@@ -45,7 +45,7 @@ export default function PermissionDeniedScreen({
             <MaterialIcons
               name="lock-outline"
               size={72}
-              color={Colors.yellow}
+              color={Colors.warning}
             />
           )}
         </View>

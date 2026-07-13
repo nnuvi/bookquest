@@ -1,4 +1,5 @@
 import { BorrowRequestStatus } from "./borrow";
+import { BorrowRecordStatus, ReturnRequestStatus } from "./return";
 import { User } from "./user";
 
 export type Book = {
@@ -61,10 +62,15 @@ export type BookCardItem = {
   availability?: availability;
 
   addedAt?: Date;
-  borrowDate?: Date;
+  borrowAt?: Date;
+  dueAt?: Date;
+  returnAt?: Date;
+
+  borrowStatus?: BorrowRecordStatus;
 
   borrowRequestId?: string;
   borrowRequestStatus?: BorrowRequestStatus;
+  returnRequestId?: string;
 
   requester?: {
     id: string;
@@ -79,20 +85,15 @@ export type BookCardItem = {
     username: string;
     profileImage?: string;
   };
+
+  borrowRecordId?: string;
+
+  returnRequestStatus?: ReturnRequestStatus;
+
+  borrower?: {
+    id: string;
+    fullName: string;
+    username: string;
+    profileImage?: string;
+  };
 };
-// export type BookCardItem = {
-//   _id: string;
-//   bookId?: string;
-//   userBookId?: string;
-//   title: string;
-//   author: string[];
-//   coverImage: string;
-//   userBook?: UserBook;
-//   owner?: User;
-//   borrower?: User;
-//   addedAt?: Date;
-//   borrowDate?: Date;
-//   availability?: availability;
-//   status?: "borrowed" | "returned" | "overdue";
-//   type?: bookType;
-// };

@@ -1,8 +1,11 @@
 import { z } from "zod";
 import {
   bookIdParams,
+  borrowDurationDaysField,
+  messageField,
   objectIdParams,
   requestIdParams,
+  userBookIdParams,
 } from "./common.validation.js";
 import { BorrowRequestStatusEnum } from "../model/BorrowRequest.model.js";
 import { ReturnRequestStatusEnum } from "../model/ReturnRequest.model.js";
@@ -19,17 +22,22 @@ export const BorrowRequestActionSchema = z.enum(BorrowRequestActionValues);
 
 export const ReturnRequestActionSchema = z.enum(ReturnRequestActionValues);
 
-export const sendBorrowRequestSchema = bookIdParams(
+export const sendBorrowRequestSchema = userBookIdParams(
   "Send Borrow Request Book ID",
-);
+).extend({
+  body: z.object({
+    borrowDurationDays: borrowDurationDaysField,
+    message: messageField,
+  }),
+});
 
-export const borrowStatusSchema = bookIdParams("Borrow Statues Book ID");
+export const borrowStatusSchema = userBookIdParams("Borrow Statues Book ID");
 
 export const respondBorrowRequestSchema = requestIdParams(
   "Borrow Request ID",
 ).extend({
   body: z.object({
-    action: BorrowRequestActionSchema,
+    status: BorrowRequestActionSchema,
   }),
 });
 

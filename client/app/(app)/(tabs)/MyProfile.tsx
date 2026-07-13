@@ -16,6 +16,7 @@ import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 
 import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
 import { useMyProfile } from "@/hooks/user";
+import BorrowAction from "@/components/feature/borrow/BorrowAction";
 
 type TabType = "list" | "borrowed" | "lent";
 
@@ -123,6 +124,8 @@ export default function ProfileScreen() {
               }
               refreshing={refreshing}
               onRefresh={onRefresh}
+              actionButton="right"
+              action={(userBookId) => <BorrowAction bookId={userBookId} />}
               contentContainerStyle={{
                 paddingBottom: 70,
               }}
@@ -138,4 +141,7 @@ export default function ProfileScreen() {
       )}
     </Screen>
   );
+}
+{
+  /* <BorrowAction bookId={item.userBookId!} /> */
 }

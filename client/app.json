@@ -7,29 +7,28 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/images/icon.png",
-
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-
       "package": "com.bookquest.app",
       "softwareKeyboardLayoutMode": "pan"
     },
-
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-
     "androidStatusBar": {
       "backgroundColor": "#000000"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-splash-screen"
+    ]
   }
 }

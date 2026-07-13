@@ -7,6 +7,7 @@ import {
   respondToBorrowRequest,
   cancelBorrowRequest,
   getBorrowStatus,
+  getBorrowRequest,
 } from "../controller/borrow.controller.js";
 
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -23,25 +24,22 @@ const router = express.Router();
 
 // Send a borrow request
 router.post(
-  "/:bookId/request",
+  "/:userBookId/request",
   protectRoute,
   validate(sendBorrowRequestSchema),
   sendBorrowRequest,
 );
 
+
+
 // Incoming borrow requests (owner)
-router.get(
-  "/request",
-  protectRoute,
-  getBorrowRequests,
-);
+router.get("/request", protectRoute, getBorrowRequests);
 
 // Sent borrow requests (requester)
-router.get(
-  "/request/sent",
-  protectRoute,
-  getSentBorrowRequests,
-);
+router.get("/request/sent", protectRoute, getSentBorrowRequests);
+
+// Incoming borrow request (owner)
+router.get("/request/:requestId", protectRoute, getBorrowRequest);
 
 // Accept / Decline a borrow request
 router.patch(
@@ -52,8 +50,8 @@ router.patch(
 );
 
 // Cancel a borrow request
-router.delete(
-  "/request/:requestId",
+router.patch(
+  "/request/:requestId/cancel",
   protectRoute,
   validate(cancelBorrowRequestSchema),
   cancelBorrowRequest,
@@ -61,7 +59,7 @@ router.delete(
 
 // Get borrow status for a book
 router.get(
-  "/:bookId/status",
+  "/:userBookId/status",
   protectRoute,
   validate(borrowStatusSchema),
   getBorrowStatus,

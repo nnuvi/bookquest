@@ -17,7 +17,6 @@ const BorrowRecordSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "BorrowRequest",
       required: true,
-      unique: true,
       index: true,
     },
 
@@ -81,15 +80,15 @@ const BorrowRecordSchema = new Schema(
   },
 );
 
-BorrowRecordSchema.index(
-  { userBook: 1 },
-  {
-    unique: true,
-    partialFilterExpression: {
-      status: "borrowed",
-    },
-  },
-);
+// BorrowRecordSchema.index(
+//   { userBook: 1 },
+//   {
+//     unique: true,
+//     partialFilterExpression: {
+//       status: "borrowed",
+//     },
+//   },
+// );
 
 export type BorrowRecordSchemaType = InferSchemaType<typeof BorrowRecordSchema>;
 

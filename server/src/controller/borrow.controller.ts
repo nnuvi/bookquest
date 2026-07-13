@@ -5,6 +5,8 @@ import { asyncHandler } from "../lib/asyncHandler.js";
 // import { FriendRequestAction } from "../model/FriendRequest.model.js";
 import * as friendService from "../service/friend.service.js";
 import * as borrowService from "../service/borrow.service.js";
+import logger from "../config/logger.js";
+import { success } from "zod";
 
 export const getBorrowRequests = asyncHandler(
   async (req: Request, res: Response) => {
@@ -16,40 +18,59 @@ export const getBorrowRequests = asyncHandler(
 
 export const getSentBorrowRequests = asyncHandler(
   async (req: Request, res: Response) => {
-    const data = await borrowService.getSentBorrowRequests(
-      req.user._id.toString(),
-    );
+    const data = await borrowService.getSentBorrowRequests(req.user._id);
 
     res.status(HTTP_STATUS.OK).json(data);
   },
 );
 
-export const sendBorrowRequest = asyncHandler( 
-  async (req: Request, res: Response): Promise<void> => {
-    const { bookId } = req.params;
-    const data = await borrowService.getBorrowRequests
+export const getBorrowRequest = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { requestId } = req.params;
+    const data = await borrowService.getBorrowRequestDetails(requestId!);
+
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: " Successfully",
-      data
+      message: "Request Fetched Successfully",
+      data,
     });
-  }
+  },
+);
+
+export const sendBorrowRequest = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { userBookId } = req.params;
+    const { borrowDurationDays, message } = req.body;
+
+    const data = await borrowService.sendBorrowRequest(
+      req.user._id,
+      userBookId!,
+      borrowDurationDays,
+      message,
+    );
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Successfully",
+      data,
+    });
+  },
 );
 
 export const respondToBorrowRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { requestId } = req.params;
-    const { action } = req.body;
+    const { status } = req.body;
 
     const result = await borrowService.respondBorrowRequest(
       requestId!,
-      req.user.id,
-      action,
+      req.user._id,
+      status,
     );
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Borrow request ${action}.`,
+      message: `Borrow request ${status}.`,
       data: result,
     });
   },
@@ -61,7 +82,7 @@ export const cancelBorrowRequest = asyncHandler(
 
     const result = await borrowService.cancelBorrowRequest(
       requestId!,
-      req.user.id
+      req.user._id,
     );
 
     res.status(HTTP_STATUS.OK).json({
@@ -75,9 +96,9 @@ export const cancelBorrowRequest = asyncHandler(
 export const getBorrowStatus = asyncHandler(
   async (req: Request, res: Response) => {
     const { userBookId } = req.params;
-
+    logger.debug(`Status UserBookID ${userBookId}`);
     const result = await borrowService.getBorrowStatus(
-      req.user.id,
+      req.user._id,
       userBookId!,
     );
 
