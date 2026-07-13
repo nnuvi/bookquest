@@ -15,7 +15,7 @@ type Props = {
 export default function ReturnButton({
   recordId,
   fullWidth = false,
-  buttonClassName = "",
+  buttonClassName,
 }: Props) {
   const [visible, setVisible] = useState(false);
 

@@ -13,7 +13,7 @@ type Props = {
 export default function BorrowButton({
   bookId,
   fullWidth = false,
-  buttonClassName = "",
+  buttonClassName,
 }: Props) {
   const [visible, setVisible] = useState(false);
 

@@ -18,7 +18,7 @@ export default function BorrowRequestAction({
   requestId,
   mode = "incoming",
   fullWidth = false,
-  buttonClassName = "",
+  buttonClassName,
 }: Props) {
   const respond = useRespondBorrowRequest();
   const revoke = useRevokeBorrowRequest();
@@ -27,7 +27,7 @@ export default function BorrowRequestAction({
 
   if (mode === "sent") {
     return (
-      // <View className="px-4 pb-4">
+      <View className="">
         <Button
           title="Cancel"
           variant="neutral"
@@ -35,39 +35,39 @@ export default function BorrowRequestAction({
           //   loading={revoke.isPending}
           onPress={() => revoke.mutate(requestId)}
         />
-      // </View>
+      </View>
     );
   }
 
   return (
-    <View className="flex-row gap-2 px-2">
+    <View className="flex-row gap-2">
       {/* <View className={fullWidth ? "flex-1" : undefined}> */}
-        <Button
-          title="Approve"
-          className={fullWidth ? "flex-1" : buttonClassName}
-          //   loading={respond.isPending}
-          onPress={() =>
-            respond.mutate({
-              requestId,
-              status: "accepted",
-            })
-          }
-        />
+      <Button
+        title="Approve"
+        className={fullWidth ? "flex-1" : buttonClassName}
+        //   loading={respond.isPending}
+        onPress={() =>
+          respond.mutate({
+            requestId,
+            status: "accepted",
+          })
+        }
+      />
       {/* </View> */}
 
       {/* <View className={fullWidth ? "flex-1" : undefined}> */}
-        <Button
-          title="Decline"
-          variant="neutral"
-          className={fullWidth ? "flex-1" : buttonClassName}
-          //   loading={respond.isPending}
-          onPress={() =>
-            respond.mutate({
-              requestId,
-              status: "declined",
-            })
-          }
-        />
+      <Button
+        title="Decline"
+        variant="neutral"
+        className={fullWidth ? "flex-1" : buttonClassName}
+        //   loading={respond.isPending}
+        onPress={() =>
+          respond.mutate({
+            requestId,
+            status: "declined",
+          })
+        }
+      />
       {/* </View> */}
     </View>
   );

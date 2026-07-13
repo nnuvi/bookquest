@@ -14,7 +14,7 @@ type Props = {
 export default function AskBackButton({
   recordId,
   fullWidth = false,
-  buttonClassName = "",
+  buttonClassName,
 }: Props) {
   const askBack = useSendReturnReminder();
 

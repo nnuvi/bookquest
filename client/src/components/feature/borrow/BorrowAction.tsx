@@ -56,7 +56,11 @@ export default function BorrowAction({
       )}
 
       {data.actions.includes("accept-borrow-request") && (
-        <BorrowActionButton requestId={data.borrowRequestId!} />
+        <BorrowActionButton
+          requestId={data.borrowRequestId!}
+          fullWidth={fullWidth}
+          buttonClassName={buttonClassName}
+        />
       )}
 
       {data.actions.includes("return") && (
@@ -76,11 +80,20 @@ export default function BorrowAction({
       )}
 
       {data.actions.includes("accept-return-request") && (
-        <ReturnActionButton requestId={data.returnRequestId!} mode="incoming" />
+        <ReturnActionButton
+          requestId={data.returnRequestId!}
+          fullWidth={fullWidth}
+          buttonClassName={buttonClassName}
+        />
       )}
 
       {data.actions.includes("cancel-return-request") && (
-        <ReturnActionButton requestId={data.returnRequestId!} mode="sent" />
+        <ReturnActionButton
+          requestId={data.returnRequestId!}
+          fullWidth={fullWidth}
+          mode="sent"
+          buttonClassName={buttonClassName}
+        />
       )}
     </View>
   );

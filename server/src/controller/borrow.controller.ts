@@ -42,6 +42,12 @@ export const sendBorrowRequest = asyncHandler(
     const { userBookId } = req.params;
     const { borrowDurationDays, message } = req.body;
 
+    logger.debug(`Borrow Duration: ${borrowDurationDays}`, {
+      userBookId,
+      borrowDurationDays,
+      message
+    })
+
     const data = await borrowService.sendBorrowRequest(
       req.user._id,
       userBookId!,

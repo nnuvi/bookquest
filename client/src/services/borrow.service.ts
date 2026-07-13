@@ -70,8 +70,9 @@ export const sendBorrowRequest = async (
     message,
   });
 
-  logger.debug(LOG_SCOPE.request, "Borrow request sent:", {
+  logger.debug(LOG_SCOPE.request, "Borrow request sent: react Query: ", {
     requestId: data.data._id,
+    data
   });
 
   return data.data;

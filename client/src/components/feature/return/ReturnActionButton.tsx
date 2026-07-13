@@ -22,29 +22,41 @@ export default function ReturnRequestAction({
   requestId,
   mode = "incoming",
   fullWidth = false,
-  buttonClassName = "",
+  buttonClassName,
 }: Props) {
   const respond = useRespondReturnRequest();
   const revoke = useCancelReturnRequest();
 
   logger.debug(LOG_SCOPE.query, "query action", { requestId });
 
+  // if (mode === "sent") {
+  //   return (
+  //     <Button
+  //       title="Cancel"
+  //       variant="neutral"
+  //       className={fullWidth ? "flex-1" : buttonClassName}
+  //       //   loading={revoke.isPending}
+  //       onPress={() => revoke.mutate(requestId!)}
+  //     />
+  //   );
+  // }
+
   if (mode === "sent") {
     return (
-      <View className="px-4 pb-4">
+      <View className="">
         <Button
           title="Cancel"
           variant="neutral"
           className={fullWidth ? "flex-1" : buttonClassName}
           //   loading={revoke.isPending}
-          onPress={() => revoke.mutate(requestId!)}
+          onPress={() => revoke.mutate(requestId)}
         />
       </View>
     );
   }
 
   return (
-    <View className="flex-row gap-3 px-4 pb-4">
+    <View className="flex-row gap-2">
       {/* <View className="flex-1"> */}
       <Button
         title="Approve"
