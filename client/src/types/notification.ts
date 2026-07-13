@@ -1,3 +1,4 @@
+import { Book, UserBook } from "./book";
 import { User } from "./user";
 
 export const NotificationEvents = {
@@ -8,6 +9,13 @@ export const NotificationEvents = {
   BORROW_REQUEST_SENT: "borrow.request.sent",
   BORROW_REQUEST_APPROVED: "borrow.request.approved",
   BORROW_REQUEST_DECLINED: "borrow.request.declined",
+  BORROW_REQUEST_CANCELLED: "borrow.request.cancelled",
+
+  RETURN_REQUEST_SENT: "return.request.sent",
+  RETURN_REQUEST_APPROVED: "return.request.approved",
+  RETURN_REQUEST_DECLINED: "return.request.declined",
+  RETURN_REQUEST_CANCELLED: "return.request.cancelled",
+  RETURN_REMINDER_SENT: "return.reminder.sent",
 
   BOOK_ADDED_MANUAL: "book.added.manual",
   BOOK_ADDED_ISBN: "book.added.isbn",
@@ -31,8 +39,8 @@ export interface Notification {
   event: NotificationEvent;
   message: string;
 
-  book?: string;
-  userBook?: string;
+  book?: Book;
+  userBook?: UserBook;
 
   isRead: boolean;
   readAt?: string;

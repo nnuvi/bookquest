@@ -117,7 +117,7 @@ export async function sendFriendRequest(
     from: senderId,
     to: receiverId,
     event: NotificationEvents.FRIEND_REQUEST_SENT,
-    message: `${senderName} sent you a friend request.`,
+    message: `sent you a friend request`,
   });
 
   return {
@@ -155,8 +155,8 @@ export async function respondFriendRequest(
       ? NotificationEvents.FRIEND_REQUEST_ACCEPTED
       : NotificationEvents.FRIEND_REQUEST_DECLINED,
     message: accepted
-      ? `${fullName} accepted your friend request.`
-      : `${fullName} declined your friend request.`,
+      ? `accepted your friend request`
+      : `declined your friend request`,
   });
 
   return {

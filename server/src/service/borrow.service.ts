@@ -122,7 +122,7 @@ export async function respondBorrowRequest(
       to: requesterId,
       userBook: userBookId,
       event: NotificationEvents.BORROW_REQUEST_APPROVED,
-      message: `acceped your Borrow Request`,
+      message: `acceped your Borrow Request for the book`,
     });
     await cancelPendingBorrowRequests(userBookId, requestId);
     await updateBookAvailability(userBookId, "borrowed");
@@ -133,7 +133,7 @@ export async function respondBorrowRequest(
       to: requesterId,
       userBook: userBookId,
       event: NotificationEvents.BORROW_REQUEST_DECLINED,
-      message: `declined your Borrow Request`,
+      message: `declined your Borrow Request for the book`,
     });
   }
 

@@ -51,7 +51,7 @@ export async function sendReturnRequest(
     to: borrowRecord.owner.toString(),
     userBook: borrowRecord.userBook.toString(),
     event: NotificationEvents.RETURN_REQUEST_SENT,
-    message: "sent a return request.",
+    message: "sent a return request for the book",
   });
 
   return {
@@ -143,7 +143,7 @@ export async function respondReturnRequest(
       to: borrowerId,
       userBook: borrowRecord.userBook.toString(),
       event: NotificationEvents.RETURN_REQUEST_DECLINED,
-      message: "declined your return request.",
+      message: "declined your return request for the book",
     });
   }
 
@@ -189,7 +189,7 @@ export async function sendReturnReminder(
     to: borrowRecord.borrower.toString(),
     userBook: borrowRecord.userBook.toString(),
     event: NotificationEvents.RETURN_REMINDER_SENT,
-    message: "reminded you to return the book.",
+    message: "reminded you to return the book",
   });
 
   borrowRecord.lastReminderAt = new Date();

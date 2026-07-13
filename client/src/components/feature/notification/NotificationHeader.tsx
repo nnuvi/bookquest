@@ -1,5 +1,6 @@
 import { View, Text } from "react-native";
 import NotificationBadge from "./NotificationBadge";
+import AppText from "@/components/ui/AppText";
 
 interface NotificationHeaderProps {
   title?: string;
@@ -13,9 +14,9 @@ const NotificationHeader = ({
   return (
     <>
       <View className="flex-row items-center justify-between px-5 py-3">
-        <Text className="text-lg font-semibold text-selection">
+        <AppText size="lg" weight="semibold">
           {title}
-        </Text>
+        </AppText>
 
         <NotificationBadge count={unreadCount} />
       </View>
