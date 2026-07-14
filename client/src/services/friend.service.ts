@@ -21,11 +21,11 @@ export const getFriendStatus = async (
 export const getFriendRequests = async (): Promise<FriendRequest[]> => {
   const { data } =
     await api.get<ApiResponse<FriendRequest[]>>(`/api/friend/request`);
-  logger.debug(
-    LOG_SCOPE.request,
-    "Friend requests:",
-    data.data.map((r) => r.from.username),
-  );
+  // logger.debug(
+  //   LOG_SCOPE.request,
+  //   "Friend requests:",
+  //   data.data.map((r) => r.from.username),
+  // );
   return data.data;
 };
 
@@ -35,7 +35,7 @@ export const sendFriendRequest = async (
   const { data } = await api.put<ApiResponse<FriendRequest>>(
     `/api/friend/request/${receiverId}`,
   );
-  logger.debug(LOG_SCOPE.request, "Sent friend requests: ", data.data);
+  // logger.debug(LOG_SCOPE.request, "Sent friend requests: ", data.data);
   return data.data;
 };
 

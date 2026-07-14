@@ -27,11 +27,11 @@ export default function BorrowRequestSentList({
   onCancel,
   onBookPress,
 }: BorrowSentRequestListProps) {
-  logger.debug(
-    LOG_SCOPE.query,
-    "Fetched borrow requests sent (item): ",
-    requests,
-  );
+  // logger.debug(
+  //   LOG_SCOPE.query,
+  //   "Fetched borrow requests sent (item): ",
+  //   requests,
+  // );
   return (
     <FlatList
       data={requests}
@@ -55,7 +55,7 @@ export default function BorrowRequestSentList({
           item={item}
             onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
           actionButton="bottom"
-          action={<BorrowRequestAction mode="sent" requestId={item.id} />}
+          action={<BorrowRequestAction mode="sent" requestId={item.id}/>}
         />
       )}
     />

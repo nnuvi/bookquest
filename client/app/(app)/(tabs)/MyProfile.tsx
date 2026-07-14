@@ -15,8 +15,9 @@ import BookCardSkeleton from "@/components/skeleton/BookCardsSkeleton";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 
 import { useBorrowedBooks, useLentBooks, useMyBooks } from "@/hooks/books";
-import { useMyProfile } from "@/hooks/user";
+import { useMyProfile, useUpdateProfileImage } from "@/hooks/user";
 import BorrowAction from "@/components/feature/borrow/BorrowAction";
+import { pickImage } from "@/lib/image";
 
 type TabType = "list" | "borrowed" | "lent";
 
@@ -51,6 +52,16 @@ export default function ProfileScreen() {
     isPending: isLentBooksPending,
     isRefetching: isLentBooksRefetching,
   } = useLentBooks();
+
+  const updateProfileImage = useUpdateProfileImage();
+
+  // const handleChangePhoto = async () => {
+  //   const image = await pickImage();
+
+  //   if (!image) return;
+
+  //   updateProfileImage.mutate(image);
+  // };
 
   const onRefresh = async () => {
     await Promise.allSettled([

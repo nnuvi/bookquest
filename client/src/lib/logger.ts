@@ -30,24 +30,28 @@ const formatTime = () =>
   });
 
 const formatData = (data: unknown) => {
-  if (data === undefined) return "";
+  if (data == null) return String(data);
 
   if (data instanceof Error) {
     return JSON.stringify(
       {
         name: data.name,
         message: data.message,
-        stack: data.stack?.split("\n").map((line) => line.trim()),
+        stack: data.stack,
       },
       null,
       2,
     );
   }
 
+  if (typeof data === "string") {
+    return data;
+  }
+
   try {
     return JSON.stringify(data, null, 2);
   } catch {
-    return String(data);
+    return Object.prototype.toString.call(data);
   }
 };
 
@@ -63,7 +67,7 @@ const output = (
 
   const logger =
     level === "ERROR"
-      ? console.error
+      ? console.log
       : level === "WARN"
         ? console.warn
         : level === "DEBUG"

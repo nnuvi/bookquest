@@ -41,9 +41,20 @@ const UserSchema = new Schema(
       },
     ],
 
-    profileImg: {
-      type: String,
-      default: "",
+    // profileImg: {
+    //   type: String,
+    //   default: "",
+    // },
+
+    profileImage: {
+      url: {
+        type: String,
+        default: "",
+      },
+      publicId: {
+        type: String,
+        default: "",
+      },
     },
 
     bio: {
@@ -68,7 +79,7 @@ const UserSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export type UserSchemaType = InferSchemaType<typeof UserSchema>;

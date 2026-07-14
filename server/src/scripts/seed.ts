@@ -5,7 +5,7 @@ import User from "../model/user.model.js"; // assuming you have this  import Bor
 import BorrowRecord from "../model/BorrowRecord.model.js";
 import BorrowRequest from "../model/BorrowRequest.model.js";
 import { Request, Response } from "express";
-import connectMongoDB from "./connectMongoDB.js";
+import connectMongoDB from "../config/connectMongoDB.js";
 import bcrypt from "bcryptjs";
 
 import dotenv from "dotenv";

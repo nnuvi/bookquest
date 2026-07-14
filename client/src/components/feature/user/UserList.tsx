@@ -4,6 +4,7 @@ import UserCard from "./UserCard";
 import { User } from "@/types/user";
 import AppText from "@/components/ui/AppText";
 import { ReactElement } from "react";
+import { router } from "expo-router";
 
 type UserListProps = {
   users: User[];
@@ -34,6 +35,7 @@ export default function UserList({
           user={item}
           action={renderAction?.(item)}
           actionButton={actionButton}
+    
         />
       )}
       refreshing={refreshing}

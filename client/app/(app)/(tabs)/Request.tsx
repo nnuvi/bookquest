@@ -67,19 +67,19 @@ export default function Requests() {
   const current = tabs[tab];
   const { isPending, isError, refetch } = current.query;
 
-  logger.debug(LOG_SCOPE.query, "Query state", {
-    tab: `${tab}`,
-    status: current.query.status,
-    data: current.query.data,
-    isPending: current.query.isPending,
-    isFetching: current.query.isFetching,
-    isSuccess: current.query.isSuccess,
-    isError: current.query.isError,
-    error: current.query.error,
-  });
+  // logger.debug(LOG_SCOPE.query, "Query state", {
+  //   tab: `${tab}`,
+  //   status: current.query.status,
+  //   data: current.query.data,
+  //   isPending: current.query.isPending,
+  //   isFetching: current.query.isFetching,
+  //   isSuccess: current.query.isSuccess,
+  //   isError: current.query.isError,
+  //   error: current.query.error,
+  // });
 
-  console.log(received.error);
-console.log(current.query.error);
+//   console.log(received.error);
+// console.log(current.query.error);
 
   return (
     <Screen>

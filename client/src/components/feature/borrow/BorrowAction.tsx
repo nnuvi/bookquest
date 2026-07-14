@@ -24,15 +24,12 @@ export default function BorrowAction({
   buttonClassName = "",
   containerClassName = "",
 }: Props) {
-  logger.debug(LOG_SCOPE.query, "Borrow Action Status bookId: ", {
-    bookId,
-  });
   const { data } = useBorrowStatus(bookId);
 
-  logger.debug(LOG_SCOPE.query, "Borrow Action Status: ", {
-    bookId,
-    data,
-  });
+  // logger.debug(LOG_SCOPE.query, "Borrow Action Status: ", {
+  //   bookId,
+  //   data,
+  // });
 
   if (!data) return null;
 

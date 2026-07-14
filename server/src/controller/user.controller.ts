@@ -1,16 +1,18 @@
 import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
-import User, { UserSchemaType } from "../model/user.model.js";
+import User from "../model/user.model.js";
 
+import { HTTP_STATUS } from "../constant/httpStatus.js";
 import ApiError from "../lib/apiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
-import { HTTP_STATUS } from "../constant/httpStatus.js";
 
-import { FilterQuery } from "mongoose";
+import * as userService from "../service/user.service.js";
+import { mapUsers } from "../types/user.js";
 
 export const getMyProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    const user = await User.findById(req.user._id).select("-password");
+    // const user = await User.findById(req.user._id).select("-password");
+    const user = await userService.getFormatUserOrThrow(req.user._id);
 
     if (!user) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
@@ -25,7 +27,8 @@ export const getMyProfile = asyncHandler(
 
 export const getUserProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    const user = await User.findById(req.params.id).select("-password");
+    // const user = await User.findById(req.params.id).select("-password");
+    const user = await userService.getFormatUserOrThrow(req.params.id!);
 
     if (!user) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
@@ -33,6 +36,18 @@ export const getUserProfile = asyncHandler(
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
+      data: user,
+    });
+  },
+);
+
+export const updateMyProfileImage = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await userService.updateProfileImage(req.user._id, req.file);
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Image Uploaded Successfully",
       data: user,
     });
   },
@@ -46,7 +61,7 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
     currentPassword,
     newPassword,
     bio,
-    profileImg,
+    profileImage,
     coverImg,
   } = req.body;
 
@@ -86,11 +101,18 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
     user.password = await bcrypt.hash(newPassword, 10);
   }
 
+  if (!user.profileImage) {
+    user.profileImage = {
+      url: "",
+      publicId: "",
+    };
+  }
+
   user.fullName = fullName ?? user.fullName;
   user.username = username ?? user.username;
   user.email = email ?? user.email;
   user.bio = bio ?? user.bio;
-  user.profileImg = profileImg ?? user.profileImg;
+  user.profileImage.url = profileImage ?? user.profileImage.url;
   // user.coverImg = coverImg ?? user.coverImg;
 
   await user.save();
@@ -104,7 +126,7 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
       bio: user.bio,
-      profileImg: user.profileImg,
+      profileImage: user.profileImage.url,
       // coverImg: user.coverImg,
     },
   });
@@ -170,15 +192,7 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
 // );
 
 export const friendList = asyncHandler(async (req: Request, res: Response) => {
-  const user = await User.findById(req.user._id);
-
-  if (!user) {
-    throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
-  }
-
-  const friends = await User.find({
-    _id: { $in: user.friends },
-  }).select("-password");
+  const friends = await userService.getFriendList(req.user._id)
 
   res.status(HTTP_STATUS.OK).json({
     success: true,
@@ -202,7 +216,7 @@ export const getUsers = asyncHandler(async (req: Request, res: Response) => {
   res.status(HTTP_STATUS.OK).json({
     success: true,
     count: users.length,
-    data: users,
+    data: mapUsers(users),
   });
 });
 
@@ -245,6 +259,6 @@ export const searchUsers = asyncHandler(async (req: Request, res: Response) => {
   res.status(HTTP_STATUS.OK).json({
     success: true,
     count: users.length,
-    data: users,
+    data: mapUsers(users),
   });
 });

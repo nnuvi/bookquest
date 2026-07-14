@@ -4,7 +4,7 @@ import logger from "../config/logger.js";
 export const requestLogger = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const start = process.hrtime.bigint();
 
@@ -13,7 +13,17 @@ export const requestLogger = (
 
     const responseTime = Number(end - start) / 1_000_000; // ms
 
-    logger.http({
+    // logger.http({
+    //   requestId: req.requestId,
+    //   method: req.method,
+    //   url: req.originalUrl,
+    //   statusCode: res.statusCode,
+    //   responseTime: `${responseTime.toFixed(2)} ms`,
+    //   ip: req.ip,
+    //   userAgent: req.get("user-agent"),
+    //   contentLength: res.getHeader("content-length") ?? 0,
+    // });
+    logger.http("HTTP REQUEST",{
       requestId: req.requestId,
       method: req.method,
       url: req.originalUrl,

@@ -1,30 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   getMyFriendList,
   getMyProfile,
   getSearchUsers,
   getUserProfile,
-  // getUsers,
+  updateProfileImage,
 } from "@/services/user.service";
+import { useFeedback } from "./useFeedbackModal";
+import { getErrorMessage } from "@/lib/app";
+
+export const userKeys = {
+  all: ["users"] as const,
+
+  me: () => [...userKeys.all, "me"] as const,
+
+  friends: () => [...userKeys.all, "friends"] as const,
+
+  profile: (userId: string) => [...userKeys.all, "profile", userId] as const,
+
+  search: (query: string) => [...userKeys.all, "search", query] as const,
+};
 
 export const useMyProfile = () => {
-   console.log("GET MY PROFILE");
   return useQuery({
-    queryKey: ["myProfile"],
+    queryKey: userKeys.me(),
     queryFn: getMyProfile,
   });
 };
 
 export const useFriendList = () => {
   return useQuery({
-    queryKey: ["friends"],
+    queryKey: userKeys.friends(),
     queryFn: getMyFriendList,
   });
 };
 
 export const useUserProfile = (userId: string) => {
   return useQuery({
-    queryKey: ["userProfile", userId],
+    queryKey: userKeys.profile(userId),
     queryFn: () => getUserProfile(userId),
     enabled: !!userId,
   });
@@ -32,7 +46,7 @@ export const useUserProfile = (userId: string) => {
 
 export const useSearchUsers = (search: string) => {
   return useQuery({
-    queryKey: ["searchUsers", search],
+    queryKey: userKeys.search(search),
     queryFn: () => getSearchUsers(search),
     enabled: search.trim().length >= 2,
     staleTime: 0,
@@ -40,3 +54,27 @@ export const useSearchUsers = (search: string) => {
     retry: false,
   });
 };
+
+export function useUpdateProfileImage() {
+  const queryClient = useQueryClient();
+  const { success, error } = useFeedback();
+
+  return useMutation({
+    mutationFn: updateProfileImage,
+
+    onSuccess(updatedUser) {
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me(),
+      });
+      queryClient.setQueryData(userKeys.me(), updatedUser);
+
+      queryClient.invalidateQueries({
+        queryKey: userKeys.profile(updatedUser._id),
+      });
+      success("Sucess", "Profile Image has been updated.");
+    },
+    onError: (err: any) => {
+      error("Update Failed", getErrorMessage(err));
+    },
+  });
+}

@@ -23,7 +23,7 @@ export default function BorrowRequestAction({
   const respond = useRespondBorrowRequest();
   const revoke = useRevokeBorrowRequest();
 
-  logger.debug(LOG_SCOPE.query, "query action", { requestId });
+  // logger.debug(LOG_SCOPE.query, "query action", { requestId });
 
   if (mode === "sent") {
     return (

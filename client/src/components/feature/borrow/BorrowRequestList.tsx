@@ -27,9 +27,9 @@ export default function BorrowRequestList({
   onRefresh,
   onBookPress,
 }: BorrowRequestListProps) {
-  logger.debug(LOG_SCOPE.query, "Fetched borrow requests (item): ", {
-    requests,
-  });
+  // logger.debug(LOG_SCOPE.query, "Fetched borrow requests (item): ", {
+  //   requests,
+  // });
   return (
     <FlatList
       data={requests}

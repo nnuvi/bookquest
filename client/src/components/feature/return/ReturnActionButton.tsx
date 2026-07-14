@@ -27,7 +27,7 @@ export default function ReturnRequestAction({
   const respond = useRespondReturnRequest();
   const revoke = useCancelReturnRequest();
 
-  logger.debug(LOG_SCOPE.query, "query action", { requestId });
+  // logger.debug(LOG_SCOPE.query, "query action", { requestId });
 
   // if (mode === "sent") {
   //   return (
@@ -60,6 +60,7 @@ export default function ReturnRequestAction({
       {/* <View className="flex-1"> */}
       <Button
         title="Approve"
+        variant="primary"
         //   loading={respond.isPending}
         onPress={() =>
           respond.mutate({

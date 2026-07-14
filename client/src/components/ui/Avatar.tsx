@@ -1,4 +1,41 @@
-import { Image, ImageProps } from "react-native";
+// import { Image, ImageProps } from "react-native";
+
+// const sizes = {
+//   xs: 50,
+//   sm: 70,
+//   md: 90,
+//   lg: 110,
+//   xl: 130,
+// };
+
+// type AvatarProps = ImageProps & {
+//   size?: keyof typeof sizes;
+// };
+
+// export default function Avatar({
+//   size = "md",
+//   style,
+//   ...props
+// }: AvatarProps) {
+//   return (
+//     <Image
+//       {...props}
+//       resizeMode="cover"
+//       style={[
+//         {
+//           width: sizes[size],
+//           height: sizes[size],
+//           borderRadius: sizes[size] / 2,
+//         },
+//         style,
+//       ]}
+//     />
+//   );
+// }
+
+import { Image, ImageProps, Pressable } from "react-native";
+
+import userPlaceholder from "@assets/images/placeholder-user.png";
 
 const sizes = {
   xs: 50,
@@ -8,18 +45,30 @@ const sizes = {
   xl: 130,
 };
 
-type AvatarProps = ImageProps & {
+type AvatarProps = Omit<ImageProps, "source"> & {
+  image?: string | null;
   size?: keyof typeof sizes;
+  onPress?: () => void;
+  disabled?: boolean;
 };
 
 export default function Avatar({
+  image,
   size = "md",
   style,
+  onPress,
+  disabled,
   ...props
 }: AvatarProps) {
-  return (
+  const source =
+    typeof image === "string" && image.trim().length > 0
+      ? { uri: image }
+      : userPlaceholder;
+
+  const avatar = (
     <Image
       {...props}
+      source={source}
       resizeMode="cover"
       style={[
         {
@@ -30,5 +79,17 @@ export default function Avatar({
         style,
       ]}
     />
+  );
+
+  if (!onPress) return avatar;
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      hitSlop={8}
+    >
+      {avatar}
+    </Pressable>
   );
 }

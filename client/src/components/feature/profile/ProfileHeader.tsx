@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/ui/AppText";
 import { User } from "@/types/user";
@@ -12,6 +12,9 @@ import Avatar from "@/components/ui/Avatar";
 import { ReactNode, useState } from "react";
 import AppModal from "@/components/ui/AppModal";
 import FriendAction from "../friend/FriendAction";
+import { useUpdateProfileImage } from "@/hooks/user";
+import { pickImage } from "@/lib/image";
+import EditableAvatar from "../user/EditableAvatar";
 
 type ProfileHeaderProps = {
   user: User;
@@ -27,6 +30,15 @@ export const ProfileHeader = ({
   action,
 }: ProfileHeaderProps) => {
   const [visible, setVisible] = useState(false);
+  const updateProfileImage = useUpdateProfileImage();
+
+  const handleChangePhoto = async () => {
+    const image = await pickImage();
+
+    if (!image) return;
+
+    updateProfileImage.mutate(image.uri);
+  };
   return (
     <View>
       {/** Top Header */}
@@ -53,11 +65,14 @@ export const ProfileHeader = ({
         <View className="flex-row items-center w-full">
           {/* Image */}
           <View className="mt-2 bg-gray rounded-full overflow-hidden mb-2">
-            <Avatar
-              source={
-                user.profileImage ? { uri: user.profileImage } : userPlaceHolder
-              }
-            />
+            {currentUser ? (
+              <EditableAvatar
+                image={user.profileImage}
+                placeholder={userPlaceHolder}
+              />
+            ) : (
+              <Avatar image={user.profileImage} />
+            )}
           </View>
           {/** Book and Friends */}
           <View className="flex-row justify-end w-[70%] mt-2 mr-2">

@@ -32,15 +32,14 @@ export const getBorrowRequest = async (
 export const getBorrowRequests = async (): Promise<BookCardItem[]> => {
   const { data } =
     await api.get<ApiResponse<BorrowRequest[]>>(`/api/borrow/request`);
-  logger.debug(LOG_SCOPE.request, "Fetched borrow requests before:", { data });
-  logger.debug(
-    LOG_SCOPE.request,
-    "Fetched borrow requests:",
-    data.data.map((r) => ({
-      username: r.requester.username,
-      title: r.userBook.book.title,
-    })),
-  );
+  // logger.debug(
+  //   LOG_SCOPE.request,
+  //   "Fetched borrow requests:",
+  //   data.data.map((r) => ({
+  //     username: r.requester.username,
+  //     title: r.userBook.book.title,
+  //   })),
+  // );
   return data.data.map(mapBorrowRequestBook);
 };
 
@@ -48,14 +47,14 @@ export const getSentBorrowRequests = async (): Promise<BookCardItem[]> => {
   const { data } = await api.get<ApiResponse<BorrowRequest[]>>(
     `/api/borrow/request/sent`,
   );
-  logger.debug(
-    LOG_SCOPE.request,
-    "Fetched borrow sent requests:",
-    data.data.map((r) => ({
-      username: r.owner.username,
-      title: r.userBook.book.title,
-    })),
-  );
+  // logger.debug(
+  //   LOG_SCOPE.request,
+  //   "Fetched borrow sent requests:",
+  //   data.data.map((r) => ({
+  //     username: r.owner.username,
+  //     title: r.userBook.book.title,
+  //   })),
+  // );
   return data.data.map(mapBorrowRequestBook);
 };
 
@@ -70,10 +69,10 @@ export const sendBorrowRequest = async (
     message,
   });
 
-  logger.debug(LOG_SCOPE.request, "Borrow request sent: react Query: ", {
-    requestId: data.data._id,
-    data
-  });
+  // logger.debug(LOG_SCOPE.request, "Borrow request sent: react Query: ", {
+  //   requestId: data.data._id,
+  //   data,
+  // });
 
   return data.data;
 };
@@ -88,10 +87,10 @@ export const respondToBorrowRequest = async (
     { status },
   );
 
-  logger.debug(LOG_SCOPE.request, "Borrow request updated:", {
-    requestId,
-    status,
-  });
+  // logger.debug(LOG_SCOPE.request, "Borrow request updated:", {
+  //   requestId,
+  //   status,
+  // });
 
   return data.data;
 };
@@ -102,9 +101,9 @@ export const revokeBorrowRequest = async (requestId: string) => {
     `/api/borrow/request/${requestId}/cancel`,
   );
 
-  logger.debug(LOG_SCOPE.request, "Borrow request cancelled:", {
-    requestId,
-  });
+  // logger.debug(LOG_SCOPE.request, "Borrow request cancelled:", {
+  //   requestId,
+  // });
 
   return data;
 };
@@ -117,7 +116,7 @@ export const getBorrowStatus = async (
     `/api/borrow/${bookId}/status`,
   );
 
-  logger.debug(LOG_SCOPE.request, "Fetched borrow status", data.data);
+  // logger.debug(LOG_SCOPE.request, "Fetched borrow status", data.data);
 
   return data.data;
 };

@@ -4,7 +4,7 @@ dotenv.config();
 
 /**
  * Centralized environment configuration
- * 
+ *
  * - avoids repeating process.env everywhere
  * - prevents undefined runtime crashes
  * - keeps backend config clean & maintainable
@@ -22,6 +22,9 @@ const env = {
   JWT_SECRET: process.env.JWT_SECRET as string,
 
   // CLOUDINARY
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
   CLOUDINARY_URL: process.env.CLOUDINARY_URL as string,
 
   // CORS ORIGINS

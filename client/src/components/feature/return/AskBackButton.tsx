@@ -18,7 +18,7 @@ export default function AskBackButton({
 }: Props) {
   const askBack = useSendReturnReminder();
 
-  logger.debug(LOG_SCOPE.query, "ask back remind record id: ", recordId);
+  // logger.debug(LOG_SCOPE.query, "ask back remind record id: ", recordId);
 
   return (
     <>

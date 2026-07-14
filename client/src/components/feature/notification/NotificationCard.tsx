@@ -38,11 +38,7 @@ const NotificationCard = ({
     <View className="mx-5 my-2 rounded-2xl shadow-sm p-4">
       <View className="flex-row">
         <Avatar
-          source={
-            notification.from?.profileImage
-              ? { uri: notification.from.profileImage }
-              : userPlaceHolder
-          }
+          image={notification.from?.profileImage}
           size={"xs"}
           // size="xs"
         />

@@ -1,10 +1,9 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/ui/AppText";
 import { User } from "@/types/user";
 import { router } from "expo-router";
 
-import userPlaceHolder from "@assets/images/placeholder-user.png";
 import Avatar from "@/components/ui/Avatar";
 
 type UserCardProps = {
@@ -34,14 +33,12 @@ export default function UserCard({
   return (
     <TouchableOpacity
       onPress={() => {
-        router.push(`profile/ProfileView/${user._id}`);
+        router.push(`profile/ProfileView/${user?._id}`);
       }}
       className="flex-row items-center px-4 py-3"
     >
       <Avatar
-        source={
-          user.profileImage ? { uri: user.profileImage } : userPlaceHolder
-        }
+        image={user.profileImage}
         size={actionButton === "bottom" ? "sm" : "xs"}
         // size="xs"
       />

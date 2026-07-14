@@ -56,8 +56,6 @@ export const errorHandler = (
     statusCode,
     message,
     requestId: req.requestId,
-    ...(process.env.NODE_ENV === "development" && {
-      stack: err.stack,
-    }),
+    ...(process.env.NODE_ENV === "development" ? { stack: err.stack } : {}),
   });
 };

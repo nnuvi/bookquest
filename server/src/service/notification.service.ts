@@ -36,7 +36,7 @@ export async function getNotifications(userId: string) {
     },
   );
 
-  logger.debug("getNotificatios: ", notifications);
+  // logger.debug("getNotificatios: ", notifications);
 
   return {
     success: true,

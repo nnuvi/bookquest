@@ -120,7 +120,7 @@ export default function BorrowRequestDetailsScreen() {
             </ScrollView>
 
             {request.status === "pending" && (
-              <View className="pb-4">
+              <View className="pb-6 px-3">
                 <BorrowRequestAction
                   requestId={request._id}
                   fullWidth
