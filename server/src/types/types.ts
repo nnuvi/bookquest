@@ -1,136 +1,136 @@
-/* ===================== BOOK ===================== */
-export type BookType = {
-  _id?: string;
+// /* ===================== BOOK ===================== */
+// export type BookType = {
+//   _id?: string;
 
-  title: string;
-  author: string[];
-  genre: string[];
+//   title: string;
+//   author: string[];
+//   genre: string[];
 
-  publisher?: string;
-  publicationDate?: Date | null;
-  pageCount?: number | null;
-  description?: string;
+//   publisher?: string;
+//   publicationDate?: Date | null;
+//   pageCount?: number | null;
+//   description?: string;
 
-  isbn?: string;
+//   isbn?: string;
 
-  bookType: "myBook" | "borrowedBook" | "lentBook";
+//   bookType: "myBook" | "borrowedBook" | "lentBook";
 
-  bookAdded?: Date;
+//   bookAdded?: Date;
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-export type BooksType = BookType[];
+// export type BooksType = BookType[];
 
-/* ===================== USER ===================== */
-export type UserType = {
-  _id?: string;
+// /* ===================== USER ===================== */
+// export type UserType = {
+//   _id?: string;
 
-  username: string;
-  fullName: string;
-  email: string;
-  password: string;
+//   username: string;
+//   fullName: string;
+//   email: string;
+//   password: string;
 
-  friends: string[];
+//   friends: string[];
 
-  profileImg?: string;
-  bio?: string;
+//   profileImg?: string;
+//   bio?: string;
 
-  role: "admin" | "user";
+//   role: "admin" | "user";
 
-  bookCollection?: string[];
+//   bookCollection?: string[];
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-/* ===================== BOOK REQUEST ===================== */
-export type BookRequestType = {
-  _id?: string;
+// /* ===================== BOOK REQUEST ===================== */
+// export type BookRequestType = {
+//   _id?: string;
 
-  from: string;
-  to: string;
-  bookId: string;
+//   from: string;
+//   to: string;
+//   bookId: string;
 
-  type: "borrow" | "return";
+//   type: "borrow" | "return";
 
-  borrowedDate?: Date;
+//   borrowedDate?: Date;
 
-  status: "requested" | "approved" | "declined";
+//   status: "requested" | "approved" | "declined";
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-/* ===================== BORROW BOOK ===================== */
-export type BorrowBookType = {
-  _id?: string;
+// /* ===================== BORROW BOOK ===================== */
+// export type BorrowBookType = {
+//   _id?: string;
 
-  borrowedFrom: string;
-  borrowedTo: string;
-  bookId: string;
+//   borrowedFrom: string;
+//   borrowedTo: string;
+//   bookId: string;
 
-  borrowDate?: Date;
-  returnDate?: Date;
+//   borrowDate?: Date;
+//   returnDate?: Date;
 
-  status: "borrowed" | "returned";
+//   status: "borrowed" | "returned";
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-/* ===================== MESSAGE ===================== */
-export type MessageType = {
-  _id?: string;
+// /* ===================== MESSAGE ===================== */
+// export type MessageType = {
+//   _id?: string;
 
-  from: string;
-  to: string;
+//   from: string;
+//   to: string;
 
-  message: string;
+//   message: string;
 
-  sentTime?: Date;
+//   sentTime?: Date;
 
-  read: boolean;
+//   read: boolean;
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-/* ===================== NOTIFICATION ===================== */
-export type NotificationType = {
-  _id?: string;
+// /* ===================== NOTIFICATION ===================== */
+// export type NotificationType = {
+//   _id?: string;
 
-  from: string;
-  to: string;
+//   from: string;
+//   to: string;
 
-  type: "reminder" | "request" | "follow" | "action";
+//   type: "reminder" | "request" | "follow" | "action";
 
-  read: boolean;
+//   read: boolean;
 
-  message: string;
+//   message: string;
 
-  request?: "approved" | "declined";
+//   request?: "approved" | "declined";
 
-  book?: string;
+//   book?: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };
 
-/* ===================== REMINDER ===================== */
-export type ReminderType = {
-  _id?: string;
+// /* ===================== REMINDER ===================== */
+// export type ReminderType = {
+//   _id?: string;
 
-  to: string;
-  bookId: string;
+//   to: string;
+//   bookId: string;
 
-  type: "borrow" | "lent";
+//   type: "borrow" | "lent";
 
-  daysPassed?: Date;
+//   daysPassed?: Date;
 
-  message: string;
+//   message: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// };

@@ -50,6 +50,16 @@ const BookSchema = new Schema(
       default: "",
     },
 
+    language: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    publishDate: {
+      type: Date,
+    },
+
     rating: {
       average: {
         type: Number,

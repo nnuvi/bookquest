@@ -27,6 +27,9 @@ const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
   CLOUDINARY_URL: process.env.CLOUDINARY_URL as string,
 
+  // GOOGLE
+  GOOGLE_BOOKS_API_KEY: process.env.GOOGLE_BOOKS_API_KEY as string,
+
   // CORS ORIGINS
   CLIENT_LOCAL_URL: process.env.CLIENT_LOCAL_URL as string,
   CLIENT_MOBILE_URL: process.env.CLIENT_MOBILE_URL as string,

@@ -1,4 +1,6 @@
-import { Image, ImageProps } from "react-native";
+import { Image, ImageProps, ImageSourcePropType } from "react-native";
+
+import bookPlaceholder from "@assets/images/placeholder-book.png";
 
 const sizes = {
   xs: 50,
@@ -8,12 +10,16 @@ const sizes = {
   xl: 130,
 };
 
-type BookCoverProps = ImageProps & {
+type BookCoverProps = Omit<ImageProps, "source"> & {
+  image?: string | null;
+  placeholder?: ImageSourcePropType;
   size?: keyof typeof sizes;
   width?: number;
 };
 
 export default function BookCover({
+  image,
+  placeholder = bookPlaceholder,
   size = "md",
   width,
   style,
@@ -24,6 +30,11 @@ export default function BookCover({
   return (
     <Image
       {...props}
+      source={
+        image && image.trim().length > 0
+          ? { uri: image }
+          : placeholder
+      }
       resizeMode="cover"
       style={[
         {

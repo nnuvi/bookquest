@@ -94,7 +94,7 @@ export default function AppModal({
             }}
           >
             {title && (
-              <View className="border-b border-neutral-200 px-6 py-5">
+              <View className="border-b border-neutral-200 px-6 py-4">
                 {title}
               </View>
             )}

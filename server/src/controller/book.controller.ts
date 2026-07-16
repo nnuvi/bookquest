@@ -7,7 +7,10 @@ import ApiError from "../lib/apiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 
+import * as bookService from "@/service/book.service.js";
+
 import { FilterQuery } from "mongoose";
+import logger from "@/config/logger.js";
 
 export const getMyBooks = asyncHandler(async (req: Request, res: Response) => {
   const userBooks = await UserBook.find({
@@ -15,6 +18,8 @@ export const getMyBooks = asyncHandler(async (req: Request, res: Response) => {
   }).populate<{
     book: BookSchemaType;
   }>("book");
+
+  // logger.debug("My UserBooks: ", {userBooks})
 
   res.status(HTTP_STATUS.OK).json({
     success: true,
@@ -125,7 +130,7 @@ export const searchBooks = asyncHandler(async (req: Request, res: Response) => {
       { title: { $regex: keyword, $options: "i" } },
       { author: { $regex: keyword, $options: "i" } },
       { publisher: { $regex: keyword, $options: "i" } },
-      { isbn: { $regex: keyword } }, 
+      { isbn: { $regex: keyword } },
     ];
   }
 
@@ -135,9 +140,7 @@ export const searchBooks = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const pageLimit =
-    typeof limit === "string"
-      ? Math.max(1, Number(limit) || 20)
-      : 20;
+    typeof limit === "string" ? Math.max(1, Number(limit) || 20) : 20;
 
   let booksQuery = Book.find(filter);
 
@@ -166,3 +169,41 @@ export const searchBooks = asyncHandler(async (req: Request, res: Response) => {
     data: books,
   });
 });
+
+export const isbnScan = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { isbn } = req.params;
+
+    const book = await bookService.getBookDataByISBN(isbn!);
+    logger.debug("ISBN Scan Sent Book: ", { book });
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Book Fetched Succesfully",
+      data: book,
+    });
+  },
+);
+
+export const createBookByISBNScan = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { bookId } = req.params;
+    const { userBook } = req.body;
+
+    logger.debug("ISBN Scan to Frontend Sent Book: ", { bookId, userBook });
+
+    const createUserBook = await bookService.createBookByISBNScan(
+      req.user._id,
+      bookId!,
+      userBook,
+    );
+
+    logger.debug("Created UserBook: ", { createUserBook });
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "UserBook Created Succesfully",
+      data: createUserBook,
+    });
+  },
+);

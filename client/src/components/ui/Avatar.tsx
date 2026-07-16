@@ -84,11 +84,7 @@ export default function Avatar({
   if (!onPress) return avatar;
 
   return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      hitSlop={8}
-    >
+    <Pressable onPress={onPress} disabled={disabled} hitSlop={8}>
       {avatar}
     </Pressable>
   );

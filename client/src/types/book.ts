@@ -2,6 +2,7 @@ import { BorrowRequestStatus } from "./borrow";
 import { BorrowRecordStatus, ReturnRequestStatus } from "./return";
 import { User } from "./user";
 
+// API TYPES
 export type Book = {
   _id: string;
   title: string;
@@ -12,6 +13,8 @@ export type Book = {
   pageCount: number;
   coverImage: string;
   description: string;
+  language: string;
+  publishDate?: string;
 
   rating: {
     average: number;
@@ -23,7 +26,7 @@ export type Book = {
 };
 
 export type availability = "available" | "borrowed" | "lent" | "unavailable";
-export type condition = "new" | "good" | "fair" | "poor";
+export type BookCondition = "new" | "good" | "fair" | "poor";
 
 export type UserBook = {
   _id: string;
@@ -33,7 +36,7 @@ export type UserBook = {
 
   book: Book;
 
-  condition: condition;
+  condition: BookCondition;
   availability: availability;
   notes: string;
 
@@ -48,6 +51,7 @@ export type UserBook = {
 
 export type bookType = "userBook" | "borrowed" | "lent" | "book";
 
+// UI TYPE
 export type BookCardItem = {
   id: string;
   bookId?: string;

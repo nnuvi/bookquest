@@ -54,7 +54,7 @@ export default function BorrowRequestList({
           //   onPress={() => onBookPress?.(item)}
           actionButton="bottom"
           action={<BorrowRequestAction requestId={item.id} fullWidth/>}
-          onPress={() => router.push(`/borrow/${item.id}`)}
+          onPress={() => router.push(`/request/${item.id}`)} //rqq
         />
       )}
     />

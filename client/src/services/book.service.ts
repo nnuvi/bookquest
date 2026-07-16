@@ -4,6 +4,7 @@ import { mapBook, mapBorrowRecord, mapUserBook } from "./book.mapper";
 import { BorrowRecord } from "@/types/return";
 import { Book, BookCardItem, UserBook } from "@/types/book";
 import { LOG_SCOPE, logger } from "@/lib/logger";
+import { UserBookFormValues } from "@/schema/userBook.schema";
 
 export const getMyBooks = async (): Promise<BookCardItem[]> => {
   const { data } = await api.get<ApiResponse<UserBook[]>>("/api/book/me");
@@ -60,7 +61,24 @@ export const getSearchBooks = async (
 };
 
 export const returnBook = async (bookId: string) => {
-  const { data } = await api.post<ApiResponse<null>>(`/book/return/${bookId}`);
+  const { data } = await api.post<ApiResponse<null>>(`/api/book/return/${bookId}`);
 
-  return data;
+  return data.data;
+};
+
+export const isbnScan = async (isbn: string) => {
+  const { data } = await api.get<ApiResponse<Book>>(`/api/book/isbn/${isbn}`);
+  logger.debug(LOG_SCOPE.request, "ISBN Scan data: ", data.data);
+  return data.data;
+};
+
+export const createBookByISBNScan = async (
+  bookId: string,
+  userBook: UserBookFormValues,
+) => {
+  const { data } = await api.post<ApiResponse<UserBook>>(`/api/book/${bookId}`, {
+    userBook,
+  });
+
+  return data.data;
 };

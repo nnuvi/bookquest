@@ -18,11 +18,7 @@ export default function BookHeader({
 }: BookHeaderProps) {
   return (
     <View className="flex-row">
-      <BookCover
-        source={coverImage ? { uri: coverImage } : BookPlaceholder}
-        size="lg"
-        className="mr-4"
-      />
+      <BookCover image={coverImage} size="lg" className="mr-4" />
 
       <View className="flex-1 justify-between py-2">
         <View>

@@ -1,20 +1,20 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/ui/AppText";
+import Button from "@/components/ui/Button";
 import { User } from "@/types/user";
 import { router } from "expo-router";
-import Button from "@/components/ui/Button";
 
-import userPlaceHolder from "@assets/images/placeholder-user.png";
-import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
-import Avatar from "@/components/ui/Avatar";
-import { ReactNode, useState } from "react";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+
 import AppModal from "@/components/ui/AppModal";
-import FriendAction from "../friend/FriendAction";
-import { useUpdateProfileImage } from "@/hooks/user";
-import { pickImage } from "@/lib/image";
-import EditableAvatar from "../user/EditableAvatar";
+import Avatar from "@/components/ui/Avatar";
+import userPlaceHolder from "@assets/images/placeholder-user.png";
+import { ReactNode, useState } from "react";
+import AvatarPicker from "../user/AvatarPicker";
+import { Colors } from "@/constants/Colors";
 
 type ProfileHeaderProps = {
   user: User;
@@ -30,23 +30,22 @@ export const ProfileHeader = ({
   action,
 }: ProfileHeaderProps) => {
   const [visible, setVisible] = useState(false);
-  const updateProfileImage = useUpdateProfileImage();
 
-  const handleChangePhoto = async () => {
-    const image = await pickImage();
-
-    if (!image) return;
-
-    updateProfileImage.mutate(image.uri);
-  };
   return (
     <View>
       {/** Top Header */}
       <View className="bg-primary items-center flex-row justify-between p-3 px-4 relative">
-        <View className="flex-1 pl-4">
-          <TouchableOpacity onPress={router.back}>
-            <Ionicons name="return-up-back" size={28} color="white" />
-          </TouchableOpacity>
+        <View className="flex-1 items-start pl-3">
+          {currentUser && (
+            <TouchableOpacity>
+              {/* <Ionicons name="return-up-back" size={28} color="white" /> */}
+              <SimpleLineIcons
+                name="settings"
+                size={25}
+                color={Colors.background}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <AppText weight="bold" size="2xl" color="light" className="text-center">
@@ -55,8 +54,13 @@ export const ProfileHeader = ({
 
         <View className="flex-1 items-end pr-4">
           {currentUser && (
-            <TouchableOpacity>
-              <Ionicons name="chatbubbles-outline" size={28} color="white" />
+            <TouchableOpacity onPress={() => router.push(`request/Requests`)}>
+              {/* <Ionicons name="chatbubbles-outline" size={28} color="white" /> */}
+              <MaterialCommunityIcons
+                name="book-multiple-outline"
+                size={28}
+                color={Colors.background}
+              />
             </TouchableOpacity>
           )}
         </View>
@@ -66,7 +70,7 @@ export const ProfileHeader = ({
           {/* Image */}
           <View className="mt-2 bg-gray rounded-full overflow-hidden mb-2">
             {currentUser ? (
-              <EditableAvatar
+              <AvatarPicker
                 image={user.profileImage}
                 placeholder={userPlaceHolder}
               />

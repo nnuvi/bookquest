@@ -30,13 +30,7 @@ export default function BookCard({
   return (
     <View className="flex-1">
       <View className="flex-row items-center px-4 py-3">
-        <BookCover
-          source={
-            item?.coverImage ? { uri: item?.coverImage } : BookPlaceholder
-          }
-          size="xs"
-          className="mr-4"
-        />
+        <BookCover image={item?.coverImage} size="xs" className="mr-4" />
 
         <View className="flex-1 h-full">
           <TouchableOpacity className="gap-1" onPress={() => onPress?.(item)}>

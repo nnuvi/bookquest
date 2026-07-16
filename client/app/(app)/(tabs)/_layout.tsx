@@ -53,11 +53,11 @@ export default function HomeLayout() {
         }}
       />
       <Tabs.Screen
-        name="Request"
+        name="Scan"
         options={{
-          title: "Request",
+          title: "Scan",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="data-matrix-scan" size={24} color={color} />
+            <MaterialCommunityIcons name="line-scan" size={24} color={color} />
           ),
         }}
       />

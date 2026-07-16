@@ -26,10 +26,10 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const { bookCardWidth, isDesktop, isTablet, numColumns } = useResponsive();
 
-  logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
-  logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
-  logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
-  logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
+  // logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
+  // logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
+  // logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
+  // logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
 
   const {
     data: books = [],
@@ -62,7 +62,7 @@ export default function HomeScreen() {
       onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
     >
       <BookCover
-        source={item.coverImage ? { uri: item.coverImage } : BookPlaceholder}
+        image={item.coverImage}
       />
 
       <AppText

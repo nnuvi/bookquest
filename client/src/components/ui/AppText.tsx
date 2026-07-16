@@ -9,14 +9,13 @@ export type AppTextProps = TextProps & {
     | "selection"
     | "black"
     | "text"
-    | "midGray"
+    // | "midGray"
     | "yellow"
     | "red"
     | "green"
     | "gray"
     | "choco"
-    | "savoy"
-    | "blue";
+    | "savoy";
 
   weight?: "regular" | "medium" | "semibold" | "bold";
 
@@ -31,19 +30,18 @@ const colorStyles = {
   default: "text-text",
   light: "text-text-inverse",
   primary: "text-primary",
-  secondary: "text-secondary",
+  secondary: "text-primary-light",
   selection: "text-selection",
 
   black: "text-black",
   text: "text-text",
-  midGray: "text-midGray",
-  yellow: "text-yellow",
-  red: "text-red",
-  green: "text-green",
-  gray: "text-gray",
+  // midGray: "text-midGray",
+  yellow: "text-warning",
+  red: "text-danger",
+  green: "text-success",
+  gray: "text-border",
   choco: "text-choco",
   savoy: "text-savoy",
-  blue: "text-blue",
 };
 
 const weightStyles = {

@@ -6,19 +6,19 @@ import Avatar from "@/components/ui/Avatar";
 import { useUpdateProfileImage } from "@/hooks/user";
 import { pickImage } from "@/lib/image";
 
-type EditableAvatarProps = {
+type AvatarPickerProps = {
   image?: string;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   placeholder: any;
   onSuccess?: () => void;
 };
 
-export default function EditableAvatar({
+export default function AvatarPicker({
   image,
   size = "md",
   placeholder,
   onSuccess,
-}: EditableAvatarProps) {
+}: AvatarPickerProps) {
   const mutation = useUpdateProfileImage();
 
   async function handlePress() {
