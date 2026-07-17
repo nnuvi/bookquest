@@ -59,7 +59,6 @@ export default function Skeleton({
           height,
           borderRadius: circle ? 999 : radius,
           backgroundColor: "#E5E7EB",
-          //   backgroundColor: Colors.midGray,
         },
         animatedStyle,
         style,

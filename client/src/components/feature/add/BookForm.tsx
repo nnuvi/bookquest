@@ -6,24 +6,32 @@ import SubmitButton from "./SubmitButton";
 import UserBookFields from "./UserBookFields";
 import { AddBookFormData } from "@/schema/addBook.schema";
 import { View } from "react-native";
+import BookFormSkeleton from "@/components/skeleton/BookFormSkeleton";
 
 type BookFormProps = {
   form: UseFormReturn<AddBookFormData>;
   onSubmit: (data: AddBookFormData) => void | Promise<void>;
   loading?: boolean;
+  readOnlyBook?: boolean;
 };
 
-export default function BookForm({ form, onSubmit, loading }: BookFormProps) {
+export default function BookForm({
+  form,
+  onSubmit,
+  loading,
+  readOnlyBook,
+}: BookFormProps) {
+  if (loading) return <BookFormSkeleton />;
   return (
     <View className="p-4">
-      {/* 1. Pass the full form object here */}
+      {/* BOOK COVER */}
       <BookCoverPicker form={form} />
       <View className="mb-4" />
 
-      {/* 2. Pass the full form object here instead of just control */}
-      <BookMetadataFields form={form} />
+      {/* BOOK DATA */}
+      <BookMetadataFields form={form} readOnlyBook={readOnlyBook} />
 
-      {/* 3. Pass the full form object here instead of just control */}
+      {/* USERBOOK DATA */}
       <UserBookFields form={form} />
       <View className="py-4">
         <SubmitButton loading={loading} onPress={form.handleSubmit(onSubmit)} />

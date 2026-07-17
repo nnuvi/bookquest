@@ -13,7 +13,7 @@ export default function Landing() {
       <StatusBar />
       <LogoText variant="dark" />
 
-      <Text className="text-center text-midgray mb-10">
+      <Text className="text-center text-gray mb-10">
         Manage, borrow, and track your books easily.
       </Text>
 

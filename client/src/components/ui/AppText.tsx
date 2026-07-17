@@ -14,6 +14,8 @@ export type AppTextProps = TextProps & {
     | "red"
     | "green"
     | "gray"
+    | "darkGray"
+    | "neutral"
     | "choco"
     | "savoy";
 
@@ -39,7 +41,9 @@ const colorStyles = {
   yellow: "text-warning",
   red: "text-danger",
   green: "text-success",
-  gray: "text-border",
+  gray: "text-text-muted",
+  neutral: "text-neutral",
+  darkGray: "text-neutral-dark",
   choco: "text-choco",
   savoy: "text-savoy",
 };

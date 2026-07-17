@@ -1,35 +1,29 @@
-import { useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
+import { useState } from "react";
+import {
+  Pressable,
+  TouchableOpacity,
+  View
+} from "react-native";
 
 import DropdownModal from "@/components/common/DropdownModal";
 import LogoText from "@/components/common/LogoText";
 import Screen from "@/components/common/Screen";
 
-import EmptyState from "@/components/common/EmptyState";
 import ErrorScreen from "@/components/common/ErrorScreen";
 
 import BookGridSkeleton from "@/components/skeleton/BookGridSkeleton";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 import { useMyBooks } from "@/hooks/books";
 import { api } from "@/lib/api";
-import { BookCardItem } from "@/types/book";
 
-import BookPlaceholder from "@assets/images/placeholder-book.png";
-import AppText from "@/components/ui/AppText";
-import BookCover from "@/components/ui/BookCover";
-import { useResponsive } from "@/hooks/useResponsive";
-import { LOG_SCOPE, logger } from "@/lib/logger";
+import BookGrid from "@/components/feature/book/BookGrid";
+import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
-  const { bookCardWidth, isDesktop, isTablet, numColumns } = useResponsive();
-
-  // logger.debug(LOG_SCOPE.image, "bookCardWidth", bookCardWidth);
-  // logger.debug(LOG_SCOPE.image, "isDesktop", isDesktop);
-  // logger.debug(LOG_SCOPE.image, "isTablet", isTablet);
-  // logger.debug(LOG_SCOPE.image, "numColumns", numColumns);
 
   const {
     data: books = [],
@@ -55,42 +49,28 @@ export default function HomeScreen() {
     }
   };
 
-  const renderBookItem = ({ item }: { item: BookCardItem }) => (
-    <TouchableOpacity
-      style={{ width: bookCardWidth }}
-      className={`items-center px-2`}
-      onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
-    >
-      <BookCover
-        image={item.coverImage}
-      />
-
-      <AppText
-        size="sm"
-        weight="semibold"
-        center
-        numberOfLines={2}
-        className="mt-2"
-      >
-        {item.title}
-      </AppText>
-    </TouchableOpacity>
-  );
-
   return (
     <Screen>
       {/* Header */}
       <View className="bg-primary px-5 pt-3 pb-2">
         <View className="flex-row items-center justify-between">
           <LogoText />
-
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="white"
-            />
-          </TouchableOpacity>
+          <View className="flex-row gap-3">
+            <Pressable onPress={() => router.push(`add/ScanISBN`)}>
+              <SimpleLineIcons
+                name="camera"
+                size={24}
+                color={Colors.background}
+              />
+            </Pressable>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <MaterialCommunityIcons
+                name="dots-vertical"
+                size={24}
+                color="white"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <DropdownModal
@@ -112,32 +92,15 @@ export default function HomeScreen() {
           onRetry={refetch}
         />
       ) : (
-        <FlatList
-          key={numColumns}
-          data={books}
-          style={{
-            flex: 1,
-            width: "100%",
-          }}
-          numColumns={numColumns}
-          keyExtractor={(item) => item.id}
-          renderItem={renderBookItem}
-          refreshing={isRefetching}
-          onRefresh={refetch}
-          contentContainerClassName="p-4 pb-70"
-          columnWrapperStyle={{
-            justifyContent: "space-between", // Change to flex-start to prevent strange alignment gaps
-            gap: 8, // Adds even grid spacing between cards
-            marginBottom: 10,
-          }}
-          ListEmptyComponent={
-            <EmptyState
-              title="No Books Yet"
-              description="Start building your personal library by adding your first book."
+        <View className="flex-1 items-start">
+          <View className="flex-1 items-center">
+            <BookGrid
+              books={books}
+              refreshing={isRefetching}
+              onRefresh={refetch}
             />
-          }
-          showsVerticalScrollIndicator={false}
-        />
+          </View>
+        </View>
       )}
     </Screen>
   );

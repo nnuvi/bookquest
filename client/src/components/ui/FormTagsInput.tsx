@@ -11,6 +11,8 @@ type FormTagsInputProps<T extends FieldValues> = {
 
   label?: string;
   placeholder?: string;
+
+  disabled?: boolean;
 };
 
 export default function FormTagsInput<T extends FieldValues>({
@@ -18,6 +20,7 @@ export default function FormTagsInput<T extends FieldValues>({
   name,
   label,
   placeholder,
+  disabled = false,
 }: FormTagsInputProps<T>) {
   const [text, setText] = useState("");
 
@@ -38,6 +41,7 @@ export default function FormTagsInput<T extends FieldValues>({
             onChange={field.onChange}
             placeholder={placeholder}
             error={!!fieldState.error}
+            disabled={disabled}
           />
 
           {!!fieldState.error && (

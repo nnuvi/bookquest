@@ -11,7 +11,7 @@ interface Props {
 
 export default function RequestTabs({ selected, onChange }: Props) {
   return (
-    <View className="mx-3 mt-3 flex-row rounded-full bg-neutral p-1">
+    <View className="mx-3 my-3 flex-row rounded-full bg-neutral p-1">
       <RequestTabButton
         title="Received"
         active={selected === "received"}

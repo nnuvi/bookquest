@@ -52,12 +52,25 @@ export default function HomeLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="Scan"
         options={{
           title: "Scan",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="line-scan" size={24} color={color} />
+          ),
+        }}
+      /> */}
+      <Tabs.Screen
+        name="Request"
+        options={{
+          title: "Request",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="book-multiple"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />

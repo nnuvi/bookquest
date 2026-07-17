@@ -46,7 +46,9 @@ export default function Requests() {
         <BorrowRequestList
           requests={received.data ?? []}
           refreshing={received.isRefetching}
-          onRefresh={received.refetch}
+          onRefresh={() => {
+            received.refetch();
+          }}
         />
       ),
     },
@@ -78,8 +80,8 @@ export default function Requests() {
   //   error: current.query.error,
   // });
 
-//   console.log(received.error);
-// console.log(current.query.error);
+  //   console.log(received.error);
+  // console.log(current.query.error);
 
   return (
     <Screen>

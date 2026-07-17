@@ -24,6 +24,8 @@ type FormSelectProps<
 
   options: readonly Option<TValue>[];
 
+  disabled?: boolean;
+
   onPress?: (
     options: readonly Option<TValue>[],
     value: TValue | undefined,
@@ -39,6 +41,7 @@ export default function FormSelect<
   name,
   label,
   placeholder = "Select",
+  disabled = false,
   options,
   onPress,
 }: FormSelectProps<TFieldValues, TValue>) {
@@ -62,7 +65,8 @@ export default function FormSelect<
               value={selected?.label}
               placeholder={placeholder}
               error={!!fieldState.error}
-             onPress={() => setVisible(true)}
+              disabled={disabled}
+              onPress={() => setVisible(true)}
             />
 
             <SelectModal

@@ -3,6 +3,7 @@ import { TextInput, TextInputProps, View } from "react-native";
 
 type InputProps = TextInputProps & {
   error?: boolean;
+  disabled?: boolean;
   rounded?:
     | "xs"
     | "sm"
@@ -26,11 +27,12 @@ const roundedStyles = {
   "2xl": "rounded-2xl",
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
-  "full": "rounded-full",
+  full: "rounded-full",
 };
 
 export default function Input({
   error,
+  disabled = false,
   rounded = "full",
   className,
   ...props
@@ -47,8 +49,15 @@ export default function Input({
     >
       <TextInput
         {...props}
-        className={`text-lg text-text ${className ?? ""}`}
+        // className={`text-lg text-text ${className ?? ""}`}
         placeholderTextColor={Colors.neutral}
+        editable={!disabled}
+        selectTextOnFocus={!disabled}
+        className={`
+          text-lg
+          ${disabled ? "text-neutral-dark" : "text-text"}
+          ${className ?? ""}
+        `}
       />
     </View>
   );

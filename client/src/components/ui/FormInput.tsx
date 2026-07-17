@@ -26,6 +26,8 @@ type FormInputProps<T extends FieldValues> = {
   multiline?: boolean;
   numberOfLines?: number;
 
+  disabled?: boolean;
+
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
 };
 
@@ -34,6 +36,7 @@ export default function FormInput<T extends FieldValues>({
   name,
   label,
   rounded,
+  disabled = false,
   ...props
 }: FormInputProps<T>) {
   return (
@@ -54,6 +57,7 @@ export default function FormInput<T extends FieldValues>({
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={!!fieldState.error}
+            disabled={disabled}
             rounded={rounded}
           />
 

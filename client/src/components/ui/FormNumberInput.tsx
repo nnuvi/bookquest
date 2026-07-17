@@ -11,6 +11,8 @@ type FormNumberInputProps<T extends FieldValues> = {
   label?: string;
   placeholder?: string;
 
+  disabled?: boolean;
+
   min?: number;
   max?: number;
 };
@@ -20,6 +22,7 @@ export default function FormNumberInput<T extends FieldValues>({
   name,
   label,
   placeholder,
+  disabled = false,
   min,
   max,
 }: FormNumberInputProps<T>) {
@@ -41,6 +44,7 @@ export default function FormNumberInput<T extends FieldValues>({
             placeholder={placeholder}
             onBlur={field.onBlur}
             error={!!fieldState.error}
+            disabled={disabled}
             onChangeText={(text) => {
               if (text === "") {
                 field.onChange(undefined);

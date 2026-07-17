@@ -36,16 +36,16 @@ export const ProfileHeader = ({
       {/** Top Header */}
       <View className="bg-primary items-center flex-row justify-between p-3 px-4 relative">
         <View className="flex-1 items-start pl-3">
-          {currentUser && (
-            <TouchableOpacity>
-              {/* <Ionicons name="return-up-back" size={28} color="white" /> */}
-              <SimpleLineIcons
+          {/* {currentUser && ( */}
+          <TouchableOpacity onPress={router.back}>
+            <Ionicons name="return-up-back" size={25} color="white" />
+            {/* <SimpleLineIcons
                 name="settings"
                 size={25}
                 color={Colors.background}
-              />
-            </TouchableOpacity>
-          )}
+              /> */}
+          </TouchableOpacity>
+          {/* )} */}
         </View>
 
         <AppText weight="bold" size="2xl" color="light" className="text-center">
@@ -54,11 +54,19 @@ export const ProfileHeader = ({
 
         <View className="flex-1 items-end pr-4">
           {currentUser && (
-            <TouchableOpacity onPress={() => router.push(`request/Requests`)}>
-              {/* <Ionicons name="chatbubbles-outline" size={28} color="white" /> */}
-              <MaterialCommunityIcons
-                name="book-multiple-outline"
-                size={28}
+            // <TouchableOpacity onPress={() => router.push(`request/Requests`)}>
+            //   {/* <Ionicons name="chatbubbles-outline" size={28} color="white" /> */}
+            //   <MaterialCommunityIcons
+            //     name="book-multiple-outline"
+            //     size={28}
+            //     color={Colors.background}
+            //   />
+            // </TouchableOpacity>
+            <TouchableOpacity>
+              {/* <Ionicons name="return-up-back" size={28} color="white" /> */}
+              <SimpleLineIcons
+                name="settings"
+                size={25}
                 color={Colors.background}
               />
             </TouchableOpacity>

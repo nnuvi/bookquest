@@ -5,6 +5,8 @@ import { TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/ui/AppText";
 import { Colors } from "@/constants/Colors";
+import AddBookModal from "../add/AddBookModal";
+import { useState } from "react";
 
 type TabType = "list" | "borrowed" | "lent";
 
@@ -21,6 +23,7 @@ export default function ProfileTabs({
   onAddPress,
   currentUser = true,
 }: ProfileTabsProps) {
+  const [showAddModal, setShowAddModal] = useState(false);
   return (
     <View className="flex-row justify-around items-center bg-primary p-2 mt-2">
       <TouchableOpacity
@@ -89,7 +92,7 @@ export default function ProfileTabs({
       {currentUser && (
         <TouchableOpacity
           className="px-3 items-center justify-center"
-          onPress={onAddPress}
+          onPress={() => setShowAddModal(true)}
         >
           <MaterialIcons
             name="library-add"
@@ -97,11 +100,14 @@ export default function ProfileTabs({
             color={Colors.background}
           />
 
-          <AppText color="light">
-            Add
-          </AppText>
+          <AppText color="light">Add</AppText>
         </TouchableOpacity>
       )}
+
+      <AddBookModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
     </View>
   );
 }

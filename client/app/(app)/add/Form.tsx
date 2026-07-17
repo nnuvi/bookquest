@@ -14,6 +14,9 @@ import {
 } from "@/schema/addBook.schema";
 import { useCreateBookByISBNScan, useISBNScan } from "@/hooks/books";
 import { useEffect } from "react";
+import { useFeedback } from "@/hooks/useFeedbackModal";
+import { getErrorMessage } from "@/lib/app";
+import FeedbackModal from "@/components/common/FeedbackModal";
 // import { BookFormData, BookSchema } from "@/schema/userBook.schema";
 
 export default function AddBookForm() {
@@ -26,7 +29,12 @@ export default function AddBookForm() {
     defaultValues: addBookDefaultValues,
   });
 
-  const { data: book, isPending } = useISBNScan(isbn);
+  const {
+    data: book,
+    isPending,
+    isError,
+    error: queryError,
+  } = useISBNScan(isbn);
 
   const createBook = useCreateBookByISBNScan();
   // const { mutateAsync: createBook, isPending } = useISBNScan(is);
@@ -52,17 +60,28 @@ export default function AddBookForm() {
     <Screen>
       <HeaderTitle text="Add Book" />
 
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-        style={{padding: 8}}
-      >
-        <BookForm
-          form={form}
-          loading={isPending || createBook.isPending}
-          onSubmit={handleSubmit}
+      {isError ? (
+        <FeedbackModal
+          visible={true}
+          type={"error"}
+          title={"Failed"}
+          message={getErrorMessage(queryError)}
+          onClose={router.back}
         />
-      </ScrollView>
+      ) : (
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={{ padding: 8 }}
+        >
+          <BookForm
+            form={form}
+            loading={isPending || createBook.isPending}
+            onSubmit={handleSubmit}
+            readOnlyBook={!!book}
+          />
+        </ScrollView>
+      )}
     </Screen>
   );
 }

@@ -11,6 +11,8 @@ type TagsInputProps = {
   placeholder?: string;
   error?: boolean;
 
+  disabled?: boolean;
+
   addButtonText?: string;
 };
 
@@ -19,6 +21,7 @@ export default function TagsInput({
   onChange,
   placeholder,
   error,
+  disabled = false,
   addButtonText = "Add",
 }: TagsInputProps) {
   const [text, setText] = useState("");
@@ -52,6 +55,7 @@ export default function TagsInput({
             onSubmitEditing={addTag}
             returnKeyType="done"
             error={error}
+            disabled={disabled}
           />
         </View>
 
@@ -59,7 +63,7 @@ export default function TagsInput({
           onPress={addTag}
           className="rounded-full bg-primary px-6 py-3"
         >
-          <AppText weight="medium" className="text-text-inverse">
+          <AppText weight="medium" color="light">
             {addButtonText}
           </AppText>
         </Pressable>
@@ -72,10 +76,9 @@ export default function TagsInput({
               key={tag}
               onPress={() => removeTag(tag)}
               className="rounded-full bg-primary px-3 py-2"
+              disabled={disabled}
             >
-              <AppText className="text-text-inverse">
-                {tag} ✕
-              </AppText>
+              <AppText color="light">{tag} ✕</AppText>
             </Pressable>
           ))}
         </View>

@@ -31,7 +31,7 @@ export default function BookHeader({
             {title ?? "N/A"}
           </AppText>
 
-          <AppText size="lg" color="midGray" className="mt-2" numberOfLines={2}>
+          <AppText size="lg" color="gray" className="mt-2" numberOfLines={2}>
             by {author?.join(", ") ?? "N/A"}
           </AppText>
         </View>
@@ -40,12 +40,12 @@ export default function BookHeader({
             <View
               className={`w-3 h-3 rounded-full mr-2 ${
                 availability === "available"
-                  ? "bg-green-500"
+                  ? "bg-success"
                   : availability === "borrowed"
-                    ? "bg-yellow-500"
+                    ? "bg-warning"
                     : availability === "lent"
                       ? "bg-blue-500"
-                      : "bg-red-500"
+                      : "bg-danger"
               }`}
             />
 

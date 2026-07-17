@@ -7,6 +7,17 @@ const imageSchema = z.object({
   mimeType: z.string().optional(),
 });
 
+export const ISBNSchema = z.object({
+  isbn: z
+    .string()
+    .trim()
+    .min(10, "ISBN must be at least 10 digits")
+    .max(13, "ISBN must be at most 13 digits")
+    .regex(/^\d+$/, "ISBN must contain only numbers"),
+});
+
+export type ISBNFormData = z.infer<typeof ISBNSchema>;
+
 export const bookFormSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
 

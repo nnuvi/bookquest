@@ -174,7 +174,7 @@ export const isbnScan = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const { isbn } = req.params;
 
-    const book = await bookService.getBookDataByISBN(isbn!);
+    const book = await bookService.getBookDataByISBN(isbn!, req.user._id);
     logger.debug("ISBN Scan Sent Book: ", { book });
 
     res.status(HTTP_STATUS.OK).json({

@@ -9,7 +9,7 @@ import { Colors } from "@/constants/Colors";
 type FeedbackModalProps = {
   visible: boolean;
   type: "success" | "error";
-  title: string;
+  title?: string;
   message?: string;
   onClose: () => void;
 };
@@ -29,7 +29,7 @@ export default function FeedbackModal({
         {/* Icon */}
         <View
           className={`mb-5 h-20 w-20 items-center justify-center rounded-full ${
-            success ? "bg-primary-light/10" : "bg-neutral/10"
+            success ? "bg-primary-light/10" : "bg-neutral/30"
           }`}
         >
           <Ionicons
@@ -40,29 +40,19 @@ export default function FeedbackModal({
         </View>
 
         {/* Title */}
-        <AppText
-          size="2xl"
-          weight="bold"
-          className="text-center"
-        >
-          {title}
+        <AppText size="2xl" weight="bold" className="text-center">
+          {title ?? (success ? "Success" : "Failed")}
         </AppText>
 
         {/* Message */}
         {message && (
-          <AppText
-            className="mt-3 text-center text-text-muted"
-          >
+          <AppText className="mt-3 text-center text-text-muted">
             {message}
           </AppText>
         )}
 
         {/* Button */}
-        <Button
-          title="OK"
-          className="mt-8 w-full"
-          onPress={onClose}
-        />
+        <Button title="OK" className="mt-8 w-full" onPress={onClose} />
       </View>
     </AppModal>
   );

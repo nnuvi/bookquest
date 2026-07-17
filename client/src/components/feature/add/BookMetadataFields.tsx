@@ -10,9 +10,13 @@ import { View } from "react-native";
 
 type BookMetadataFieldsProps = {
   form: UseFormReturn<AddBookFormData>;
+  readOnlyBook?: boolean;
 };
 
-export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
+export default function BookMetadataFields({
+  form,
+  readOnlyBook = false,
+}: BookMetadataFieldsProps) {
   const { control } = form;
 
   return (
@@ -22,6 +26,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.title"
         label="Title"
         placeholder="Book title"
+        disabled={readOnlyBook}
       />
 
       <FormTagsInput
@@ -29,6 +34,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.author"
         label="Authors"
         placeholder="J.K. Rowling"
+        disabled={readOnlyBook}
       />
 
       <FormTagsInput
@@ -36,6 +42,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.genres"
         label="Genres"
         placeholder="Fantasy"
+        disabled={readOnlyBook}
       />
 
       <FormInput
@@ -43,6 +50,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.isbn"
         label="ISBN"
         placeholder="978..."
+        disabled={readOnlyBook}
       />
 
       <FormInput
@@ -50,12 +58,14 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.publisher"
         label="Publisher"
         placeholder="Publisher"
+        disabled={readOnlyBook}
       />
 
       <FormDatePicker
         control={control}
         name="book.publishedDate"
         label="Published Date"
+        disabled={readOnlyBook}
       />
 
       <FormInput
@@ -63,6 +73,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.language"
         label="Language"
         placeholder="English"
+        disabled={readOnlyBook}
       />
 
       <FormNumberInput
@@ -70,6 +81,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         name="book.pageCount"
         label="Pages"
         placeholder="320"
+        disabled={readOnlyBook}
       />
 
       <FormInput
@@ -80,6 +92,7 @@ export default function BookMetadataFields({ form }: BookMetadataFieldsProps) {
         multiline
         numberOfLines={5}
         rounded="3xl"
+        disabled={readOnlyBook}
       />
     </View>
   );

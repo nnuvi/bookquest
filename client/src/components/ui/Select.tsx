@@ -12,6 +12,7 @@ type SelectProps = PressableProps & {
 export default function Select({
   value,
   placeholder = "Select",
+  disabled = false,
   error,
   className,
   ...props
@@ -19,6 +20,7 @@ export default function Select({
   return (
     <Pressable
       {...props}
+      disabled={disabled}
       className={`
         flex-row
         items-center
@@ -32,17 +34,11 @@ export default function Select({
         ${className ?? ""}
       `}
     >
-      <AppText
-        className={value ? "text-text text-lg" : "text-neutral text-lg"}
-      >
+      <AppText className={value ? "text-text text-lg" : "text-neutral text-lg"}>
         {value ?? placeholder}
       </AppText>
 
-      <Ionicons
-        name="chevron-down"
-        size={20}
-        color="currentColor"
-      />
+      <Ionicons name="chevron-down" size={20} color="currentColor" />
     </Pressable>
   );
 }

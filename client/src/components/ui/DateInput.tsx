@@ -12,6 +12,7 @@ type DateInputProps = PressableProps & {
 export default function DateInput({
   value,
   placeholder = "Select date",
+  disabled = false,
   error,
   className,
   ...props
@@ -19,6 +20,7 @@ export default function DateInput({
   return (
     <Pressable
       {...props}
+      disabled={disabled}
       className={`
         flex-row
         items-center
@@ -33,20 +35,14 @@ export default function DateInput({
       `}
     >
       <AppText
-        className={
-          value ? "text-lg text-text" : "text-lg text-neutral"
-        }
+        color={disabled ? "darkGray" : value ? "default" : "neutral"}
+        size="lg"
+        // className={value ? "text-lg text-text" : "text-lg text-neutral"}
       >
-        {value
-          ? value.toLocaleDateString()
-          : placeholder}
+        {value ? value.toLocaleDateString() : placeholder}
       </AppText>
 
-      <Ionicons
-        name="calendar-outline"
-        size={20}
-        color="currentColor"
-      />
+      <Ionicons name="calendar-outline" size={20} color="currentColor" />
     </Pressable>
   );
 }

@@ -15,6 +15,8 @@ type FormDatePickerProps<T extends FieldValues> = {
   label?: string;
   placeholder?: string;
 
+  disabled?: boolean;
+
   minimumDate?: Date;
   maximumDate?: Date;
 };
@@ -24,6 +26,7 @@ export default function FormDatePicker<T extends FieldValues>({
   name,
   label,
   placeholder = "Select date",
+  disabled = false,
   minimumDate,
   maximumDate,
 }: FormDatePickerProps<T>) {
@@ -45,6 +48,7 @@ export default function FormDatePicker<T extends FieldValues>({
             value={field.value}
             placeholder={placeholder}
             error={!!fieldState.error}
+            disabled={disabled}
             onPress={() => setShow(true)}
           />
 

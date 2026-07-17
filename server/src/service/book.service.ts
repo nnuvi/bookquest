@@ -12,6 +12,7 @@ import UserBook, {
 } from "../model/UserBook.model.js";
 import { getGoogleBookByISBN } from "./external.service.js";
 import logger from "@/config/logger.js";
+import { FilterQuery } from "mongoose";
 
 // userbook exists
 // ensure book availablity (case)
@@ -19,6 +20,62 @@ import logger from "@/config/logger.js";
 // ensure book owner
 // ensure not bookowner
 // update book avalibilty
+
+export async function getBookDataByISBN(isbn: string, userId: string) {
+  logger.debug("UserId and ISBN: ", {
+    userId,
+    isbn,
+  });
+
+  await ensureNotDuplicateBook(userId, { isbn });
+
+  const existing = await getBookByISBN(isbn);
+
+  logger.debug("Exists Book:? ", { existing });
+
+  if (existing) {
+    await ensureNotDuplicateBook(userId, { bookId: existing?._id.toString() });
+    return existing;
+  }
+
+  const googleResponse = await getGoogleBookByISBN(isbn);
+
+  if (!googleResponse.items?.length) {
+    throw new ApiError(HTTP_STATUS.NOT_FOUND, "Book not found.");
+  }
+
+  const bookData = mapGoogleBook(googleResponse.items[0], isbn);
+
+  logger.debug("Google Books API Book: ", { bookData });
+
+  const book = createBook(bookData);
+
+  return book;
+}
+
+export async function createBookByISBNScan(
+  userId: string,
+  bookId: string,
+  data: CreateUserBookDto,
+): Promise<UserBookSchemaType> {
+  logger.debug("Create UserBook Data: ", { data });
+  // Create the user's copy
+  const userBook = await UserBook.create({
+    owner: userId,
+    book: bookId,
+
+    condition: data.condition ?? "good",
+    notes: data.notes ?? "",
+
+    inputSource: {
+      method: data.inputSource?.method ?? "isbn",
+      rawInput: data.inputSource?.rawInput ?? "",
+      confidence: data.inputSource?.confidence ?? 1,
+    },
+  });
+
+  return userBook.populate("book");
+}
 
 export async function getBookByIdOrThrow(bookId: string) {
   const book = await Book.findById(bookId);
@@ -103,53 +160,38 @@ export async function updateBookAvailability(
 }
 
 export async function getBookByISBN(isbn: string) {
-  return Book.findOne({ isbn });
+  return Book.findOne({ isbn }).lean();
 }
 
 export async function createBook(book: CreateBookDto): Promise<BookSchemaType> {
   return Book.create(book);
 }
 
-export async function getBookDataByISBN(isbn: string) {
-  const existing = await getBookByISBN(isbn);
+export async function ensureNotDuplicateBook(
+  userId: string,
+  options: {
+    bookId?: string;
+    isbn?: string;
+  },
+) {
+  const query: FilterQuery<typeof UserBook> = {
+    owner: userId,
+  };
 
-  logger.debug("Exists Book:? ", { existing });
-
-  if (existing) return existing;
-
-  const googleResponse = await getGoogleBookByISBN(isbn);
-
-  if (!googleResponse.items?.length) {
-    throw new ApiError(HTTP_STATUS.NOT_FOUND, "Book not found.");
+  if (options.bookId) {
+    query.book = options.bookId;
+  } else if (options.isbn) {
+    query.isbn = options.isbn;
+  } else {
+    throw new Error("Either bookId or isbn must be provided.");
   }
 
-  const bookData = mapGoogleBook(googleResponse.items[0], isbn);
-
-  logger.debug("Google Books API Book: ", { bookData });
-
-  return createBook(bookData);
-}
-
-export async function createBookByISBNScan(
-  userId: string,
-  bookId: string,
-  data: CreateUserBookDto,
-): Promise<UserBookSchemaType> {
-  logger.debug("Create UserBook Data: ", { data });
-  // Create the user's copy
-  const userBook = await UserBook.create({
-    owner: userId,
-    book: bookId,
-
-    condition: data.condition ?? "good",
-    notes: data.notes ?? "",
-
-    inputSource: {
-      method: data.inputSource?.method ?? "isbn",
-      rawInput: data.inputSource?.rawInput ?? "",
-      confidence: data.inputSource?.confidence ?? 1,
-    },
-  });
-
-  return userBook.populate("book");
+  const exists = await UserBook.exists(query);
+  logger.debug("Duplicate book Exists: ", { exists });
+  if (exists) {
+    throw new ApiError(
+      HTTP_STATUS.BAD_REQUEST,
+      "You already own this book in your library",
+    );
+  }
 }
