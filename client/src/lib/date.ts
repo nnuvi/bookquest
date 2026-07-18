@@ -60,3 +60,4 @@ export function formatDate(
 
   return format(Math.floor(absDiff / year), "year", false);
 }
+

@@ -198,7 +198,28 @@ export const createBookByISBNScan = asyncHandler(
       userBook,
     );
 
-    logger.debug("Created UserBook: ", { createUserBook });
+    logger.debug("Created UserBook ISBN: ", { createUserBook });
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "UserBook Created Succesfully",
+      data: createUserBook,
+    });
+  },
+);
+
+export const createBookManually = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const addBookData = req.body;
+
+    logger.debug("Manually typed book:", addBookData);
+
+    const createUserBook = await bookService.createBookManually(
+      req.user._id,
+      addBookData,
+    );
+
+    logger.debug("Created UserBook Manually: ", { createUserBook });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,

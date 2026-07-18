@@ -1,5 +1,10 @@
 import { BookSchemaType } from "@/model/Book.model.js";
 
+export type CreateBookData = Omit<
+  BookSchemaType,
+  "rating" | "createdAt" | "updatedAt"
+>;
+
 export interface GoogleBooksResponse {
   kind: string;
   totalItems: number;
@@ -61,48 +66,6 @@ export type CreateBookDto = {
   coverImage: string;
 };
 
-export function mapGoogleBook(book: GoogleBook, isbn: string): CreateBookDto {
-  const info = book.volumeInfo;
-
-  const extractedISBN =
-    info.industryIdentifiers?.find(({ type }) => type === "ISBN_13")
-      ?.identifier ??
-    info.industryIdentifiers?.find(({ type }) => type === "ISBN_10")
-      ?.identifier;
-
-  const dto: CreateBookDto = {
-    title: info.title ?? "",
-    author: info.authors ?? [],
-    genres: info.categories ?? [],
-    pageCount: info.pageCount ?? 0,
-    isbn: extractedISBN ?? isbn,
-    publisher: info.publisher ?? "",
-    description: info.description ?? "",
-    coverImage:
-      info.imageLinks?.large ??
-      info.imageLinks?.medium ??
-      info.imageLinks?.thumbnail ??
-      "",
-    language: info.language ?? "",
-  };
-
-  const publishDate = parsePublishedDate(info.publishedDate);
-
-  if (publishDate) {
-    dto.publishDate = publishDate;
-  }
-
-  return dto;
-}
-
-function parsePublishedDate(date?: string): Date | undefined {
-  if (!date) return undefined;
-
-  const parsed = new Date(date);
-
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-}
-
 export const UserBookConditionEnum = ["new", "good", "fair", "poor"] as const;
 
 export type UserBookCondition = (typeof UserBookConditionEnum)[number];
@@ -129,10 +92,10 @@ export type CreateUserBookDto = {
   };
 };
 
-export interface BookType {
-  _id: string;
-  title: string;
-  author: string[];
-  genre: string[];
-  bookType: string;
-}
+// export interface BookType {
+//   _id: string;
+//   title: string;
+//   author: string[];
+//   genre: string[];
+//   bookType: string;
+// }

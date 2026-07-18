@@ -19,7 +19,7 @@ export default function BookForm({
   form,
   onSubmit,
   loading,
-  readOnlyBook,
+  readOnlyBook = false,
 }: BookFormProps) {
   if (loading) return <BookFormSkeleton />;
   return (

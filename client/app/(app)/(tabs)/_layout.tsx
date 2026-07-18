@@ -13,20 +13,16 @@ export default function HomeLayout() {
         headerShown: false,
         tabBarStyle: {
           position: "absolute",
+
           borderTopWidth: 0,
           elevation: 0,
           height: 65,
           paddingTop: 6,
+
           backgroundColor: Colors.primary,
-          justifyContent: "center",
-          alignItems: "center",
         },
         tabBarActiveTintColor: Colors.selection,
         tabBarInactiveTintColor: Colors.background,
-        tabBarItemStyle: {
-          justifyContent: "center",
-          alignItems: "center",
-        },
         tabBarLabelStyle: {
           fontSize: 12.5,
           fontWeight: "600",

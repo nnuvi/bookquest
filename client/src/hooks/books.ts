@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   createBookByISBNScan,
+  createBookManually,
   getBookDetails,
   getBorrowedBooks,
   getLentBooks,
@@ -160,3 +161,24 @@ export const useCreateBookByISBNScan = () => {
     },
   });
 };
+
+export function useCreateBookManually() {
+  const queryClient = useQueryClient();
+  const { success, error } = useFeedback();
+
+  return useMutation({
+    mutationFn: createBookManually,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: bookKeys.all,
+      });
+
+      success("Sucess", "The book has been added to your library.");
+    },
+
+    onError: (err) => {
+      error("Update Failed", getErrorMessage(err));
+    },
+  });
+}

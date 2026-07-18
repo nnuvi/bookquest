@@ -12,7 +12,7 @@ export const errorHandler = (
   next: NextFunction,
 ): void => {
   if (err instanceof ZodError) {
-    logger.warn({
+    logger.warn("Request validation failed", {
       requestId: req.requestId,
       method: req.method,
       url: req.originalUrl,
@@ -42,7 +42,7 @@ export const errorHandler = (
   const message =
     err instanceof ApiError ? err.message : "Internal Server Error";
 
-  logger.error({
+  logger.error("Unhandled application error", {
     requestId: req.requestId,
     method: req.method,
     url: req.originalUrl,

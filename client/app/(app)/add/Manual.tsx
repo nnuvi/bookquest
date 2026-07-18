@@ -12,8 +12,8 @@ import {
   AddBookFormData,
   addBookDefaultValues,
 } from "@/schema/addBook.schema";
-
-import { useCreateBook } from "@/hooks/books";
+import { useCreateBookManually } from "@/hooks/books";
+import { navigateBackOrRoute } from "@/lib/app";
 
 export default function ManualAddBookScreen() {
   const form = useForm<AddBookFormData>({
@@ -21,12 +21,12 @@ export default function ManualAddBookScreen() {
     defaultValues: addBookDefaultValues,
   });
 
-  const { mutateAsync: createBook, isPending } = useCreateBook();
+  const { mutateAsync: createBook, isPending } = useCreateBookManually();
 
   async function handleSubmit(data: AddBookFormData) {
     await createBook(data);
 
-    router.back();
+    navigateBackOrRoute('/(tabs)/MyProfile')
   }
 
   return (
@@ -37,11 +37,7 @@ export default function ManualAddBookScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <BookForm
-          form={form}
-          onSubmit={handleSubmit}
-          loading={isPending}
-        />
+        <BookForm form={form} onSubmit={handleSubmit} loading={isPending} />
       </ScrollView>
     </Screen>
   );

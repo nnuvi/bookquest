@@ -1,8 +1,4 @@
-import {
-  CreateBookDto,
-  CreateUserBookDto,
-  mapGoogleBook,
-} from "@/types/book.js";
+import { CreateBookDto, CreateUserBookDto } from "@/types/book.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import ApiError from "../lib/apiError.js";
 import Book, { BookSchemaType } from "../model/Book.model.js";
@@ -13,6 +9,12 @@ import UserBook, {
 import { getGoogleBookByISBN } from "./external.service.js";
 import logger from "@/config/logger.js";
 import { FilterQuery } from "mongoose";
+import { AddBookInputData } from "@/validation/book.validation.js";
+import {
+  mapAddBookInputToUserBook,
+  mapGoogleBook,
+} from "@/mapper/book.mapper.js";
+import { title } from "process";
 
 // userbook exists
 // ensure book availablity (case)
@@ -75,6 +77,37 @@ export async function createBookByISBNScan(
   });
 
   return userBook.populate("book");
+}
+
+export async function createBookManually(
+  userId: string,
+  addBookData: AddBookInputData,
+) {
+  let book = null;
+
+  // Try to find an existing Book
+  if (addBookData.book.isbn) {
+    book = await Book.findOne({ isbn: addBookData.book.isbn });
+  } else {
+    book = await Book.findOne({
+      title: addBookData.book.title,
+      author: addBookData.book.author,
+    });
+  }
+
+  if (!book) {
+    book = await Book.create(addBookData.book);
+  }
+
+  await ensureNotDuplicateBook(userId, {
+    bookId: book._id.toString(),
+  });
+
+  const userBook = await UserBook.create(
+    mapAddBookInputToUserBook(userId, book._id.toString(), addBookData),
+  );
+
+  return userBook;
 }
 
 export async function getBookByIdOrThrow(bookId: string) {
@@ -172,22 +205,38 @@ export async function ensureNotDuplicateBook(
   options: {
     bookId?: string;
     isbn?: string;
+    title?: string;
+    author?: string[];
   },
 ) {
-  const query: FilterQuery<typeof UserBook> = {
-    owner: userId,
-  };
+  let bookId = options.bookId;
 
-  if (options.bookId) {
-    query.book = options.bookId;
-  } else if (options.isbn) {
-    query.isbn = options.isbn;
-  } else {
-    throw new Error("Either bookId or isbn must be provided.");
+  if (!bookId && options.isbn) {
+    const book = await Book.findOne({ isbn: options.isbn }).select("_id");
+    bookId = book?._id.toString();
   }
 
-  const exists = await UserBook.exists(query);
-  logger.debug("Duplicate book Exists: ", { exists });
+  if (!bookId && options.title && options.author?.length) {
+    const book = await Book.findOne({
+      title: options.title,
+      author: options.author,
+    }).select("_id");
+
+    bookId = book?._id.toString();
+  }
+
+  if (!bookId) {
+    // No existing Book found, so there can't be a duplicate UserBook.
+    return;
+  }
+
+  const exists = await UserBook.exists({
+    owner: userId,
+    book: bookId,
+  });
+
+  logger.debug("Duplicate book Exists:", { exists });
+
   if (exists) {
     throw new ApiError(
       HTTP_STATUS.BAD_REQUEST,
