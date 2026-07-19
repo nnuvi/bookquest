@@ -38,7 +38,7 @@ export default function BookList({
         <BookCard
           item={item}
           onPress={onItemPress}
-          action={action?.(item.userBookId!) }
+          action={action?.(item.userBookId!)}
           actionButton={actionButton}
         />
       )}
@@ -46,6 +46,7 @@ export default function BookList({
       onRefresh={onRefresh}
       contentContainerStyle={[
         {
+          // flexGrow: 1,
           paddingBottom: 20,
           paddingVertical: 4,
         },

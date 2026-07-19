@@ -38,16 +38,16 @@ export const ProfileHeader = ({
       {/** Top Header */}
       <View className="bg-primary items-center flex-row justify-between p-3 px-4 relative">
         <View className="flex-1 items-start pl-3">
-          {/* {currentUser && ( */}
-          <TouchableOpacity onPress={router.back}>
-            {/* <Ionicons name="return-up-back" size={25} color="white" /> */}
-            <SimpleLineIcons
-              name="settings"
-              size={25}
-              color={Colors.background}
-            />
-          </TouchableOpacity>
-          {/* )} */}
+          {currentUser && (
+            <TouchableOpacity onPress={router.back}>
+              {/* <Ionicons name="return-up-back" size={25} color="white" /> */}
+              <SimpleLineIcons
+                name="settings"
+                size={25}
+                color={Colors.background}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <AppText weight="bold" size="2xl" color="light" className="text-center">
@@ -138,7 +138,7 @@ export const ProfileHeader = ({
             <AppText size="lg">{user?.bio}</AppText>
           </View>
           {/* Edit Button */}
-          {currentUser && (
+          {/* {currentUser && (
             <View className="justify-end pb-2 px-6">
               <Button
                 title={"Edit"}
@@ -147,7 +147,7 @@ export const ProfileHeader = ({
                 onPress={() => setVisible(true)}
               />
             </View>
-          )}
+          )} */}
           {visible && (
             <AppModal
               visible={visible}

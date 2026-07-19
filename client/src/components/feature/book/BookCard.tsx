@@ -28,7 +28,7 @@ export default function BookCard({
   //   item,
   // });
   return (
-    <View className="flex-1">
+    <>
       <View className="flex-row items-center px-4 py-3">
         <BookCover image={item?.coverImage} size="xs" className="mr-4" />
 
@@ -76,6 +76,6 @@ export default function BookCard({
         {actionButton === "right" && <View className="">{action}</View>}
       </View>
       {actionButton === "bottom" && <View className="px-3">{action}</View>}
-    </View>
+    </>
   );
 }

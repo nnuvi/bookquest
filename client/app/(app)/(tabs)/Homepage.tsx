@@ -93,7 +93,7 @@ export default function HomeScreen() {
         />
       ) : (
         // <View className="flex-1 items-start">
-        <View className="flex-1 items-center">
+        <View className="flex-1">
           <BookGrid
             books={books}
             refreshing={isRefetching}

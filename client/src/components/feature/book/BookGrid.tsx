@@ -35,6 +35,7 @@ export default function BookGrid({
 
   return (
     <FlatList
+      className="flex-1 w-full"
       key={numColumns}
       data={books}
       numColumns={numColumns}
@@ -42,7 +43,12 @@ export default function BookGrid({
       onRefresh={onRefresh}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
-      contentContainerClassName="p-4 pb-12"
+      contentContainerClassName="p-4 pb-22"
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingVertical: 8,
+        paddingBottom: 150,
+      }}
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={
         <EmptyState title={emptyTitle} description={emptyDescription} />
