@@ -19,8 +19,8 @@ export default function BookGridItem({ item, onPress }: BookGridItemProps) {
       onPress={onPress}
       style={{
         width: bookCardWidth,
-        marginBottom: 10,
-        margin: 6,
+        marginBottom: 12,
+        margin: 7,
       }}
       className="items-center"
     >

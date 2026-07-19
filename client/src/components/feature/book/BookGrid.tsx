@@ -7,6 +7,7 @@ import BookCard from "./BookCard";
 import { useResponsive } from "@/hooks/useResponsive";
 import { BookCardItem } from "@/types/book";
 import BookGridItem from "./BookGridItem";
+import { Colors } from "@/constants/Colors";
 
 type BookGridProps = {
   books: BookCardItem[];
@@ -35,7 +36,10 @@ export default function BookGrid({
 
   return (
     <FlatList
-      className="flex-1 w-full"
+      style={{
+        flex: 1,
+        width: "100%"
+      }}
       key={numColumns}
       data={books}
       numColumns={numColumns}
@@ -43,11 +47,14 @@ export default function BookGrid({
       onRefresh={onRefresh}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
-      contentContainerClassName="p-4 pb-22"
+      // contentContainerClassName="p-4 pb-22"
       contentContainerStyle={{
         flexGrow: 1,
         paddingVertical: 8,
-        paddingBottom: 150,
+        paddingBottom: 80,
+      }}
+      columnWrapperStyle={{
+        justifyContent: "flex-start",       
       }}
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={

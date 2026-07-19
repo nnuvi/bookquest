@@ -1,12 +1,14 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "@/constants/Colors";
 import AppText from "@/components/ui/AppText";
 import { useState } from "react";
-import { TextInput, TextInputProps, View } from "react-native";
+import { Pressable, TextInput, TextInputProps, View } from "react-native";
 
 type InputProps = TextInputProps & {
   error?: boolean;
   disabled?: boolean;
   showFloatingLabel?: boolean;
+  showPasswordToggle?: boolean;
 
   rounded?:
     | "xs"
@@ -40,53 +42,72 @@ export default function Input({
   rounded = "full",
   className,
   showFloatingLabel = false,
+  showPasswordToggle = false,
   placeholder,
   onFocus,
   onBlur,
+  secureTextEntry,
+  multiline,
   ...props
 }: InputProps) {
-  const [isFocused, setIsFocused] = useState(false);
+  const [secure, setSecure] = useState(!!secureTextEntry);
 
   return (
     <View
       className={`
         ${roundedStyles[rounded]}
-        relative
         border
         bg-input
         px-6
-        ${props.multiline ? "py-3 min-h-32" : "h-16 justify-center"}
+        ${multiline ? "py-3 min-h-32" : "h-16 justify-center"}
         ${error ? "border-danger" : "border-border"}
       `}
     >
+  
       {showFloatingLabel && placeholder && (
-        <AppText size="xs" color="placeholder" className="mb-0">
+        <AppText size="xs" color="placeholder">
           {placeholder}
         </AppText>
       )}
 
-      <TextInput
-        {...props}
-        textAlignVertical={props.multiline ? "top" : "center"}
-        placeholder={showFloatingLabel ? "" : placeholder}
-        placeholderTextColor={Colors.textMuted}
-        editable={!disabled}
-        onFocus={(e) => {
-          setIsFocused(true);
-          onFocus?.(e);
-        }}
-        onBlur={(e) => {
-          setIsFocused(false);
-          onBlur?.(e);
-        }}
-        className={`
-          ${props.multiline ? "min-h-22 py-1" : "h-6"}
-          p-0
-          text-lg
-          ${disabled ? "text-neutral-dark" : "text-text"}
-          ${className ?? ""}
-        `}
-      />
+      <View className="flex-row items-center">
+        <TextInput
+          {...props}
+          multiline={multiline}
+          editable={!disabled}
+          placeholder={showFloatingLabel ? "" : placeholder}
+          placeholderTextColor={Colors.textMuted}
+          textAlignVertical={multiline ? "top" : "center"}
+          secureTextEntry={secure}
+          onFocus={(e) => {
+            onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            onBlur?.(e);
+          }}
+          className={`
+            flex-1
+            p-0
+            text-lg
+            ${multiline ? "min-h-24 py-1" : "h-6"}
+            ${disabled ? "text-neutral-dark" : "text-text"}
+            ${className ?? ""}
+          `}
+        />
+
+        {showPasswordToggle && (
+          <Pressable
+            onPress={() => setSecure((prev) => !prev)}
+            className="ml-3"
+          >
+            <Ionicons
+              name={secure ? "eye-off-outline" : "eye-outline"}
+              size={22}
+              color="gray"
+            />
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }

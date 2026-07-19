@@ -74,6 +74,7 @@ export default function FormInput<T extends FieldValues>({
             disabled={disabled}
             rounded={rounded}
             showFloatingLabel={!!field.value}
+            showPasswordToggle={props.secureTextEntry}
           />
 
           {fieldState.error && (
