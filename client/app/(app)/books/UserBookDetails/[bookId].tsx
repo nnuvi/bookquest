@@ -1,6 +1,6 @@
 import { useGlobalSearchParams } from "expo-router";
 import { useState } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import Screen from "@/components/common/Screen";
@@ -17,6 +17,7 @@ import ErrorScreen from "@/components/common/ErrorScreen";
 import NotFoundScreen from "@/components/common/NotFoundScreen";
 
 import { useUserBookDetails } from "@/hooks/books";
+import AppText from "@/components/ui/AppText";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId: string }>();
@@ -116,6 +117,28 @@ export default function BookDetails() {
             description={userBook.book.description}
             notes={userBook.notes}
           />
+          {/* <View>
+            {Array.from({ length: 50 }).map((_, i) => (
+              <AppText key={i}>Row {i}</AppText>
+            ))}
+          </View> */}
+          <View className="pb-20 items-center">
+            <AppText size="xl" color="text" className="mt-10">
+              HELLO hello HellowWorld 1 text
+            </AppText>
+            <AppText size="xl" color="muted" className="mt-5">
+              HELLO hello HellowWorld 2 muted plc
+            </AppText>
+            <AppText size="xl" color="neutral" className="mt-5">
+              HELLO hello HellowWorld 3 neutral (mic plc)
+            </AppText>
+            <AppText size="xl" color="gray" className="mt-5">
+              HELLO hello HellowWorld 4 gray muted
+            </AppText>
+            <AppText size="xl" color="placeholder" className="mt-5">
+              HELLO hello HellowWorld 5 placeholder
+            </AppText>
+          </View>
         </ScrollView>
       )}
 

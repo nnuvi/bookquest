@@ -50,6 +50,7 @@ export default function FormDatePicker<T extends FieldValues>({
             error={!!fieldState.error}
             disabled={disabled}
             onPress={() => setShow(true)}
+            showFloatingLabel={true}
           />
 
           {show && (
@@ -59,8 +60,12 @@ export default function FormDatePicker<T extends FieldValues>({
               minimumDate={minimumDate}
               maximumDate={maximumDate}
               display={Platform.OS === "android" ? "calendar" : "default"}
-              onValueChange={(date) => {
-                field.onChange(date);
+              onValueChange={(event) => {
+                if (event.nativeEvent?.timestamp) {
+                  field.onChange(new Date(event.nativeEvent.timestamp));
+                }
+
+                setShow(false);
               }}
               onDismiss={() => {
                 setShow(false);

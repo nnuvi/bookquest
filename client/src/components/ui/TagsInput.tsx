@@ -56,6 +56,7 @@ export default function TagsInput({
             returnKeyType="done"
             error={error}
             disabled={disabled}
+            showFloatingLabel={!!text}
           />
         </View>
 

@@ -1,10 +1,13 @@
 import { Colors } from "@/constants/Colors";
-import { useEffect } from "react";
+import AppText from "@/components/ui/AppText";
+import { useState } from "react";
 import { TextInput, TextInputProps, View } from "react-native";
 
 type InputProps = TextInputProps & {
   error?: boolean;
   disabled?: boolean;
+  showFloatingLabel?: boolean;
+
   rounded?:
     | "xs"
     | "sm"
@@ -29,39 +32,56 @@ const roundedStyles = {
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
   full: "rounded-full",
-};
+} as const;
 
 export default function Input({
   error,
   disabled = false,
   rounded = "full",
   className,
+  showFloatingLabel = false,
+  placeholder,
+  onFocus,
+  onBlur,
   ...props
 }: InputProps) {
-  useEffect(() => {
-    console.log("Input mounted");
+  const [isFocused, setIsFocused] = useState(false);
 
-    return () => {
-      console.log("Input unmounted");
-    };
-  }, []);
   return (
     <View
       className={`
         ${roundedStyles[rounded]}
+        relative
         border
         bg-input
-        px-4
+        px-6
+        ${props.multiline ? "py-3 min-h-32" : "h-16 justify-center"}
         ${error ? "border-danger" : "border-border"}
       `}
     >
+      {showFloatingLabel && placeholder && (
+        <AppText size="xs" color="placeholder" className="mb-0">
+          {placeholder}
+        </AppText>
+      )}
+
       <TextInput
         {...props}
-        // className={`text-lg text-text ${className ?? ""}`}
-        placeholderTextColor={Colors.neutralDark}
+        textAlignVertical={props.multiline ? "top" : "center"}
+        placeholder={showFloatingLabel ? "" : placeholder}
+        placeholderTextColor={Colors.textMuted}
         editable={!disabled}
-        // selectTextOnFocus={!disabled}
+        onFocus={(e) => {
+          setIsFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setIsFocused(false);
+          onBlur?.(e);
+        }}
         className={`
+          ${props.multiline ? "min-h-22 py-1" : "h-6"}
+          p-0
           text-lg
           ${disabled ? "text-neutral-dark" : "text-text"}
           ${className ?? ""}

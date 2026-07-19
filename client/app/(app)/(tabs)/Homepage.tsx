@@ -98,6 +98,9 @@ export default function HomeScreen() {
             books={books}
             refreshing={isRefetching}
             onRefresh={refetch}
+            onBookPress={(item) =>
+              router.push(`book/UserBookDetails/${item.userBookId}`)
+            }
           />
         </View>
         // </View>

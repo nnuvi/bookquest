@@ -132,65 +132,6 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
-// export const friendsRequestSendUnsend = asyncHandler(
-//   async (req: Request, res: Response) => {
-//     const userId = req.user._id;
-//     const friendId = req.params.id;
-
-//     const [user, friend] = await Promise.all([
-//       User.findById(userId),
-//       User.findById(friendId),
-//     ]);
-
-//     if (!user || !friend) {
-//       throw new ApiError(
-//         HTTP_STATUS.NOT_FOUND,
-//         "User not found."
-//       );
-//     }
-
-//     if (user._id.equals(friend._id)) {
-//       throw new ApiError(
-//         HTTP_STATUS.BAD_REQUEST,
-//         "You cannot add yourself as a friend."
-//       );
-//     }
-
-//     const isFriend = user.friends.some((id) =>
-//       id.equals(friend._id)
-//     );
-
-//     if (!isFriend) {
-//       user.friends.push(friend._id);
-//       friend.friends.push(user._id);
-
-//       await Promise.all([
-//         user.save(),
-//         friend.save(),
-//       ]);
-
-//       return res.status(HTTP_STATUS.OK).json({
-//         success: true,
-//         message: "Friend added successfully.",
-//       });
-//     }
-
-//     await Promise.all([
-//       User.findByIdAndUpdate(userId, {
-//         $pull: { friends: friend._id },
-//       }),
-//       User.findByIdAndUpdate(friendId, {
-//         $pull: { friends: user._id },
-//       }),
-//     ]);
-
-//     res.status(HTTP_STATUS.OK).json({
-//       success: true,
-//       message: "Friend removed successfully.",
-//     });
-//   }
-// );
-
 export const friendList = asyncHandler(async (req: Request, res: Response) => {
   const friends = await userService.getFriendList(req.user._id)
 

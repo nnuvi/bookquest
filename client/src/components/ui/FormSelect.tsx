@@ -52,6 +52,8 @@ export default function FormSelect<
       name={name}
       render={({ field, fieldState }) => {
         const selected = options.find((o) => o.value === field.value);
+        const selectedLabel = selected?.label ?? "";
+      
 
         return (
           <View className="mb-5">
@@ -62,11 +64,12 @@ export default function FormSelect<
             )}
 
             <Select
-              value={selected?.label}
+              value={selectedLabel}
               placeholder={placeholder}
               error={!!fieldState.error}
               disabled={disabled}
               onPress={() => setVisible(true)}
+              showFloatingLabel={true}
             />
 
             <SelectModal
@@ -75,7 +78,11 @@ export default function FormSelect<
               options={options}
               value={field.value}
               onClose={() => setVisible(false)}
-              onSelect={field.onChange}
+              // onSelect={field.onChange}
+              onSelect={(value) => {
+                field.onChange(value);
+                setVisible(false);
+              }}
             />
 
             {!!fieldState.error && (

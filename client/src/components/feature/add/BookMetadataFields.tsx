@@ -89,7 +89,7 @@ export default function BookMetadataFields({
         control={control}
         name="book.description"
         // label="Description"
-        placeholder="Book description..."
+        placeholder="Description"
         multiline
         numberOfLines={5}
         rounded="3xl"

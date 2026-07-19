@@ -40,10 +40,10 @@ const colorStyles = {
   red: "text-danger",
   green: "text-success",
 
-  muted: "text-text-muted",
+  placeholder: "text-text-muted",
   neutral: "text-neutral",
-  gray: "text-neutral-dark",
-  placeholder: "text-border-dark",
+  muted: "text-neutral-dark",
+  gray: "text-neutral-text",
 
   choco: "text-choco",
   savoy: "text-savoy",

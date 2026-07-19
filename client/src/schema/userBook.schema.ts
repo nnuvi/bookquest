@@ -12,7 +12,7 @@ export const inputMethodEnum = [
 ] as const;
 
 export const userBookFormSchema = z.object({
-  condition: z.enum(userBookConditionEnum),
+  condition: z.enum(userBookConditionEnum).optional(),
 
   notes: z.string().trim().optional(),
 

@@ -2,9 +2,18 @@ import mongoose, { InferSchemaType, model } from "mongoose";
 
 const { Schema } = mongoose;
 
-export const UserBookAvailabilityEnum = ["available", "borrowed", "lent", "unavailable"];
+export const UserBookAvailabilityEnum = [
+  "available",
+  "borrowed",
+  "lent",
+  "unavailable",
+];
 
-export type UserBookAvailability = (typeof UserBookAvailabilityEnum)[number]
+export type UserBookAvailability = (typeof UserBookAvailabilityEnum)[number];
+
+const BookConditionEnum = ["new", "good", "fair", "poor"] as const;
+
+export type BookCondition = (typeof BookConditionEnum)[number];
 
 const UserBookSchema = new Schema(
   {
@@ -24,8 +33,7 @@ const UserBookSchema = new Schema(
 
     condition: {
       type: String,
-      enum: ["new", "good", "fair", "poor"],
-      default: "good",
+      enum: BookConditionEnum,
     },
 
     availability: {
@@ -34,11 +42,6 @@ const UserBookSchema = new Schema(
       default: "available",
     },
 
-    // addedVia: {
-    //   type: String,
-    //   enum: ["manual", "isbn", "barcode", "ocr_image", "ai"],
-    //   default: "manual",
-    // },
     inputSource: {
       method: {
         type: String,

@@ -6,7 +6,10 @@ import UserBook, {
   UserBookSchemaType,
   UserBookAvailability,
 } from "../model/UserBook.model.js";
-import { getGoogleBookByISBN } from "./external.service.js";
+import {
+  getGoogleBookByISBN,
+  selectBestGoogleBook,
+} from "./external.service.js";
 import logger from "@/config/logger.js";
 import { FilterQuery } from "mongoose";
 import { AddBookInputData } from "@/validation/book.validation.js";
@@ -24,19 +27,24 @@ import { title } from "process";
 // update book avalibilty
 
 export async function getBookDataByISBN(isbn: string, userId: string) {
-  logger.debug("UserId and ISBN: ", {
-    userId,
-    isbn,
-  });
+  // logger.debug("UserId and ISBN: ", {
+  //   userId,
+  //   isbn,
+  // });
+  // logger.debug("UserId of book adder:? ", { userId, isbn });
+
+  // <<<<<<<<<<<<<<<<<<<< User Doesnt Have the book with same isbn >>>>>>>>>>>>>>>>>>>> //
 
   await ensureNotDuplicateBook(userId, { isbn });
 
+  // <<<<<<<<<<<<<<<<<<<< Get Book with the ISBN >>>>>>>>>>>>>>>>>>>> //
+
   const existing = await getBookByISBN(isbn);
 
-  logger.debug("Exists Book:? ", { existing });
+  // logger.debug("Exists Book:? ", { existing });
 
   if (existing) {
-    await ensureNotDuplicateBook(userId, { bookId: existing?._id.toString() });
+    // await ensureNotDuplicateBook(userId, { bookId: existing?._id.toString() });
     return existing;
   }
 
@@ -46,9 +54,11 @@ export async function getBookDataByISBN(isbn: string, userId: string) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, "Book not found.");
   }
 
-  const bookData = mapGoogleBook(googleResponse.items[0], isbn);
+  // const bookData = mapGoogleBook(googleResponse.items[0], isbn);
 
-  logger.debug("Google Books API Book: ", { bookData });
+  const bestBook = selectBestGoogleBook(googleResponse.items, isbn);
+
+  const bookData = mapGoogleBook(bestBook, isbn);
 
   const book = createBook(bookData);
 
@@ -60,9 +70,8 @@ export async function createBookByISBNScan(
   bookId: string,
   data: CreateUserBookDto,
 ): Promise<UserBookSchemaType> {
-  logger.debug("Create UserBook Data: ", { data });
   await ensureNotDuplicateBook(userId, { bookId });
-  logger.debug("Clear not duplicate: ", { data });
+
   // Create the user's copy
   const userBook = await UserBook.create({
     owner: userId,
@@ -213,8 +222,11 @@ export async function ensureNotDuplicateBook(
 ) {
   let bookId = options.bookId;
 
+  // logger.debug("Duplicate find bookid: ", { bookId });
+
   if (!bookId && options.isbn) {
     const book = await Book.findOne({ isbn: options.isbn }).select("_id");
+    // logger.debug("Book ID of ISBN SCAN: ", { book });
     bookId = book?._id.toString();
   }
 

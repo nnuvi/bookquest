@@ -7,6 +7,7 @@ type SelectProps = PressableProps & {
   value?: string;
   placeholder?: string;
   error?: boolean;
+  showFloatingLabel?: boolean;
 };
 
 export default function Select({
@@ -15,8 +16,11 @@ export default function Select({
   disabled = false,
   error,
   className,
+  showFloatingLabel = false,
   ...props
 }: SelectProps) {
+  const hasValue = !!value;
+  const showLabel = showFloatingLabel && hasValue;
   return (
     <Pressable
       {...props}
@@ -27,17 +31,26 @@ export default function Select({
         justify-between
         rounded-full
         border
+        relative
+        h-16
         bg-input
-        px-4
-        py-3
+        px-6
         ${error ? "border-danger" : "border-border"}
         ${className ?? ""}
       `}
     >
-      <AppText className={value ? "text-text text-lg" : "text-neutral text-lg"}>
-        {value ?? placeholder}
-      </AppText>
-
+      <View className="justify-center">
+        {showLabel && (
+          <AppText size="xs" color="placeholder" className="mb-0">
+            {placeholder}
+          </AppText>
+        )}
+        <AppText
+          className={value ? "text-text text-lg" : "text-neutral text-lg"}
+        >
+          {value || placeholder}
+        </AppText>
+      </View>
       <Ionicons name="chevron-down" size={20} color="currentColor" />
     </Pressable>
   );

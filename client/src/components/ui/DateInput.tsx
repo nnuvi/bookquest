@@ -1,12 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Pressable, PressableProps } from "react-native";
+import { Pressable, PressableProps, View } from "react-native";
 
 import AppText from "./AppText";
+import { useState } from "react";
 
 type DateInputProps = PressableProps & {
   value?: Date;
   placeholder?: string;
   error?: boolean;
+  showFloatingLabel?: boolean;
 };
 
 export default function DateInput({
@@ -15,8 +17,10 @@ export default function DateInput({
   disabled = false,
   error,
   className,
+  showFloatingLabel = false,
   ...props
 }: DateInputProps) {
+  const showLabel = showFloatingLabel && !!value;
   return (
     <Pressable
       {...props}
@@ -27,20 +31,39 @@ export default function DateInput({
         justify-between
         rounded-full
         border
+        relative
+        h-16
         bg-input
-        px-4
+        px-6
         py-3
         ${error ? "border-danger" : "border-border"}
         ${className ?? ""}
       `}
     >
-      <AppText
-        color={disabled ? "darkGray" : value ? "default" : "darkGray"}
-        size="lg"
-        // className={value ? "text-lg text-text" : "text-lg text-neutral"}
-      >
-        {value ? value.toLocaleDateString() : placeholder}
-      </AppText>
+      <View className="justify-center">
+        {showLabel && (
+          <AppText size="xs" color="placeholder" className="mb-0">
+            {placeholder}
+          </AppText>
+        )}
+
+        <AppText
+          color={
+            disabled
+              ? "muted"
+              : placeholder
+                ? "placeholder"
+                : value
+                  ? "default"
+                  : "placeholder"
+          }
+          size="lg"
+
+          // className={value ? "text-lg text-text" : "text-lg text-neutral"}
+        >
+          {value ? value.toLocaleDateString() : placeholder}
+        </AppText>
+      </View>
 
       <Ionicons name="calendar-outline" size={20} color="currentColor" />
     </Pressable>

@@ -32,7 +32,7 @@ export default function UserBookFields({ form }: UserBookFieldsProps) {
         control={control}
         name="userBook.notes"
         // label="Notes"
-        placeholder="Personal notes..."
+        placeholder="Notes"
         multiline
         numberOfLines={4}
         rounded="3xl"

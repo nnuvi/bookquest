@@ -23,7 +23,7 @@ export default function BookForm({
 }: BookFormProps) {
   if (loading) return <BookFormSkeleton />;
   return (
-    <View className="p-6">
+    <View className="p-4">
       {/* BOOK COVER */}
       <BookCoverPicker form={form} />
       <View className="mb-4" />

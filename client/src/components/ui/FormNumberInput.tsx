@@ -45,6 +45,7 @@ export default function FormNumberInput<T extends FieldValues>({
             onBlur={field.onBlur}
             error={!!fieldState.error}
             disabled={disabled}
+            showFloatingLabel={!!field.value}
             onChangeText={(text) => {
               if (text === "") {
                 field.onChange(undefined);

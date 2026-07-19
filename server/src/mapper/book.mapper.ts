@@ -1,7 +1,9 @@
+import logger from "@/config/logger.js";
 import { BookSchemaType } from "@/model/Book.model.js";
 import { UserBookSchemaType } from "@/model/UserBook.model.js";
-import { CreateBookDto, GoogleBook } from "@/types/book.js";
+import { CreateBookDto, GoogleBook, GoogleImageLinks } from "@/types/book.js";
 import { AddBookInputData } from "@/validation/book.validation.js";
+import { getGoogleBookCover } from "@/service/external.service.js";
 
 export function mapGoogleBook(book: GoogleBook, isbn: string): CreateBookDto {
   const info = book.volumeInfo;
@@ -20,11 +22,7 @@ export function mapGoogleBook(book: GoogleBook, isbn: string): CreateBookDto {
     isbn: extractedISBN ?? isbn,
     publisher: info.publisher ?? "",
     description: info.description ?? "",
-    coverImage:
-      info.imageLinks?.large ??
-      info.imageLinks?.medium ??
-      info.imageLinks?.thumbnail ??
-      "",
+    coverImage: getGoogleBookCover(info.imageLinks),
     language: info.language ?? "",
   };
 

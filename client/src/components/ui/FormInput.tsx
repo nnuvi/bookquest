@@ -67,13 +67,13 @@ export default function FormInput<T extends FieldValues>({
             value={field.value?.toString() ?? ""}
             // onChangeText={field.onChange}
             onChangeText={(text) => {
-              console.log("typed:", text);
               field.onChange(text);
             }}
-            onBlur={field.onBlur}
+            // onBlur={field.onBlur}
             error={!!fieldState.error}
             disabled={disabled}
             rounded={rounded}
+            showFloatingLabel={!!field.value}
           />
 
           {fieldState.error && (
