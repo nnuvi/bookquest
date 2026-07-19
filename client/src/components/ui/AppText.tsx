@@ -7,15 +7,14 @@ export type AppTextProps = TextProps & {
     | "primary"
     | "secondary"
     | "selection"
-    | "black"
     | "text"
-    // | "midGray"
     | "yellow"
     | "red"
     | "green"
+    | "muted"
     | "gray"
-    | "darkGray"
     | "neutral"
+    | "placeholder"
     | "choco"
     | "savoy";
 
@@ -35,15 +34,17 @@ const colorStyles = {
   secondary: "text-primary-light",
   selection: "text-selection",
 
-  black: "text-black",
   text: "text-text",
-  // midGray: "text-midGray",
+
   yellow: "text-warning",
   red: "text-danger",
   green: "text-success",
-  gray: "text-text-muted",
+
+  muted: "text-text-muted",
   neutral: "text-neutral",
-  darkGray: "text-neutral-dark",
+  gray: "text-neutral-dark",
+  placeholder: "text-border-dark",
+
   choco: "text-choco",
   savoy: "text-savoy",
 };

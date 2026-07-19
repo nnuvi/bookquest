@@ -1,11 +1,7 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  Pressable,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 
 import DropdownModal from "@/components/common/DropdownModal";
 import LogoText from "@/components/common/LogoText";
@@ -21,6 +17,7 @@ import { api } from "@/lib/api";
 
 import BookGrid from "@/components/feature/book/BookGrid";
 import { Colors } from "@/constants/Colors";
+import { useLogout } from "@/hooks/auth";
 
 export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,21 +30,24 @@ export default function HomeScreen() {
     isError,
   } = useMyBooks();
 
-  const options = ["Option 1", "Option 2", "Option 3", "Log out"];
+  const logoutMutation = useLogout();
 
-  const handleOptionActions = async (option: string) => {
-    setModalVisible(false);
+  const options = ["Log out"];
+  // const options = ["Option 1", "Option 2", "Option 3", "Log out"];
 
-    switch (option) {
-      case "Log out":
-        await api.post("/api/auth/logout");
-        router.replace("/");
-        break;
+  // const handleOptionActions = async (option: string) => {
+  //   setModalVisible(false);
 
-      default:
-        break;
-    }
-  };
+  //   switch (option) {
+  //     case "Log out":
+  //       await api.post("/api/auth/logout");
+  //       router.replace("/");
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // };
 
   return (
     <Screen>
@@ -77,7 +77,7 @@ export default function HomeScreen() {
           visible={modalVisible}
           options={options}
           top={60}
-          onSelect={handleOptionActions}
+          onSelect={() => logoutMutation.mutate()}
           onClose={() => setModalVisible(false)}
         />
       </View>
@@ -92,15 +92,15 @@ export default function HomeScreen() {
           onRetry={refetch}
         />
       ) : (
-        <View className="flex-1 items-start">
-          <View className="flex-1 items-center">
-            <BookGrid
-              books={books}
-              refreshing={isRefetching}
-              onRefresh={refetch}
-            />
-          </View>
+        // <View className="flex-1 items-start">
+        <View className="flex-1 items-center">
+          <BookGrid
+            books={books}
+            refreshing={isRefetching}
+            onRefresh={refetch}
+          />
         </View>
+        // </View>
       )}
     </Screen>
   );

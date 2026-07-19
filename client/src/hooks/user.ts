@@ -71,10 +71,10 @@ export function useUpdateProfileImage() {
       queryClient.invalidateQueries({
         queryKey: userKeys.profile(updatedUser._id),
       });
-      success("Sucess", "Profile Image has been updated.");
+      success("Profile Image has been updated.");
     },
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 }

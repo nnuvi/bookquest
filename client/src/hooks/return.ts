@@ -75,7 +75,7 @@ export const useSendReturnRequest = () => {
         queryKey: borrowKeys.all, // or borrowKeys.status(bookId)
       });
 
-      success("Request Sent", "Your return request has been sent.");
+      success("Your return request has been sent.", "Request Sent", );
     },
 
     onError: (err: any) => {
@@ -111,11 +111,11 @@ export const useRespondReturnRequest = () => {
         queryKey: returnKeys.all,
       });
 
-      success("Request Updated", "The return request has been updated.");
+      success( "The return request has been updated.", "Request Updated",);
     },
 
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 };
@@ -141,11 +141,11 @@ export const useCancelReturnRequest = () => {
         queryKey: borrowKeys.all, // or borrowKeys.status(bookId)
       });
 
-      success("Request Cancelled", "The return request has been cancelled.");
+      success("The return request has been cancelled.", "Request Cancelled", );
     },
 
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 };
@@ -158,7 +158,7 @@ export const useSendReturnReminder = () => {
     mutationFn: sendReturnReminder,
 
     onSuccess: () => {
-      success("Reminder Sent", "A reminder has been sent.");
+      success("A reminder has been sent.", "Reminder Sent", );
     },
 
     onError: (err: any) => {

@@ -35,7 +35,7 @@ export default function DateInput({
       `}
     >
       <AppText
-        color={disabled ? "darkGray" : value ? "default" : "neutral"}
+        color={disabled ? "darkGray" : value ? "default" : "darkGray"}
         size="lg"
         // className={value ? "text-lg text-text" : "text-lg text-neutral"}
       >

@@ -15,6 +15,7 @@ import userPlaceHolder from "@assets/images/placeholder-user.png";
 import { ReactNode, useState } from "react";
 import AvatarPicker from "../user/AvatarPicker";
 import { Colors } from "@/constants/Colors";
+import { useLogout } from "@/hooks/auth";
 
 type ProfileHeaderProps = {
   user: User;
@@ -30,6 +31,7 @@ export const ProfileHeader = ({
   action,
 }: ProfileHeaderProps) => {
   const [visible, setVisible] = useState(false);
+  const logoutMutation = useLogout();
 
   return (
     <View>
@@ -38,12 +40,12 @@ export const ProfileHeader = ({
         <View className="flex-1 items-start pl-3">
           {/* {currentUser && ( */}
           <TouchableOpacity onPress={router.back}>
-            <Ionicons name="return-up-back" size={25} color="white" />
-            {/* <SimpleLineIcons
-                name="settings"
-                size={25}
-                color={Colors.background}
-              /> */}
+            {/* <Ionicons name="return-up-back" size={25} color="white" /> */}
+            <SimpleLineIcons
+              name="settings"
+              size={25}
+              color={Colors.background}
+            />
           </TouchableOpacity>
           {/* )} */}
         </View>
@@ -62,11 +64,16 @@ export const ProfileHeader = ({
             //     color={Colors.background}
             //   />
             // </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => logoutMutation.mutate()}>
               {/* <Ionicons name="return-up-back" size={28} color="white" /> */}
-              <SimpleLineIcons
+              {/* <SimpleLineIcons
                 name="settings"
                 size={25}
+                color={Colors.background}
+              /> */}
+              <MaterialCommunityIcons
+                name="logout"
+                size={26}
                 color={Colors.background}
               />
             </TouchableOpacity>
@@ -135,7 +142,7 @@ export const ProfileHeader = ({
             <View className="justify-end pb-2 px-6">
               <Button
                 title={"Edit"}
-                size="base"
+                buttonSize="base"
                 // onPress={() => router.push("/profile/EditProfile")}
                 onPress={() => setVisible(true)}
               />

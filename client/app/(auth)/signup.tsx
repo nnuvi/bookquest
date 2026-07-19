@@ -1,233 +1,110 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  ActivityIndicator,
-} from "react-native";
 import { useRouter } from "expo-router";
-import { Colors } from "@/constants/Colors";
-import { retroFont } from "@/lib/fontAdd";
-import { api } from "@/lib/api";
-import Button from "@/components/ui/Button";
+import { View } from "react-native";
+
 import LogoText from "@/components/common/LogoText";
-import StatusBar from "@/components/common/StatusBar";
+import Button from "@/components/ui/Button";
+import FormInput from "@/components/ui/FormInput";
+import Screen from "@/components/common/Screen";
 
-const Page = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-  });
+import { useSignup } from "@/hooks/auth";
 
+import {
+  SignupInput,
+  signupInputDefaultValues,
+  signupSchema,
+} from "@/schema/auth.schema";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+export default function SignupScreen() {
   const router = useRouter();
 
-  const signup = async (
-    fullName: string,
-    username: string,
-    email: string,
-    password: string,
-  ) => {
-    setError(null);
-    try {
-      console.log("fsdata", { fullName, username, email, password });
+  const signupMutation = useSignup();
 
-      const res = await api.post("/api/auth/signup", {
-        fullName,
-        username,
-        email,
-        password,
-      });
-      console.log("res data", res.data);
-      console.log("status", res.status);
-      //const data = await res.data;
+  const { control, handleSubmit } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: signupInputDefaultValues,
+  });
 
-      if (res.status === 200 || 201) {
-        setLoading(false);
-        alert("signup complete;");
-        router.push("/auth/login");
-      } else {
-        setError("Something went wrong in Routing.");
-      }
-    } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
-        setError(err.response.data.message); // Backend error message
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
-      console.error("Error during signup:", err);
-      setLoading(false);
-    }
-  };
+  // const onSubmit = (data: SignupInput) => {
+  //   const { confirmPassword, ...signupData } = data;
 
-  const handleSignup = () => {
-    const trimmedName = formData.name.trim();
-    const trimmedUsername = formData.username.trim();
-    const trimmedEmail = formData.email.trim();
-    const trimmedPassword = formData.password.trim();
-
-    /*if (!trimmedUsername || !trimmedPassword  || !trimmedName || !trimmedEmail) {
-      alert('Check your inputs.');
-      return;
-    }*/
-
-    if (!trimmedName) {
-      alert("Enter your Name");
-      return;
-    } else if (!trimmedUsername) {
-      alert("Enter your Username");
-      return;
-    } else if (!trimmedEmail) {
-      alert("Enter an Email Address.");
-      return;
-    } else if (!trimmedPassword) {
-      alert("Enter a Password.");
-      return;
-    }
-
-    console.log("Current Form Data:", formData);
-    console.log("Submitting Data:", {
-      name: trimmedName,
-      username: trimmedUsername,
-      email: trimmedEmail,
-      password: trimmedPassword,
+  //   signupMutation.mutate(signupData, {
+  //     onSuccess: () => {
+  //       router.replace("/(auth)/login");
+  //     },
+  //   });
+  // };
+  const onSubmit = (data: SignupInput) => {
+    signupMutation.mutate(data, {
+      onSuccess: () => {
+        router.replace("/(auth)/login");
+      },
     });
-
-    signup(trimmedName, trimmedUsername, trimmedEmail, trimmedPassword);
   };
 
   return (
-    <View style={styles.container}>
-      {/* Full Page Transparent Loading Indicator */}
-      <StatusBar />
-      <Modal visible={loading} transparent animationType="fade">
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-          <Text style={styles.loadingText}>Loading...</Text>
+    <Screen>
+      <View className="flex-1 justify-center px-6">
+        <View className="items-center mb-10">
+          <LogoText variant="dark" />
         </View>
-      </Modal>
 
-      <LogoText />
+        <View className="gap-2 mb-6">
+          <FormInput
+            control={control}
+            name="fullName"
+            // label="Full Name"
+            placeholder="Full name"
+            autoCapitalize="words"
+          />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Name"
-          placeholderTextColor={Colors.primary}
-          style={styles.input}
-          onChangeText={(text) =>
-            setFormData((prevState) => ({
-              ...prevState,
-              name: text,
-            }))
+          <FormInput
+            control={control}
+            name="username"
+            // label="Username"
+            placeholder="Username"
+            autoCapitalize="none"
+          />
+
+          <FormInput
+            control={control}
+            name="email"
+            // label="Email"
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <FormInput
+            control={control}
+            name="password"
+            // label="Password"
+            placeholder="Password"
+            secureTextEntry
+          />
+
+          <FormInput
+            control={control}
+            name="confirmPassword"
+            // label="Confirm Password"
+            placeholder="Confirm password"
+            secureTextEntry
+          />
+        </View>
+
+        <Button
+          title={
+            signupMutation.isPending ? "Creating Account..." : "Create Account"
           }
-        />
-        <TextInput
-          placeholder="Username"
-          placeholderTextColor={Colors.primary}
-          style={styles.input}
-          onChangeText={(text) =>
-            setFormData((prevState) => ({
-              ...prevState,
-              username: text,
-            }))
-          }
-        />
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor={Colors.primary}
-          style={styles.input}
-          onChangeText={(text) =>
-            setFormData((prevState) => ({
-              ...prevState,
-              email: text,
-            }))
-          }
-        />
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor={Colors.primary}
-          secureTextEntry
-          style={styles.input}
-          onChangeText={(text) =>
-            setFormData((prevState) => ({
-              ...prevState,
-              password: text,
-            }))
-          }
+          variant="primary"
+          buttonSize="lg"
+          fullWidth
+          disabled={signupMutation.isPending}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
-
-      <Button title="Signup" onPress={handleSignup}></Button>
-
-      {error && <Text style={styles.errorText}>{error}</Text>}
-    </View>
+    </Screen>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 55,
-    color: Colors.primary,
-    fontFamily: "CustomFont",
-  },
-  inputContainer: {
-    width: "80%",
-  },
-  input: {
-    backgroundColor: "#F1F1F1",
-    textAlign: "center",
-    fontSize: 18,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  button: {
-    width: "80%",
-    backgroundColor: "gray",
-    paddingVertical: 12,
-    borderRadius: 50,
-  },
-  buttonText: {
-    fontSize: 18,
-    textAlign: "center",
-  },
-  space: {
-    height: 33,
-  },
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 10,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  },
-  loadingText: {
-    marginTop: 10,
-    color: Colors.primary,
-    fontSize: 18,
-  },
-  errorText: {
-    color: Colors.red,
-    marginTop: 20,
-    fontSize: 19,
-  },
-});
-
-export default Page;
+}

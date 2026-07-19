@@ -8,6 +8,8 @@ type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
 
+  label?: string;
+
   rounded?:
     | "xs"
     | "sm"
@@ -20,15 +22,24 @@ type FormInputProps<T extends FieldValues> = {
     | "4xl"
     | "full";
 
-  label?: string;
   placeholder?: string;
 
   multiline?: boolean;
   numberOfLines?: number;
 
+  secureTextEntry?: boolean;
+
   disabled?: boolean;
 
   keyboardType?: "default" | "numeric" | "email-address" | "phone-pad";
+
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
+
+  autoCorrect?: boolean;
+
+  returnKeyType?: "done" | "go" | "next" | "search" | "send";
+
+  onSubmitEditing?: () => void;
 };
 
 export default function FormInput<T extends FieldValues>({
@@ -53,15 +64,19 @@ export default function FormInput<T extends FieldValues>({
 
           <Input
             {...props}
-            value={field.value ?? ""}
-            onChangeText={field.onChange}
+            value={field.value?.toString() ?? ""}
+            // onChangeText={field.onChange}
+            onChangeText={(text) => {
+              console.log("typed:", text);
+              field.onChange(text);
+            }}
             onBlur={field.onBlur}
             error={!!fieldState.error}
             disabled={disabled}
             rounded={rounded}
           />
 
-          {!!fieldState.error && (
+          {fieldState.error && (
             <AppText size="sm" color="red" className="mt-1">
               {fieldState.error.message}
             </AppText>

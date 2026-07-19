@@ -1,10 +1,12 @@
 import FeedbackModal from "@/components/common/FeedbackModal";
 import { createContext, useState } from "react";
 import type { FeedbackType } from "@/types/app";
+import { getErrorMessage } from "@/lib/app";
 
 type FeedbackContextType = {
-  success: (title: string, message?: string) => void;
-  error: (title: string, message?: string) => void;
+  success: (message: string, title?: string) => void;
+  error: (err: unknown, title?: string) => void;
+  errorMessage: (message: string, title?: string) => void;
   close: () => void;
 };
 
@@ -28,7 +30,24 @@ export default function FeedbackProvider({
     title: "",
   });
 
-  const success = (title: string, message?: string) =>
+  // const success = (title: string, message?: string) =>
+  //   setState({
+  //     visible: true,
+  //     type: "success",
+  //     title,
+  //     message,
+  //   });
+
+  // const error = (title: string, message?: string) =>
+  //   setState({
+  //     visible: true,
+  //     type: "error",
+  //     title,
+  //     // message,
+  //     message: getErrorMessage(error),
+  //   });
+
+  const success = (message: string, title = "Success") =>
     setState({
       visible: true,
       type: "success",
@@ -36,7 +55,15 @@ export default function FeedbackProvider({
       message,
     });
 
-  const error = (title: string, message?: string) =>
+  const error = (err: unknown, title = "Failed") =>
+    setState({
+      visible: true,
+      type: "error",
+      title,
+      message: getErrorMessage(err),
+    });
+
+  const errorMessage = (message: string, title = "Failed") =>
     setState({
       visible: true,
       type: "error",
@@ -55,6 +82,7 @@ export default function FeedbackProvider({
       value={{
         success,
         error,
+        errorMessage,
         close,
       }}
     >

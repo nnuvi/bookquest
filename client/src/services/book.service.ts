@@ -79,11 +79,10 @@ export const createBookByISBNScan = async (
   bookId: string,
   userBook: UserBookFormValues,
 ) => {
+  logger.debug(LOG_SCOPE.request, "UserBook Data: ", userBook);
   const { data } = await api.post<ApiResponse<UserBook>>(
     `/api/book/${bookId}`,
-    {
-      userBook,
-    },
+    userBook,
   );
 
   return data.data;

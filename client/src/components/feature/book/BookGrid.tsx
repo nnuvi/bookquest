@@ -42,7 +42,7 @@ export default function BookGrid({
       onRefresh={onRefresh}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
-      contentContainerClassName="p-4 pb-28"
+      contentContainerClassName="p-4 pb-12"
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={
         <EmptyState title={emptyTitle} description={emptyDescription} />

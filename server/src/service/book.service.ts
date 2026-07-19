@@ -61,6 +61,8 @@ export async function createBookByISBNScan(
   data: CreateUserBookDto,
 ): Promise<UserBookSchemaType> {
   logger.debug("Create UserBook Data: ", { data });
+  await ensureNotDuplicateBook(userId, { bookId });
+  logger.debug("Clear not duplicate: ", { data });
   // Create the user's copy
   const userBook = await UserBook.create({
     owner: userId,

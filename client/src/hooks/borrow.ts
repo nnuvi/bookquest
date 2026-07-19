@@ -82,10 +82,10 @@ export const useSendBorrowRequest = () => {
         queryKey: borrowKeys.status(variables.userBookId),
       });
 
-      success("Request Sent", "Your borrow request has been sent.");
+      success("Your borrow request has been sent.", "Request Sent", );
     },
     onError: (err: any) => {
-      error("Request Failed",getErrorMessage(err));
+      error("Request Failed", getErrorMessage(err));
     },
   });
 };
@@ -117,10 +117,10 @@ export const useRespondBorrowRequest = () => {
         queryKey: borrowKeys.all,
       });
 
-      success("Request Updated", "The borrow request has been updated.");
+      success("The borrow request has been updated.", "Request Updated", );
     },
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 };
@@ -142,10 +142,10 @@ export const useRevokeBorrowRequest = () => {
         queryKey: borrowKeys.all,
       });
 
-      success("Request Cancelled", "The borrow request has been cancelled.");
+      success( "The borrow request has been cancelled.", "Request Cancelled",);
     },
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 };

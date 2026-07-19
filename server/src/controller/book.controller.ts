@@ -188,7 +188,7 @@ export const isbnScan = asyncHandler(
 export const createBookByISBNScan = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const { bookId } = req.params;
-    const { userBook } = req.body;
+    const userBook  = req.body;
 
     logger.debug("ISBN Scan to Frontend Sent Book: ", { bookId, userBook });
 

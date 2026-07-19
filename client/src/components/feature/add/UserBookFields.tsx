@@ -23,7 +23,7 @@ export default function UserBookFields({ form }: UserBookFieldsProps) {
       <FormSelect
         control={control}
         name="userBook.condition"
-        label="Condition"
+        // label="Select Book Condition"
         placeholder="Select condition"
         options={conditionOptions}
       />
@@ -31,7 +31,7 @@ export default function UserBookFields({ form }: UserBookFieldsProps) {
       <FormInput
         control={control}
         name="userBook.notes"
-        label="Notes"
+        // label="Notes"
         placeholder="Personal notes..."
         multiline
         numberOfLines={4}

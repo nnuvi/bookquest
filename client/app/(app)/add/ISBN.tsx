@@ -32,12 +32,12 @@ export default function ISBN() {
         <FormInput
           control={form.control}
           name="isbn"
-          label="ISBN"
-          placeholder="9780140177398"
+          // label="ISBN"
+          placeholder="ISBN"
           keyboardType="numeric"
         />
 
-        <Button title="Search Book"  onPress={form.handleSubmit(onSubmit)} />
+        <Button title="Search Book" onPress={form.handleSubmit(onSubmit)} />
       </View>
     </Screen>
   );

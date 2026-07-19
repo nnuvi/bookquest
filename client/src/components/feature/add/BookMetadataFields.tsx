@@ -20,11 +20,11 @@ export default function BookMetadataFields({
   const { control } = form;
 
   return (
-    <View className="gap-2">
+    <View className="gap-3 mt-3">
       <FormInput
         control={control}
         name="book.title"
-        label="Title"
+        // label="Title"
         placeholder="Book title"
         disabled={readOnlyBook}
       />
@@ -32,31 +32,31 @@ export default function BookMetadataFields({
       <FormTagsInput
         control={control}
         name="book.author"
-        label="Authors"
-        placeholder="J.K. Rowling"
+        // label="Authors"
+        placeholder="Authors"
         disabled={readOnlyBook}
       />
 
       <FormTagsInput
         control={control}
         name="book.genres"
-        label="Genres"
-        placeholder="Fantasy"
+        // label="Genres"
+        placeholder="Genres"
         disabled={readOnlyBook}
       />
 
       <FormInput
         control={control}
         name="book.isbn"
-        label="ISBN"
-        placeholder="978..."
+        // label="ISBN"
+        placeholder="ISBN"
         disabled={readOnlyBook}
       />
 
       <FormInput
         control={control}
         name="book.publisher"
-        label="Publisher"
+        // label="Publisher"
         placeholder="Publisher"
         disabled={readOnlyBook}
       />
@@ -64,30 +64,31 @@ export default function BookMetadataFields({
       <FormDatePicker
         control={control}
         name="book.publishedDate"
-        label="Published Date"
+        // label="Published Date"
+        placeholder="Published Date"
         disabled={readOnlyBook}
       />
 
       <FormInput
         control={control}
         name="book.language"
-        label="Language"
-        placeholder="English"
+        // label="Language"
+        placeholder="Language"
         disabled={readOnlyBook}
       />
 
       <FormNumberInput
         control={control}
         name="book.pageCount"
-        label="Pages"
-        placeholder="320"
+        // label="Pages"
+        placeholder="Pages"
         disabled={readOnlyBook}
       />
 
       <FormInput
         control={control}
         name="book.description"
-        label="Description"
+        // label="Description"
         placeholder="Book description..."
         multiline
         numberOfLines={5}

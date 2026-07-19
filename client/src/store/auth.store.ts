@@ -7,6 +7,7 @@ import { AuthUser, User } from "@/types/user";
 type AuthState = {
   user: User | null;
   loading: boolean;
+  isAuthenticated: boolean;
 
   setUser: (user: User | null) => void;
   logout: () => void;
@@ -18,10 +19,19 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       loading: true,
+      isAuthenticated: false,
 
-      setUser: (user) => set({ user }),
+      setUser: (user) =>
+        set({
+          user,
+          isAuthenticated: !!user,
+        }),
 
-      logout: () => set({ user: null }),
+      logout: () =>
+        set({
+          user: null,
+          isAuthenticated: false,
+        }),
 
       setLoading: (loading) => set({ loading }),
     }),
@@ -38,6 +48,6 @@ export const useAuthStore = create<AuthState>()(
           state?.setLoading(false);
         };
       },
-    }
-  )
+    },
+  ),
 );

@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { useEffect } from "react";
 import { TextInput, TextInputProps, View } from "react-native";
 
 type InputProps = TextInputProps & {
@@ -37,6 +38,13 @@ export default function Input({
   className,
   ...props
 }: InputProps) {
+  useEffect(() => {
+    console.log("Input mounted");
+
+    return () => {
+      console.log("Input unmounted");
+    };
+  }, []);
   return (
     <View
       className={`
@@ -50,9 +58,9 @@ export default function Input({
       <TextInput
         {...props}
         // className={`text-lg text-text ${className ?? ""}`}
-        placeholderTextColor={Colors.neutral}
+        placeholderTextColor={Colors.neutralDark}
         editable={!disabled}
-        selectTextOnFocus={!disabled}
+        // selectTextOnFocus={!disabled}
         className={`
           text-lg
           ${disabled ? "text-neutral-dark" : "text-text"}

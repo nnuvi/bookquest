@@ -154,10 +154,10 @@ export const useCreateBookByISBNScan = () => {
       // queryClient.invalidateQueries({
       //   queryKey: bookKeys.userBook(variables.userBook.),
       // });
-      success("Sucess", "Added the book to the Library.");
+      success("Added the book to the Library.");
     },
     onError: (err: any) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 };
@@ -174,11 +174,11 @@ export function useCreateBookManually() {
         queryKey: bookKeys.all,
       });
 
-      success("Sucess", "The book has been added to your library.");
+      success("The book has been added to your library.");
     },
 
     onError: (err) => {
-      error("Update Failed", getErrorMessage(err));
+      error(err);
     },
   });
 }

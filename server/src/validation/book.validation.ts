@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userBookIdParams } from "./common.validation.js";
+import { bookIdParams, userBookIdParams } from "./common.validation.js";
 
 const imageSchema = z.object({
   uri: z.string(),
@@ -83,10 +83,10 @@ export type AddBookInputData = z.infer<typeof AddBookInputSchema>;
 //   body: AddBookInputSchema,
 // });
 
-export const createBookByISBNScanSchema = userBookIdParams(
+export const createBookByISBNScanSchema = bookIdParams(
   "Create Book By ISBN Scan Book ID",
 ).extend({
-  body: ISBNSchema,
+  body: UserBookInputSchema,
 });
 
 export const createBookManuallySchema = z.object({

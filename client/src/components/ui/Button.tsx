@@ -1,19 +1,33 @@
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
-import AppText, { type AppTextProps } from "@/components/ui/AppText";
 
-type ButtonProps = TouchableOpacityProps & {
+import AppText from "@/components/ui/AppText";
+
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "success"
+  | "danger"
+  | "lavendar"
+  | "neutral";
+
+export type ButtonSize =
+  | "xs"
+  | "sm"
+  | "md"
+  | "base"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "4xl";
+
+type ButtonProps = Omit<TouchableOpacityProps, "children"> & {
   title: string;
 
-  variant?:
-    | "primary"
-    | "secondary"
-    | "outline"
-    | "success"
-    | "danger"
-    | "lavendar"
-    | "neutral";
+  variant?: ButtonVariant;
 
-  size?: "xs" | "sm" | "md" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  buttonSize?: ButtonSize;
 
   fullWidth?: boolean;
 
@@ -57,7 +71,7 @@ const variants = {
     container: "border border-primary bg-transparent",
     text: "text-primary",
   },
-};
+} as const;
 
 const sizes = {
   xs: {
@@ -109,7 +123,7 @@ const sizes = {
 export default function Button({
   title,
   variant = "secondary",
-  size = "base",
+  buttonSize = "base",
   fullWidth = false,
   className = "",
   textClassName = "",
@@ -117,10 +131,11 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const currentVariant = variants[variant];
-  const currentSize = sizes[size];
+  const currentSize = sizes[buttonSize];
 
   return (
     <TouchableOpacity
+      {...props}
       activeOpacity={0.8}
       disabled={disabled}
       className={`
@@ -133,7 +148,6 @@ export default function Button({
         ${disabled ? "opacity-50" : ""}
         ${className}
       `}
-      {...props}
     >
       <AppText
         weight="semibold"
