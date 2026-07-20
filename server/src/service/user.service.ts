@@ -1,5 +1,5 @@
 import User from "../model/user.model.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import {
   deleteImage,
@@ -70,7 +70,7 @@ export async function getFriendList(userId: string) {
     _id: { $in: user.friends },
   });
 
-  return mapUsers(friends)
+  return mapUsers(friends);
 
   // return friends.map((user) => ({
   //   _id: user._id,

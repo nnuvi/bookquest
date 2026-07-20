@@ -1,7 +1,7 @@
 import env from "@/config/env.js";
 import logger from "@/config/logger.js";
 import { HTTP_STATUS } from "@/constant/httpStatus.js";
-import ApiError from "@/lib/apiError.js";
+import ApiError from "@/lib/ApiError.js";
 import { GoogleBook } from "@/types/book.js";
 // import ApiError from "@/utils/ApiError";
 

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 import User from "../model/user.model.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { Authtoken } from "../types/user.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";

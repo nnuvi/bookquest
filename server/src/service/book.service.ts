@@ -1,6 +1,6 @@
 import { CreateBookDto, CreateUserBookDto } from "@/types/book.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import Book, { BookSchemaType } from "../model/Book.model.js";
 import UserBook, {
   UserBookSchemaType,

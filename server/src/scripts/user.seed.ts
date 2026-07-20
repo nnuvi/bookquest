@@ -9,7 +9,7 @@ import UserBook from "../model/UserBook.model.js";
 import Notification from "../model/Notification.model.js";
 import BorrowRequest from "../model/BorrowRequest.model.js";
 
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 
 export async function getUserIdsByUsername(
   usernames: string[],

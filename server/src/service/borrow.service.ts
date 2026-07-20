@@ -1,4 +1,4 @@
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import logger from "../config/logger.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 import BorrowRequest, {
@@ -361,7 +361,7 @@ export async function getBorrowStatus(
   const isOwner = userBook.owner.toString() === userId;
 
   // <<<<<<<<<<<<<<<<<<<< OWNER >>>>>>>>>>>>>>>>>>>> //
-   
+
   if (isOwner) {
     const borrowRequest = await BorrowRequest.findOne({
       owner: userId,
@@ -460,7 +460,7 @@ export async function getBorrowStatus(
   }
 
   // <<<<<<<<<<<<<<<<<<<< VISITOR >>>>>>>>>>>>>>>>>>>> //
-  
+
   const borrowRequest = await BorrowRequest.findOne({
     requester: userId,
     userBook: userBookId,
@@ -610,8 +610,6 @@ export async function updateBorrowRequestStatus(
 
   return result;
 }
-
-
 
 export async function ensureNoDuplicateBorrowRequest(
   requesterId: string,

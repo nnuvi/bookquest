@@ -1,5 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 
 import { Readable } from "stream";

@@ -1,6 +1,6 @@
 import logger from "../config/logger.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import BorrowRecord, {
   BorrowRecordSchemaType,
 } from "../model/BorrowRecord.model.js";

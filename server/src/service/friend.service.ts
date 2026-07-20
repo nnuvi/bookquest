@@ -1,4 +1,4 @@
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import FriendRequest from "../model/FriendRequest.model.js";
 import User, { UserSchemaType } from "../model/user.model.js";
 // import { FriendRequestAction } from "../validation/friend.validation.js";

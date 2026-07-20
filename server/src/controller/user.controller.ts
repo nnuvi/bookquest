@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import User from "../model/user.model.js";
 
 import { HTTP_STATUS } from "../constant/httpStatus.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 
 import * as userService from "../service/user.service.js";
@@ -133,7 +133,7 @@ export const editProfile = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const friendList = asyncHandler(async (req: Request, res: Response) => {
-  const friends = await userService.getFriendList(req.user._id)
+  const friends = await userService.getFriendList(req.user._id);
 
   res.status(HTTP_STATUS.OK).json({
     success: true,

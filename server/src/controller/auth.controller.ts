@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import User from "../model/user.model.js";
 
 import { generateTokenAndSetCookie } from "../lib/generateToken.js";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 
 import { HTTP_STATUS } from "../constant/httpStatus.js";
@@ -58,7 +58,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
       friends: user.friends,
-      profileImg: user.profileImg,
+      profileImage: user.profileImage?.url,
     },
   });
 });

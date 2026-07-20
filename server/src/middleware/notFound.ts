@@ -1,15 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 
 export const notFound = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
-  next(
-    new ApiError(
-      404,
-      `Route '${req.originalUrl}' not found`
-    )
-  );
+  next(new ApiError(404, `Route '${req.originalUrl}' not found`));
 };

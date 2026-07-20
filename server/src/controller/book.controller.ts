@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import Book, { BookSchemaType } from "../model/Book.model.js";
 import UserBook from "../model/UserBook.model.js";
 
-import ApiError from "../lib/apiError.js";
+import ApiError from "../lib/ApiError.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { HTTP_STATUS } from "../constant/httpStatus.js";
 
@@ -188,7 +188,7 @@ export const isbnScan = asyncHandler(
 export const createBookByISBNScan = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const { bookId } = req.params;
-    const userBook  = req.body;
+    const userBook = req.body;
 
     logger.debug("ISBN Scan to Frontend Sent Book: ", { bookId, userBook });
 
