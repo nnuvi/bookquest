@@ -94,7 +94,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
       friends: user.friends,
-      profileImg: user.profileImg,
+      profileImage: user.profileImage?.url,
     },
   });
 });

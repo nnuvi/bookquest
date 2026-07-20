@@ -21,7 +21,7 @@ import {
   deleteUserAndData,
   getUserIdsByUsername,
 } from "./user.seed.js";
-import { createBooks, createBorrowRequests } from "./book.seed.js";
+// import { createBooks, createBorrowRequests } from "./book.seed.js";
 import { createNotifications } from "./notification.seed.js";
 import ReturnRequest from "../model/ReturnRequest.model.js";
 dotenv.config();

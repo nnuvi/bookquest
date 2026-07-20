@@ -11,16 +11,16 @@ async function testCloudinary() {
   try {
     const result = await cloudinary.uploader.upload("./src/scripts/test.png");
 
-    console.log(result);
+    // console.log(result);
   } catch (error: any) {
     console.error(error);
-    console.dir(error, { depth: null });
+    // console.dir(error, { depth: null });
 
-    console.log("status:", error.http_code);
-    console.log("message:", error.message);
-    console.log("response:", error.response);
-    console.log("error:", error.error);
-    console.log("body:", error.body);
+    // console.log("status:", error.http_code);
+    // console.log("message:", error.message);
+    // console.log("response:", error.response);
+    // console.log("error:", error.error);
+    // console.log("body:", error.body);
   }
 }
 
