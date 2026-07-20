@@ -37,7 +37,7 @@ export default function BookCoverPicker({
   }
 
   return (
-    <Pressable onPress={handlePress} className="self-center">
+    <Pressable onPress={() => {}} className="self-center">
       <View>
         <BookCover
           image={form.watch("book.coverImage")?.uri ?? image}

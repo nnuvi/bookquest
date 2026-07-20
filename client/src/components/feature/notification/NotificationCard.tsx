@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { getNotificationTitle } from "@/services/notification.mapper";
 import userPlaceHolder from "@assets/images/placeholder-user.png";
 import Avatar from "@/components/ui/Avatar";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 
 interface NotificationCardProps {
   notification: Notification;
@@ -34,11 +35,13 @@ const NotificationCard = ({
     }
   };
 
+  logger.debug(LOG_SCOPE.notification, "Notification from:", notification.from);
+
   return (
     <View className="mx-5 my-2 rounded-2xl shadow-sm p-4">
       <View className="flex-row">
         <Avatar
-          image={notification.from?.profileImage}
+          image={notification.from?.profileImage.url}
           size={"xs"}
           // size="xs"
         />

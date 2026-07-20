@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType, model } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, model } from "mongoose";
 // import { NotificationEvents } from "../constant/notification.js";
 
 const { Schema } = mongoose;
@@ -90,6 +90,8 @@ const NotificationSchema = new Schema(
 );
 
 export type NotificationSchemaType = InferSchemaType<typeof NotificationSchema>;
+
+export type NotificationDocument = HydratedDocument<NotificationSchemaType>;
 
 const Notification = model<NotificationSchemaType>(
   "Notification",

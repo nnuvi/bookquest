@@ -45,15 +45,14 @@ export default function BorrowRequestList({
       }
       contentContainerStyle={{
         flexGrow: 1,
-        paddingVertical: 8,
         paddingBottom: 150,
       }}
       renderItem={({ item }) => (
         <BookCard
           item={item}
-          //   onPress={() => onBookPress?.(item)}
+          // onPress={() => onBookPress?.(item)}
           actionButton="bottom"
-          action={<BorrowRequestAction requestId={item.id} fullWidth/>}
+          action={<BorrowRequestAction requestId={item.id} fullWidth />}
           onPress={() => router.push(`/request/${item.id}`)} //rqq
         />
       )}

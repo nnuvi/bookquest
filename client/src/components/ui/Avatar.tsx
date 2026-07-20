@@ -1,41 +1,7 @@
-// import { Image, ImageProps } from "react-native";
-
-// const sizes = {
-//   xs: 50,
-//   sm: 70,
-//   md: 90,
-//   lg: 110,
-//   xl: 130,
-// };
-
-// type AvatarProps = ImageProps & {
-//   size?: keyof typeof sizes;
-// };
-
-// export default function Avatar({
-//   size = "md",
-//   style,
-//   ...props
-// }: AvatarProps) {
-//   return (
-//     <Image
-//       {...props}
-//       resizeMode="cover"
-//       style={[
-//         {
-//           width: sizes[size],
-//           height: sizes[size],
-//           borderRadius: sizes[size] / 2,
-//         },
-//         style,
-//       ]}
-//     />
-//   );
-// }
-
 import { Image, ImageProps, Pressable } from "react-native";
 
 import userPlaceholder from "@assets/images/placeholder-user.png";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 
 const sizes = {
   xs: 50,
@@ -60,6 +26,7 @@ export default function Avatar({
   disabled,
   ...props
 }: AvatarProps) {
+  logger.debug(LOG_SCOPE.image, "image: ", { image });
   const source =
     typeof image === "string" && image.trim().length > 0
       ? { uri: image }

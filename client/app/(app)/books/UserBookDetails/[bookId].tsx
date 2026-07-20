@@ -72,7 +72,7 @@ export default function BookDetails() {
         />
       ) : (
         <ScrollView
-          className="flex-1 px-4 py-4"
+          className="flex-1 px-6 py-4"
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
           }
@@ -107,6 +107,12 @@ export default function BookDetails() {
                 value: userBook.book.publisher,
               },
               {
+                label: "Publish Date",
+                value: new Date(
+                  userBook?.book?.publishDate!,
+                ).toLocaleDateString(),
+              },
+              {
                 label: "Added",
                 value: new Date(userBook.addedAt).toLocaleDateString(),
               },
@@ -122,7 +128,7 @@ export default function BookDetails() {
               <AppText key={i}>Row {i}</AppText>
             ))}
           </View> */}
-          <View className="pb-20 items-center">
+          {/* <View className="pb-20 items-center">
             <AppText size="xl" color="text" className="mt-10">
               HELLO hello HellowWorld 1 text
             </AppText>
@@ -138,11 +144,11 @@ export default function BookDetails() {
             <AppText size="xl" color="placeholder" className="mt-5">
               HELLO hello HellowWorld 5 placeholder
             </AppText>
-          </View>
+          </View> */}
         </ScrollView>
       )}
 
-      <Toast />
+      {/* <Toast /> */}
     </Screen>
   );
 }

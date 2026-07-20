@@ -38,7 +38,8 @@ export default function BookGrid({
     <FlatList
       style={{
         flex: 1,
-        width: "100%"
+        width: "100%",
+        // backgroundColor: Colors.backgroundDark,
       }}
       key={numColumns}
       data={books}
@@ -54,7 +55,8 @@ export default function BookGrid({
         paddingBottom: 80,
       }}
       columnWrapperStyle={{
-        justifyContent: "flex-start",       
+        justifyContent: "flex-start",
+        // backgroundColor: Colors.accent,
       }}
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={

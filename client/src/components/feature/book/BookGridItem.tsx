@@ -18,9 +18,13 @@ export default function BookGridItem({ item, onPress }: BookGridItemProps) {
     <Pressable
       onPress={onPress}
       style={{
-        width: bookCardWidth,
+        // width: bookCardWidth,
+        width: "31%",
         marginBottom: 12,
-        margin: 7,
+        marginRight: 12,
+        // gap: 4,
+        // rowGap: 4,
+        // columnGap: 4
       }}
       className="items-center"
     >

@@ -11,7 +11,7 @@ export default function BookDescription({
   notes,
 }: BookDescriptionProps) {
   return (
-    <View className="mt-5">
+    <View className="my-5 mb-5 pb-10">
       <AppText size="2xl" weight="semibold" className="mb-1">
         Description
       </AppText>

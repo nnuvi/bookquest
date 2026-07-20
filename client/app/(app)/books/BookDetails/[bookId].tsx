@@ -63,7 +63,7 @@ export default function BookDetails() {
           {/* ScrollView */}
           {/* Body */}
           <ScrollView
-            className="flex-1 px-4 py-4"
+            className="flex-1 px-6 py-4"
             refreshControl={
               <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
             }
@@ -93,6 +93,10 @@ export default function BookDetails() {
                 {
                   label: "Publisher",
                   value: book?.publisher,
+                },
+                {
+                  label: "Publish Date",
+                  value: book?.publishDate,
                 },
               ]}
             />

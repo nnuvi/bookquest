@@ -92,17 +92,15 @@ export default function HomeScreen() {
           onRetry={refetch}
         />
       ) : (
-        <View className="flex-1 items-center">
-          <View className="items-center">
-            <BookGrid
-              books={books}
-              refreshing={isRefetching}
-              onRefresh={refetch}
-              onBookPress={(item) =>
-                router.push(`book/UserBookDetails/${item.userBookId}`)
-              }
-            />
-          </View>
+        <View className="flex-1 items-center p-4">
+          <BookGrid
+            books={books}
+            refreshing={isRefetching}
+            onRefresh={refetch}
+            onBookPress={(item) =>
+              router.push(`books/UserBookDetails/${item.userBookId}`)
+            }
+          />
         </View>
       )}
     </Screen>
