@@ -2,9 +2,9 @@ import axios from "axios";
 import { Platform } from "react-native";
 import { LOG_SCOPE, logger } from "./logger";
 
-const apiUrl =
-  Platform.OS === "web" ? "http://localhost:5555" : "http://192.168.0.102:5555";
-// const apiUrl = 'https://bookquest-backend.onrender.com/api';
+// const apiUrl =
+  // Platform.OS === "web" ? "http://localhost:5555" : "http://192.168.0.102:5555";
+const apiUrl = 'https://bookquest-1kfq.onrender.com';
 
 export const api = axios.create({
   baseURL: apiUrl,
