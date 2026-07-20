@@ -3,8 +3,8 @@ import { Platform } from "react-native";
 import { LOG_SCOPE, logger } from "./logger";
 
 // const apiUrl =
-  // Platform.OS === "web" ? "http://localhost:5555" : "http://192.168.0.102:5555";
-const apiUrl = 'https://bookquest-1kfq.onrender.com';
+// Platform.OS === "web" ? "http://localhost:5555" : "http://192.168.0.102:5555";
+const apiUrl = "https://bookquest-1kfq.onrender.com";
 
 export const api = axios.create({
   baseURL: apiUrl,
@@ -24,11 +24,30 @@ export const api = axios.create({
 //      }
 // );
 
+// api.interceptors.request.use((config) => {
+//   logger.info(
+//     LOG_SCOPE.api,
+//     `${config.method?.toUpperCase()} ${config.url}`,
+//     config.data ?? config.params,
+//   );
+
+//   return config;
+// });
+
 api.interceptors.request.use((config) => {
+  let data = config.data;
+
+  if (data?.password) {
+    data = {
+      ...data,
+      password: "********",
+    };
+  }
+
   logger.info(
     LOG_SCOPE.api,
     `${config.method?.toUpperCase()} ${config.url}`,
-    config.data ?? config.params,
+    data ?? config.params,
   );
 
   return config;

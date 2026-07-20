@@ -36,13 +36,27 @@ export default function LoginScreen() {
     });
   };
 
-  useEffect(() => {
-    console.log("LoginScreen mounted");
+  const handleDemoLogin = () => {
+    loginMutation.mutate(
+      {
+        username: "demo",
+        password: "DemoPass99",
+      },
+      {
+        onSuccess: () => {
+          router.replace("/(app)/(tabs)/Homepage");
+        },
+      },
+    );
+  };
 
-    return () => {
-      console.log("LoginScreen unmounted");
-    };
-  }, []);
+  // useEffect(() => {
+  //   console.log("LoginScreen mounted");
+
+  //   return () => {
+  //     console.log("LoginScreen unmounted");
+  //   };
+  // }, []);
 
   return (
     <View className="flex-1 bg-background justify-center px-6">
@@ -93,6 +107,16 @@ export default function LoginScreen() {
         fullWidth
         disabled={loginMutation.isPending}
         onPress={handleSubmit(onSubmit)}
+      />
+
+      <Button
+        title="Continue as Demo"
+        variant="outline"
+        buttonSize="xl"
+        fullWidth
+        disabled={loginMutation.isPending}
+        onPress={handleDemoLogin}
+        className="mt-6"
       />
     </View>
   );

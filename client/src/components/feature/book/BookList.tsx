@@ -1,10 +1,11 @@
-import { FlatList, StyleProp, ViewStyle } from "react-native";
+import { FlatList, StyleProp, View, ViewStyle } from "react-native";
 
 import AppText from "@/components/ui/AppText";
 import { BookCardItem } from "@/types/book";
 import BookCard from "../book/BookCard";
 import { ReactElement, ReactNode } from "react";
 import BorrowAction from "../borrow/BorrowAction";
+import { Colors } from "@/constants/Colors";
 
 type BookListProps = {
   data: BookCardItem[];
@@ -47,11 +48,15 @@ export default function BookList({
       contentContainerStyle={[
         {
           // flexGrow: 1,
+          padding: 12,
           paddingBottom: 20,
-          paddingVertical: 4,
+          paddingVertical: 12,
+          marginBottom: 12,
+          // backgroundColor: Colors.backgroundDark
         },
         contentContainerStyle,
       ]}
+      ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       ListEmptyComponent={
         listEmptyComponent ?? (
           <AppText className="text-center mt-5">No books available.</AppText>

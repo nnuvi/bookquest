@@ -1,6 +1,6 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 
 import { HeaderTitle } from "@/components/common/HeaderTitle";
 import Screen from "@/components/common/Screen";
@@ -21,6 +21,7 @@ import { useSearchUsers } from "@/hooks/user";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import { useQueryClient } from "@tanstack/react-query";
 import FriendAction from "@/components/feature/friend/FriendAction";
+import { useAuthUser } from "@/hooks/auth";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -80,6 +81,9 @@ export default function Search() {
 
   const refreshing = booksRefreshing || usersRefreshing;
 
+  const { data: currentUser } = useAuthUser();
+  logger.debug(LOG_SCOPE.router, "user current: ", { id: currentUser?._id });
+
   return (
     <Screen>
       <HeaderTitle text="Search" />
@@ -131,13 +135,15 @@ export default function Search() {
           />
         ) : (
           books.map((book) => (
-            <BookCard
-              key={book.bookId}
-              item={book}
-              onPress={(item) =>
-                router.push(`/books/BookDetails/${item.bookId}`)
-              }
-            />
+            <View key={book.bookId} className="px-6 mt-4">
+              <BookCard
+                // key={book.bookId}
+                item={book}
+                onPress={(item) =>
+                  router.push(`/books/BookDetails/${item.bookId}`)
+                }
+              />
+            </View>
           ))
         )}
 
@@ -171,12 +177,15 @@ export default function Search() {
           />
         ) : (
           users.map((user) => (
-            <UserCard
-              key={user._id}
-              user={user}
-              actionButton="bottom"
-              action={<FriendAction userId={user._id} />}
-            />
+            <View key={user._id} className="px-5 mt-4">
+              <UserCard
+                // key={user._id}
+                user={user}
+                currentUserId={currentUser?._id}
+                actionButton="bottom"
+                action={<FriendAction userId={user._id} />}
+              />
+            </View>
           ))
         )}
       </ScrollView>

@@ -48,9 +48,11 @@ export default function FriendRequestList({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         flexGrow: 1,
-        paddingVertical: 8,
+        // paddingVertical: 8,
         paddingBottom: 150,
+        paddingHorizontal: 16,
       }}
+      ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
     />
   );
 }

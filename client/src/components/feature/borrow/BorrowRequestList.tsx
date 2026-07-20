@@ -45,6 +45,7 @@ export default function BorrowRequestList({
       }
       contentContainerStyle={{
         flexGrow: 1,
+        paddingHorizontal: 16,
         paddingBottom: 150,
       }}
       renderItem={({ item }) => (
@@ -56,6 +57,7 @@ export default function BorrowRequestList({
           onPress={() => router.push(`/request/${item.id}`)} //rqq
         />
       )}
+      ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
     />
   );
 }

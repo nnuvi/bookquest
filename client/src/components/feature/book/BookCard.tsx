@@ -29,7 +29,7 @@ export default function BookCard({
   // });
   return (
     <>
-      <View className="flex-row items-center px-4 py-3">
+      <View className="flex-row items-center">
         <BookCover image={item?.coverImage} size="xs" className="mr-4" />
 
         <View className="flex-1 h-full">
@@ -75,7 +75,7 @@ export default function BookCard({
         </View>
         {actionButton === "right" && <View className="">{action}</View>}
       </View>
-      {actionButton === "bottom" && <View className="px-3">{action}</View>}
+      {actionButton === "bottom" && <View className="mt-2">{action}</View>}
     </>
   );
 }

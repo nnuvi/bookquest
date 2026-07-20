@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 
 import EmptyState from "@/components/common/EmptyState";
 import BookCard from "@/components/feature/book/BookCard";
@@ -47,17 +47,21 @@ export default function BorrowRequestSentList({
       }
       contentContainerStyle={{
         flexGrow: 1,
-        paddingVertical: 8,
+        // paddingVertical: 8,
+        paddingHorizontal: 16,
         paddingBottom: 150,
       }}
       renderItem={({ item }) => (
         <BookCard
           item={item}
-            onPress={() => router.push(`/books/UserBookDetails/${item.userBookId}`)}
+          onPress={() =>
+            router.push(`/books/UserBookDetails/${item.userBookId}`)
+          }
           actionButton="bottom"
-          action={<BorrowRequestAction mode="sent" requestId={item.id}/>}
+          action={<BorrowRequestAction mode="sent" requestId={item.id} />}
         />
       )}
+      ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
     />
   );
 }

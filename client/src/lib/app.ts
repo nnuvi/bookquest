@@ -6,6 +6,14 @@ export function getErrorMessage(error: any) {
   );
 }
 
+export function navigate(route: Href) {
+  router.push(route);
+}
+
+export function replace(route: Href) {
+  router.replace(route);
+}
+
 export function navigateBackOrRoute(route: Href) {
   if (router.canGoBack()) {
     router.back();

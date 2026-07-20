@@ -5,11 +5,16 @@ import { User } from "@/types/user";
 import { router } from "expo-router";
 
 import Avatar from "@/components/ui/Avatar";
+import { useAuthUser } from "@/hooks/auth";
+import { navigate } from "@/lib/app";
+import { ROUTES } from "@/constants/Routes";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 
 type UserCardProps = {
   user: User;
   action?: React.ReactNode;
   actionButton?: "bottom" | "right";
+  currentUserId?: string;
   onPress?: () => void;
   primaryButton?: {
     title: string;
@@ -26,16 +31,26 @@ export default function UserCard({
   user,
   action,
   actionButton,
+  currentUserId,
   onPress,
   primaryButton,
   secondaryButton,
 }: UserCardProps) {
+  const handleUserPress = () => {
+    if (user._id === currentUserId) {
+      logger.debug(LOG_SCOPE.router, "user current: ", { currentUserId });
+      navigate(ROUTES.MY_PROFILE);
+    } else {
+      navigate(`/(app)/user/${user._id}`);
+    }
+  };
   return (
     <TouchableOpacity
-      onPress={() => {
-        router.push(`profile/ProfileView/${user?._id}`);
-      }}
-      className="flex-row items-center px-4 py-3"
+      // onPress={() => {
+      //   router.push(`profile/ProfileView/${user?._id}`);
+      // }}
+      onPress={handleUserPress}
+      className="flex-row items-center"
     >
       <Avatar
         image={user.profileImage}
