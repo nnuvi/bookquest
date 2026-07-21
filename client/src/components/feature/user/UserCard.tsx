@@ -41,7 +41,7 @@ export default function UserCard({
       logger.debug(LOG_SCOPE.router, "user current: ", { currentUserId });
       navigate(ROUTES.MY_PROFILE);
     } else {
-      navigate(`/(app)/user/${user._id}`);
+      navigate(`/(app)/profile/ProfileView/${user._id}`);
     }
   };
   return (

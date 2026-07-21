@@ -9,20 +9,17 @@ type CustomStatusBarProps = {
 
 export default function CustomStatusBar({
   barStyle,
-  translucent = true,
+  translucent = false,
   backgroundColor = Colors.primary,
 }: CustomStatusBarProps) {
   const colorScheme = useColorScheme();
 
   const statusBarStyle =
-    barStyle ??
-    (colorScheme === "dark"
-      ? "light-content"
-      : "dark-content");
+    barStyle ?? (colorScheme === "dark" ? "light-content" : "dark-content");
 
   return (
     <StatusBar
-      barStyle={statusBarStyle}
+      barStyle={barStyle}
       translucent={translucent}
       backgroundColor={backgroundColor}
     />
