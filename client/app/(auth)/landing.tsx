@@ -1,18 +1,17 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import { Text, View } from "react-native";
 
 import LogoText from "@/components/common/LogoText";
-import StatusBar from "@/components/common/StatusBar";
-import { Colors } from "@/constants/Colors";
-import Button from "@/components/ui/Button";
 import Screen from "@/components/common/Screen";
+import Button from "@/components/ui/Button";
+import { Colors } from "@/constants/Colors";
 
 export default function Landing() {
   const router = useRouter();
 
   return (
-    <Screen>
-      <View className="flex-1 justify-center items-center bg-background px-6">
+    <Screen statusBarColor={Colors.background}>
+      <View className="flex-1 justify-center items-center px-6">
         {/* <StatusBar /> */}
         <LogoText variant="dark" />
 

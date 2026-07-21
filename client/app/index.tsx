@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { View } from "react-native";
+import Screen from "@/components/common/Screen";
 
 export default function Index() {
   const router = useRouter();
@@ -34,9 +35,11 @@ export default function Index() {
 
   if (authUser.isPending) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <LoadingScreen />
-      </View>
+      <Screen>
+        <View className="flex-1 justify-center items-center">
+          <LoadingScreen />
+        </View>
+      </Screen>
     );
   }
 

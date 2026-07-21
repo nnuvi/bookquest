@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { TextInput, View } from "react-native";
+import { View } from "react-native";
 
 import LogoText from "@/components/common/LogoText";
 import Button from "@/components/ui/Button";
@@ -11,10 +11,10 @@ import {
   loginInputDefaultValues,
   loginSchema,
 } from "@/schema/auth.schema";
-import { getUser } from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Colors } from "@/constants/Colors";
+import Screen from "@/components/common/Screen";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -50,74 +50,54 @@ export default function LoginScreen() {
     );
   };
 
-  // useEffect(() => {
-  //   console.log("LoginScreen mounted");
-
-  //   return () => {
-  //     console.log("LoginScreen unmounted");
-  //   };
-  // }, []);
-
   return (
-    <View className="flex-1 bg-background justify-center px-6">
-      {/* <StatusBar style="auto" translucent backgroundColor="transparent" /> */}
+    <Screen statusBarColor={Colors.background}>
+      <View className="flex-1 justify-center px-6">
+        {/* <StatusBar style="auto" translucent backgroundColor="transparent" /> */}
 
-      <View className="items-center mb-12">
-        <LogoText variant="dark" />
-        {/* <AppText size="3xl" weight="bold" color={"primary"}>
+        <View className="items-center mb-12">
+          <LogoText variant="dark" />
+          {/* <AppText size="3xl" weight="bold" color={"primary"}>
           Login
         </AppText> */}
-      </View>
+        </View>
 
-      <View className="mb-4">
-        <FormInput
-          control={control}
-          name="username"
-          // label="Username"
-          placeholder="Username"
+        <View className="mb-4">
+          <FormInput
+            control={control}
+            name="username"
+            // label="Username"
+            placeholder="Username"
+          />
+
+          <FormInput
+            control={control}
+            name="password"
+            // label="Password"
+            placeholder="Password"
+            secureTextEntry
+          />
+        </View>
+
+        <Button
+          title="Login"
+          variant="primary"
+          buttonSize="xl"
+          fullWidth
+          disabled={loginMutation.isPending}
+          onPress={handleSubmit(onSubmit)}
         />
-        {/* <Controller
-          control={control}
-          name="username"
-          render={({ field }) => (
-            <TextInput
-              style={{
-                borderWidth: 1,
-                padding: 12,
-              }}
-              value={field.value}
-              onChangeText={field.onChange}
-            />
-          )}
-        /> */}
 
-        <FormInput
-          control={control}
-          name="password"
-          // label="Password"
-          placeholder="Password"
-          secureTextEntry
+        <Button
+          title="Continue as Demo"
+          variant="outline"
+          buttonSize="xl"
+          fullWidth
+          disabled={loginMutation.isPending}
+          onPress={handleDemoLogin}
+          className="mt-6"
         />
       </View>
-
-      <Button
-        title="Login"
-        variant="primary"
-        buttonSize="xl"
-        fullWidth
-        disabled={loginMutation.isPending}
-        onPress={handleSubmit(onSubmit)}
-      />
-
-      <Button
-        title="Continue as Demo"
-        variant="outline"
-        buttonSize="xl"
-        fullWidth
-        disabled={loginMutation.isPending}
-        onPress={handleDemoLogin}
-        className="mt-6"
-      />
-    </View>
+    </Screen>
   );
 }

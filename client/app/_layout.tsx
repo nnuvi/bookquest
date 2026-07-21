@@ -1,13 +1,12 @@
 import "../global.css";
 
+import LoadingScreen from "@/components/common/LoadingScreen";
+import AppProvider from "@/providers/AppProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import LoadingScreen from "@/components/common/LoadingScreen";
-import { useAuth } from "@/hooks/auth";
-import AppProvider from "@/providers/AppProvider";
-import { Host } from "@expo/ui";
+import { StatusBar } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 

@@ -16,6 +16,7 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Colors } from "@/constants/Colors";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <Screen>
+    <Screen statusBarColor={Colors.background}>
       <View className="flex-1 justify-center px-6">
         <View className="items-center mb-10">
           <LogoText variant="dark" />
