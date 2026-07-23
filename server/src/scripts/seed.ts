@@ -15,15 +15,38 @@ const seed = async () => {
     console.log("Start...");
 
     // Code
-    const user_1 = await User.findOne({ username: "neve" });
-    const user_2 = await User.findOne({ username: "nuvi11" });
 
-    if (!user_1 || !user_2) {
-      throw new Error("Seed users not found.");
-    }
+    await User.updateMany(
+      { profileImage: { $exists: false } },
+      {
+        $set: {
+          profileImage: {
+            url: "",
+            publicId: "",
+          },
+        },
+      },
+    );
 
-    const user_1_id = user_1._id.toString();
-    const user_2_id = user_2._id.toString();
+    await User.updateMany(
+      { "profileImage.url": { $exists: false } },
+      {
+        $set: {
+          "profileImage.url": "",
+        },
+      },
+    );
+
+    await User.updateMany(
+      { "profileImage.publicId": { $exists: false } },
+      {
+        $set: {
+          "profileImage.publicId": "",
+        },
+      },
+    );
+
+    console.log("Finished updating profile images.");
 
     console.log("Seeding completed!");
 

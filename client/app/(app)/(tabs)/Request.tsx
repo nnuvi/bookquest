@@ -26,6 +26,12 @@ export default function Requests() {
   const received = useBorrowRequest();
   const sent = useBorrowSentRequest();
 
+  // logger.debug(LOG_SCOPE.query, "Fetshed req: ", {
+  //   friend,
+  //   received,
+  //   sent,
+  // });
+
   const tabs = {
     friends: {
       query: friend,
@@ -80,7 +86,7 @@ export default function Requests() {
   //   error: current.query.error,
   // });
 
-  //   console.log(received.error);
+  // console.log(received.error);
   // console.log(current.query.error);
 
   return (

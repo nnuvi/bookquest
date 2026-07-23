@@ -2,12 +2,10 @@ import { TouchableOpacity, View } from "react-native";
 
 import AppText from "@/components/ui/AppText";
 import { User } from "@/types/user";
-import { router } from "expo-router";
 
 import Avatar from "@/components/ui/Avatar";
-import { useAuthUser } from "@/hooks/auth";
-import { navigate } from "@/lib/app";
 import { ROUTES } from "@/constants/Routes";
+import { navigate } from "@/lib/app";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 
 type UserCardProps = {
@@ -53,7 +51,7 @@ export default function UserCard({
       className="flex-row items-center"
     >
       <Avatar
-        image={user.profileImage}
+        image={user.profileImage.url}
         size={actionButton === "bottom" ? "sm" : "xs"}
         // size="xs"
       />

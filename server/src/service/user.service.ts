@@ -70,20 +70,22 @@ export async function getFriendList(userId: string) {
     _id: { $in: user.friends },
   });
 
-  return mapUsers(friends);
+  // return mapUsers(friends);
 
-  // return friends.map((user) => ({
-  //   _id: user._id,
-  //   username: user.username,
-  //   fullName: user.fullName,
-  //   email: user.email,
-  //   bio: user.bio,
-  //   role: user.role,
+  return friends.map((user) => ({
+    _id: user._id,
+    username: user.username,
+    fullName: user.fullName,
+    email: user.email,
+    bio: user.bio,
+    role: user.role,
 
-  //   profileImage: user.profileImage?.url || "",
+    profileImage: {
+      url: user?.profileImage?.url,
+    },
 
-  //   friends: user.friends,
-  // }));
+    friends: user.friends,
+  }));
 }
 
 export async function getUserOrThrow(userId: string) {
@@ -96,26 +98,26 @@ export async function getUserOrThrow(userId: string) {
   return user;
 }
 
-export async function getFormatUserOrThrow(userId: string) {
-  const user = await User.findById(userId).populate("");
+// export async function getFormatUserOrThrow(userId: string) {
+//   const user = await User.findById(userId).populate("");
 
-  if (!user) {
-    throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
-  }
+//   if (!user) {
+//     throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
+//   }
 
-  return {
-    _id: user._id,
-    username: user.username,
-    fullName: user.fullName,
-    email: user.email,
-    bio: user.bio,
-    role: user.role,
+//   return {
+//     _id: user._id,
+//     username: user.username,
+//     fullName: user.fullName,
+//     email: user.email,
+//     bio: user.bio,
+//     role: user.role,
 
-    profileImage: user.profileImage?.url || "",
+//     profileImage: user.profileImage?.url || "",
 
-    friends: user.friends,
-  };
-}
+//     friends: user.friends,
+//   };
+// }
 
 export function ensureNotSelf(userId: string, otherUserId: string) {
   if (userId === otherUserId) {

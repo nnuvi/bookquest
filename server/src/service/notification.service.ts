@@ -13,7 +13,7 @@ export async function getNotifications(userId: string) {
   const notifications = await Notification.find({
     to: userId,
   })
-    .populate("from", "fullName username profileImage")
+    .populate("from", "fullName username profileImage.url")
     .populate({
       path: "userBook",
       populate: {

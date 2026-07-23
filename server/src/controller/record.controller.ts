@@ -72,3 +72,25 @@ export async function getLentBooks(req: Request, res: Response) {
     data: records,
   });
 }
+
+export async function getBorrowRecord(req: Request, res: Response) {
+  const { userBookId } = req.params;
+  const record = await BorrowRecord.findOne({
+    userBook: userBookId,
+    status: "borrowed",
+  })
+    .populate("borrower", "fullName username profileImage")
+    .populate("owner", "fullName username profileImage")
+    .populate({
+      path: "userBook",
+      populate: {
+        path: "book",
+        select: "title author coverImage",
+      },
+    });
+
+  res.json({
+    success: true,
+    data: record,
+  });
+}

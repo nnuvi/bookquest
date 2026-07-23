@@ -4,6 +4,7 @@ import userPlaceholder from "@assets/images/placeholder-user.png";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 
 const sizes = {
+  tiny: 15,
   xs: 50,
   sm: 70,
   md: 90,
@@ -26,7 +27,7 @@ export default function Avatar({
   disabled,
   ...props
 }: AvatarProps) {
-  logger.debug(LOG_SCOPE.image, "image: ", { image });
+  // logger.debug(LOG_SCOPE.image, "image: ", { image });
   const source =
     typeof image === "string" && image.trim().length > 0
       ? { uri: image }

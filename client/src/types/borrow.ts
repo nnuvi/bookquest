@@ -1,5 +1,5 @@
 import { UserBook } from "./book";
-import { User } from "./user";
+import { User, UserPreview } from "./user";
 
 export const BorrowRequestStatus = {
   PENDING: "pending",
@@ -110,4 +110,38 @@ export type BorrowStatusResponse = {
 
   borrowRequestId?: string;
   returnRequestId?: string;
+};
+
+export type ReceivedBorrowRequest = {
+  _id: string;
+  requester: UserPreview;
+  owner: string;
+  userBook: UserBook;
+  status: BorrowRequestStatus;
+
+  message: string;
+
+  borrowDurationDays: number;
+
+  expiresAt?: string;
+
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SentBorrowRequest = {
+  _id: string;
+  requester: string;
+  owner: UserPreview;
+  userBook: UserBook;
+  status: BorrowRequestStatus;
+
+  message: string;
+
+  borrowDurationDays: number;
+
+  expiresAt?: string;
+
+  createdAt: string;
+  updatedAt: string;
 };

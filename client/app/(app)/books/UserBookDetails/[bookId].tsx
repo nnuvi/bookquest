@@ -1,6 +1,6 @@
 import { useGlobalSearchParams } from "expo-router";
 import { useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import Screen from "@/components/common/Screen";
@@ -18,13 +18,24 @@ import NotFoundScreen from "@/components/common/NotFoundScreen";
 
 import { useUserBookDetails } from "@/hooks/books";
 import AppText from "@/components/ui/AppText";
+import MetadataList from "@/components/ui/MetadataList";
+import { useBorrowStatus } from "@/hooks/borrow";
+import { useBorrowRecord } from "@/hooks/record";
+import { useAuth, useAuthUser } from "@/hooks/auth";
+import { navigate } from "@/lib/app";
+import { useAuthStore } from "@/store/auth.store";
+import Avatar from "@/components/ui/Avatar";
+import { formatDate } from "@/lib/date";
+import { LOG_SCOPE, logger } from "@/lib/logger";
+import Spacer from "@/components/ui/Spacer";
 
 export default function BookDetails() {
-  const { bookId } = useGlobalSearchParams<{ bookId: string }>();
-
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const options = ["Option 1", "Option 2", "Option 3"];
+  // const { bookId } = useGlobalSearchParams<{ bookId: string }>();
+  const { bookId, userId, fullName } = useGlobalSearchParams<{
+    bookId: string;
+    userId?: string;
+    fullName?: string;
+  }>();
 
   const {
     data: userBook,
@@ -34,27 +45,17 @@ export default function BookDetails() {
     isError,
   } = useUserBookDetails(bookId);
 
-  const handleOptionActions = (option: string) => {
-    console.log(option);
-    setModalVisible(false);
-  };
+  const { data: record } = useBorrowRecord(
+    userBook?.availability === "borrowed" ? bookId : undefined,
+  );
+
+  const { user } = useAuthStore();
+
+  logger.debug(LOG_SCOPE.query, "Record Data: ", { record, user });
 
   return (
     <Screen>
-      <HeaderTitle
-        text="Book Information"
-        threeDotsVisible={!!userBook}
-        onPress={() => setModalVisible(true)}
-      />
-
-      {userBook && (
-        <DropdownModal
-          visible={modalVisible}
-          options={options}
-          onSelect={handleOptionActions}
-          onClose={() => setModalVisible(false)}
-        />
-      )}
+      <HeaderTitle text="Book Information" />
 
       {isPending ? (
         <BookDetailsSkeleton />
@@ -84,7 +85,7 @@ export default function BookDetails() {
             availability={userBook.availability}
           />
 
-          <BookMetadata
+          <MetadataList
             items={[
               {
                 label: "Genre",
@@ -116,6 +117,63 @@ export default function BookDetails() {
                 label: "Added",
                 value: new Date(userBook.addedAt).toLocaleDateString(),
               },
+              ...(record?.owner?._id === user?._id
+                ? [
+                    {
+                      label: "Borrower",
+                      value: (
+                        <Pressable
+                          onPress={() =>
+                            navigate(
+                              `/profile/ProfileView/${record?.borrower?._id}`,
+                            )
+                          }
+                          className="flex-row gap-1 items-center"
+                        >
+                          <Avatar
+                            size={"tiny"}
+                            image={record?.borrower?.profileImage?.url}
+                          />
+                          <AppText weight="bold" color="primary">
+                            {record?.borrower?.fullName}
+                          </AppText>
+                        </Pressable>
+                      ),
+                    },
+                    {
+                      label: "Due",
+                      value: formatDate(record?.dueAt, "relative"),
+                    },
+                  ]
+                : record?.borrower?._id === user?._id
+                  ? [
+                      {
+                        label: "Owner",
+                        value: (
+                          <Pressable
+                            onPress={() =>
+                              navigate(
+                                `/profile/ProfileView/${record?.owner?._id}`,
+                              )
+                            }
+                            className="flex-row gap-1 items-center"
+                          >
+                            <Avatar
+                              size={"tiny"}
+                              image={record?.owner?.profileImage?.url}
+                            />
+                            <AppText weight="bold" color="primary">
+                              {record?.owner?.fullName}
+                            </AppText>
+                          </Pressable>
+                        ),
+                      },
+                      {
+                        label: "Due",
+                        value: formatDate(record?.dueAt, "relative"),
+                      },
+                    ]
+                  : []),
             ]}
           />
 
@@ -123,28 +181,6 @@ export default function BookDetails() {
             description={userBook.book.description}
             notes={userBook.notes}
           />
-          {/* <View>
-            {Array.from({ length: 50 }).map((_, i) => (
-              <AppText key={i}>Row {i}</AppText>
-            ))}
-          </View> */}
-          {/* <View className="pb-20 items-center">
-            <AppText size="xl" color="text" className="mt-10">
-              HELLO hello HellowWorld 1 text
-            </AppText>
-            <AppText size="xl" color="muted" className="mt-5">
-              HELLO hello HellowWorld 2 muted plc
-            </AppText>
-            <AppText size="xl" color="neutral" className="mt-5">
-              HELLO hello HellowWorld 3 neutral (mic plc)
-            </AppText>
-            <AppText size="xl" color="gray" className="mt-5">
-              HELLO hello HellowWorld 4 gray muted
-            </AppText>
-            <AppText size="xl" color="placeholder" className="mt-5">
-              HELLO hello HellowWorld 5 placeholder
-            </AppText>
-          </View> */}
         </ScrollView>
       )}
 

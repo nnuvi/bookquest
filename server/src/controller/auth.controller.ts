@@ -58,7 +58,9 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
       friends: user.friends,
-      profileImage: user.profileImage?.url,
+      profileImage: {
+        url: user?.profileImage?.url,
+      },
     },
   });
 });
@@ -94,7 +96,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       email: user.email,
       friends: user.friends,
-      profileImage: user.profileImage?.url,
+      profileImage: {
+        url: user?.profileImage?.url,
+      },
     },
   });
 });

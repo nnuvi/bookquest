@@ -86,11 +86,11 @@ export const ProfileHeader = ({
           <View className="mt-2 bg-gray rounded-full overflow-hidden mb-2">
             {currentUser ? (
               <AvatarPicker
-                image={user.profileImage}
+                image={user.profileImage.url}
                 placeholder={userPlaceHolder}
               />
             ) : (
-              <Avatar image={user.profileImage} />
+              <Avatar image={user.profileImage.url} />
             )}
           </View>
           {/** Book and Friends */}

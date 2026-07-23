@@ -73,7 +73,9 @@ export function mapNotification(notification: NotificationDto) {
           id: notification.from._id,
           fullName: notification.from.fullName,
           username: notification.from.username,
-          profileImage: notification.from.profileImage,
+          profileImage: {
+            url: notification.from.profileImage,
+          },
         }
       : null,
 

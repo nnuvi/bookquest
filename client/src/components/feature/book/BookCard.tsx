@@ -8,6 +8,8 @@ import { formatDate } from "@/lib/date";
 import { LOG_SCOPE, logger } from "@/lib/logger";
 import BookPlaceholder from "@assets/images/placeholder-book.png";
 import { ReactNode } from "react";
+import Avatar from "@/components/ui/Avatar";
+import { useAuthStore } from "@/store/auth.store";
 
 type BookCardProps = {
   item: BookCardItem;
@@ -24,7 +26,10 @@ export default function BookCard({
   actionButton = "none",
   action,
 }: BookCardProps) {
-  // logger.debug(LOG_SCOPE.query, "Book Deatail: ", {
+  const { user } = useAuthStore();
+  // logger.debug(LOG_SCOPE.query, "Book CARD Deatail: ", {
+  //   req: item.requester,
+  //   owner: item.owner,
   //   item,
   // });
   return (
@@ -66,10 +71,28 @@ export default function BookCard({
                 {" Due"} {formatDate(item.dueAt, "absolute")}
               </AppText>
             ) : item?.requester?.id ? (
-              <AppText size="sm" className="mb-2">
-                Requested by{" "}
-                <AppText weight="semibold">{item?.requester?.fullName}</AppText>
-              </AppText>
+              <View className="flex-row items-center gap-1 mb-2">
+                {/* <AppText size="sm">Requested by</AppText> */}
+
+                <Avatar
+                  size="tiny"
+                  image={item?.requester?.profileImage?.url}
+                />
+
+                <AppText size="sm" weight="semibold">
+                  {item?.requester?.fullName ?? "N/A"}
+                </AppText>
+              </View>
+            ) : item.owner?.id !== user?._id ? (
+              <View className="flex-row items-center gap-1 mb-2">
+                {/* <AppText size="sm">Requested by</AppText> */}
+
+                <Avatar size="tiny" image={item?.owner?.profileImage?.url} />
+
+                <AppText size="sm" weight="semibold">
+                  {item?.owner?.fullName ?? "N/A"}
+                </AppText>
+              </View>
             ) : null}
           </TouchableOpacity>
         </View>

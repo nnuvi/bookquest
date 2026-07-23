@@ -4,24 +4,30 @@ export type AuthUser = {
   email: string;
 };
 
+export type ProfileImage = {
+  url: string;
+};
+
+export type UserPreview = {
+  _id: string;
+  fullName: string;
+  username: string;
+  profileImage: ProfileImage;
+};
+
 export type User = {
   _id: string;
   username: string;
   fullName: string;
   email: string;
   friends: User[];
-  profileImage: string;
+  profileImage: ProfileImage;
   bio: string;
 };
 
-export type FriendRequestStatus =
-  | "pending"
-  | "accepted"
-  | "declined";
+export type FriendRequestStatus = "pending" | "accepted" | "declined";
 
-export type FriendRequestAction =
-  | "accepted"
-  | "declined";
+export type FriendRequestAction = "accepted" | "declined";
 
 export interface FriendRequest {
   _id: string;
@@ -44,7 +50,7 @@ export type FriendStatus =
   | "request_received"
   | "none";
 
-    export type FriendStatusDetails = {
-    status: FriendStatus;
-    requestId?: string;
-  }
+export type FriendStatusDetails = {
+  status: FriendStatus;
+  requestId?: string;
+};

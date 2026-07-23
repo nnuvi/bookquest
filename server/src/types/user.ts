@@ -29,11 +29,11 @@ export type UserDtoInput = {
   email: string;
   bio: string;
   role: "admin" | "user";
+  friends: Types.ObjectId[];
   profileImage?: {
     url: string;
     publicId: string;
   } | null;
-  friends: Types.ObjectId[];
 };
 
 export function mapUser(user: UserDtoInput) {

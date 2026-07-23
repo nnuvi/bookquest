@@ -12,11 +12,11 @@ type Props = {
 
 export default function DetailsList({ items }: Props) {
   return (
-    <View className="mt-4 rounded-xl bg-background p-4 shadow">
+    <View className="mt-4 rounded-xl bg-background px-4 py-2 shadow">
       {items.map(({ label, value }) => (
         <View
           key={label}
-          className="flex-row items-start py-3"
+          className="flex-row items-start py-2"
         >
           <AppText className="w-28" weight="medium">{label}</AppText>
 

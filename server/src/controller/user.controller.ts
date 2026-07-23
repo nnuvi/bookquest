@@ -11,8 +11,8 @@ import { mapUsers } from "../types/user.js";
 
 export const getMyProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    // const user = await User.findById(req.user._id).select("-password");
-    const user = await userService.getFormatUserOrThrow(req.user._id);
+    const user = await User.findById(req.user._id).select("-password");
+    // const user = await userService.getFormatUserOrThrow(req.user._id);
 
     if (!user) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
@@ -27,8 +27,8 @@ export const getMyProfile = asyncHandler(
 
 export const getUserProfile = asyncHandler(
   async (req: Request, res: Response) => {
-    // const user = await User.findById(req.params.id).select("-password");
-    const user = await userService.getFormatUserOrThrow(req.params.id!);
+    const user = await User.findById(req.params.id).select("-password");
+    // const user = await userService.getFormatUserOrThrow(req.params.id!);
 
     if (!user) {
       throw new ApiError(HTTP_STATUS.NOT_FOUND, "User not found.");
@@ -157,7 +157,8 @@ export const getUsers = asyncHandler(async (req: Request, res: Response) => {
   res.status(HTTP_STATUS.OK).json({
     success: true,
     count: users.length,
-    data: mapUsers(users),
+    data: users,
+    // data: mapUsers(users),
   });
 });
 
@@ -200,6 +201,7 @@ export const searchUsers = asyncHandler(async (req: Request, res: Response) => {
   res.status(HTTP_STATUS.OK).json({
     success: true,
     count: users.length,
-    data: mapUsers(users),
+    data: users,
+    // data: mapUsers(users),
   });
 });

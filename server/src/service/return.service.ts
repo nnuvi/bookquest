@@ -65,7 +65,7 @@ export async function getReturnRequests(ownerId: string) {
     owner: ownerId,
     status: "pending",
   })
-    .populate("borrower", "fullName username profileImage")
+    .populate("borrower", "fullName username profileImage.url")
     .populate({
       path: "borrowRecord",
       populate: {
@@ -89,7 +89,7 @@ export async function getReturnSentRequests(borrowerId: string) {
     borrower: borrowerId,
     status: "pending",
   })
-    .populate("owner", "fullName username profileImage")
+    .populate("owner", "fullName username profileImage.url")
     .populate({
       path: "borrowRecord",
       populate: {

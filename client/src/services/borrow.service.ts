@@ -1,23 +1,13 @@
 import { api } from "@/lib/api";
+import { LOG_SCOPE, logger } from "@/lib/logger";
 import { ApiResponse } from "@/types/api";
+import { BookCardItem } from "@/types/book";
 import {
   BorrowRequest,
   BorrowRequestStatus,
-  BorrowStatus,
-  BorrowStatusResponse,
+  BorrowStatusResponse
 } from "@/types/borrow";
 import { mapBorrowRequestBook } from "./book.mapper";
-import { BookCardItem } from "@/types/book";
-import { LOG_SCOPE, logger } from "@/lib/logger";
-
-// import { api } from "@/lib/api";
-// import { LOG_SCOPE, logger } from "@/lib/logger";
-
-// import { ApiResponse } from "@/types/api";
-// import { BookCardItem } from "@/types/book";
-// import { BorrowRequest, BorrowRequestStatus } from "@/types/borrow";
-
-// import { mapBorrowRequestBook } from "./book.mapper";
 
 export const getBorrowRequest = async (
   requestId: string,
@@ -35,10 +25,11 @@ export const getBorrowRequests = async (): Promise<BookCardItem[]> => {
   // logger.debug(
   //   LOG_SCOPE.request,
   //   "Fetched borrow requests:",
-  //   data.data.map((r) => ({
-  //     username: r.requester.username,
-  //     title: r.userBook.book.title,
-  //   })),
+  //   // data.data.map((r) => ({
+  //   //   username: r.requester.username,
+  //   //   title: r.userBook.book.title,
+  //   // })),
+  //   { data: data.data },
   // );
   return data.data.map(mapBorrowRequestBook);
 };
@@ -50,10 +41,11 @@ export const getSentBorrowRequests = async (): Promise<BookCardItem[]> => {
   // logger.debug(
   //   LOG_SCOPE.request,
   //   "Fetched borrow sent requests:",
-  //   data.data.map((r) => ({
-  //     username: r.owner.username,
-  //     title: r.userBook.book.title,
-  //   })),
+  //   // data.data.map((r) => ({
+  //   //   username: r.owner.username,
+  //   //   title: r.userBook.book.title,
+  //   // })),
+  //   { data: data.data },
   // );
   return data.data.map(mapBorrowRequestBook);
 };

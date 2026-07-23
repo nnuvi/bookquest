@@ -18,8 +18,8 @@ export async function getBorrowRecordOrThrow(borrowRecordId: string) {
 
 export async function getPopulatedBorrowRecordOrThrow(recordId: string) {
   const record = await BorrowRecord.findById(recordId)
-    .populate("borrower", "fullName username profileImage")
-    .populate("owner", "fullName username profileImage")
+    .populate("borrower", "fullName username profileImage.url")
+    .populate("owner", "fullName username profileImage.url")
     .populate({
       path: "userBook",
       populate: {
@@ -83,8 +83,8 @@ export async function getBorrowedBooks(userId: string) {
     borrower: userId,
     status: "borrowed",
   })
-    .populate("borrower", "fullName username profileImage")
-    .populate("owner", "fullName username profileImage")
+    .populate("borrower", "fullName username profileImage.url")
+    .populate("owner", "fullName username profileImage.url")
     .populate({
       path: "userBook",
       populate: {
@@ -100,8 +100,8 @@ export async function getLentBooks(userId: string) {
     owner: userId,
     status: "borrowed",
   })
-    .populate("borrower", "fullName username profileImage")
-    .populate("owner", "fullName username profileImage")
+    .populate("borrower", "fullName username profileImage.url")
+    .populate("owner", "fullName username profileImage.url")
     .populate({
       path: "userBook",
       populate: {

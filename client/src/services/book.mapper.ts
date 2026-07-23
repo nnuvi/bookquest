@@ -1,5 +1,7 @@
 import { Book, BookCardItem, UserBook } from "@/types/book";
-import { BorrowRequest } from "@/types/borrow";
+import {
+  BorrowRequest
+} from "@/types/borrow";
 import { BorrowRecord, ReturnRequest } from "@/types/return";
 
 export function mapBook(book: Book): BookCardItem {
@@ -48,6 +50,7 @@ export function mapBorrowRecord(
 }
 
 export function mapBorrowRequestBook(request: BorrowRequest): BookCardItem {
+  console.log("Mapping:", request);
   return {
     id: request._id,
 
@@ -65,17 +68,22 @@ export function mapBorrowRequestBook(request: BorrowRequest): BookCardItem {
       id: request.requester._id,
       fullName: request.requester.fullName,
       username: request.requester.username,
-      profileImage: request.requester.profileImage,
+      profileImage: {
+        url: request?.requester?.profileImage?.url,
+      },
     },
 
     owner: {
       id: request.owner._id,
       fullName: request.owner.fullName,
       username: request.owner.username,
-      profileImage: request.owner.profileImage,
+      profileImage: {
+        url: request?.owner?.profileImage?.url,
+      },
     },
   };
 }
+
 
 export function mapReturnRequestBook(request: ReturnRequest): BookCardItem {
   return {
@@ -95,14 +103,18 @@ export function mapReturnRequestBook(request: ReturnRequest): BookCardItem {
       id: request.borrower._id,
       fullName: request.borrower.fullName,
       username: request.borrower.username,
-      profileImage: request.borrower.profileImage,
+      profileImage: {
+        url: request?.borrower?.profileImage?.url,
+      },
     },
 
     owner: {
       id: request.owner._id,
       fullName: request.owner.fullName,
       username: request.owner.username,
-      profileImage: request.owner.profileImage,
+      profileImage: {
+        url: request?.owner?.profileImage?.url,
+      },
     },
   };
 }

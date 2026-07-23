@@ -499,8 +499,8 @@ export async function getBorrowStatus(
 
 export async function getBorrowRequestDetails(requestId: string) {
   const request = await BorrowRequest.findById(requestId)
-    .populate("requester", "fullName username profileImage")
-    .populate("owner", "fullName username profileImage")
+    .populate("requester", "fullName username profileImage.url")
+    .populate("owner", "fullName username profileImage.url")
     .populate({
       path: "userBook",
       populate: {

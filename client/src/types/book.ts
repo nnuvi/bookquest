@@ -1,6 +1,6 @@
 import { BorrowRequestStatus } from "./borrow";
 import { BorrowRecordStatus, ReturnRequestStatus } from "./return";
-import { User } from "./user";
+import { ProfileImage, User } from "./user";
 
 // API TYPES
 export type Book = {
@@ -80,14 +80,20 @@ export type BookCardItem = {
     id: string;
     fullName: string;
     username: string;
-    profileImage?: string;
+    profileImage?: ProfileImage;
+    // profileImage?: {
+    //   url: string;
+    // };
   };
 
   owner?: {
     id: string;
     fullName: string;
     username: string;
-    profileImage?: string;
+    profileImage?: ProfileImage;
+    // profileImage?: {
+    //   url: string;
+    // };
   };
 
   borrowRecordId?: string;
@@ -98,6 +104,9 @@ export type BookCardItem = {
     id: string;
     fullName: string;
     username: string;
-    profileImage?: string;
+    profileImage?: ProfileImage;
+    // profileImage?: {
+    //   url: string;
+    // };
   };
 };

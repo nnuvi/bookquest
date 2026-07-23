@@ -30,6 +30,8 @@ export default function BorrowRequestList({
   // logger.debug(LOG_SCOPE.query, "Fetched borrow requests (item): ", {
   //   requests,
   // });
+  console.log("BorrowRequestList requests:", requests);
+  console.log("Length:", requests.length);
   return (
     <FlatList
       data={requests}

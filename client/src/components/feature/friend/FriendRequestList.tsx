@@ -20,10 +20,7 @@ export default function FriendRequestList({
   refreshing = false,
   onRefresh,
 }: FriendRequestListProps) {
-  console.log(
-    "FriendRequestList render:",
-    requests.map((r) => r.from.username),
-  );
+  // logger.debug(LOG_SCOPE.query, "User frienrequestlist item: ", { requests });
   return (
     <FlatList
       data={requests}

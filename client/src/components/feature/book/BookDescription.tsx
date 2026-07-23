@@ -11,20 +11,24 @@ export default function BookDescription({
   notes,
 }: BookDescriptionProps) {
   return (
-    <View className="my-5 mb-5 pb-10">
+    <View className="my-5 pb-10">
       <AppText size="2xl" weight="semibold" className="mb-1">
         Description
       </AppText>
 
-      <AppText className="leading-5">{description}</AppText>
+      <AppText className="leading-5">
+        {description || "N/A"}
+      </AppText>
 
-      {notes && (
+      {!!notes && (
         <View className="mt-5">
           <AppText size="xl" weight="semibold" className="mb-1">
             Note
           </AppText>
 
-          <AppText className="leading-5">{notes || "N/A"}</AppText>
+          <AppText className="leading-5">
+            {notes}
+          </AppText>
         </View>
       )}
     </View>
