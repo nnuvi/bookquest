@@ -84,17 +84,23 @@ export async function sendBorrowRequest(
   ensureBookAvailability(userBook, "available");
   await ensureNoDuplicateBorrowRequest(requesterId, userBookId);
 
-  // const pendingRequest = await getPendingBorrowRequest(requesterId, userBookId);
-
-  // ensureNotPendingBorrowRequest(pendingRequest!);
-
-  return createBorrowRequest(
+  const borrowRequest = await createBorrowRequest(
     requesterId,
     userBook.owner.toString(),
     userBookId,
     borrowDurationDays,
     message,
   );
+
+  await createNotification({
+    from: requesterId,
+    to: userBook.owner.toString(),
+    userBook: userBookId,
+    event: NotificationEvents.BORROW_REQUEST_SENT,
+    message: "sent you a borrow request for the book",
+  });
+
+  return borrowRequest;
 }
 
 export async function respondBorrowRequest(

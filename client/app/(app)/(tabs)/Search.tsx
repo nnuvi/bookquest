@@ -40,24 +40,24 @@ export default function Search() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        setQuery("");
-        setSearch("");
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     return () => {
+  //       setQuery("");
+  //       setSearch("");
 
-        queryClient.removeQueries({
-          queryKey: ["searchBooks"],
-        });
+  //       queryClient.removeQueries({
+  //         queryKey: ["searchBooks"],
+  //       });
 
-        queryClient.removeQueries({
-          queryKey: ["searchUsers"],
-        });
-      };
-    }, [queryClient]),
-  );
+  //       queryClient.removeQueries({
+  //         queryKey: ["searchUsers"],
+  //       });
+  //     };
+  //   }, [queryClient]),
+  // );
 
   const {
     data: books = [],

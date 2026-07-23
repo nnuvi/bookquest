@@ -10,10 +10,14 @@ const imageSchema = z.object({
 export const ISBNSchema = z.object({
   isbn: z
     .string()
-    .trim()
-    .min(10, "ISBN must be at least 10 digits")
-    .max(13, "ISBN must be at most 13 digits")
-    .regex(/^\d+$/, "ISBN must contain only numbers"),
+    .transform((value) => value.replace(/[\s-]/g, ""))
+    .pipe(
+      z
+        .string()
+        .min(10, "ISBN must be at least 10 digits")
+        .max(13, "ISBN must be at most 13 digits")
+        .regex(/^\d+$/, "ISBN must contain only numbers"),
+    ),
 });
 
 export type ISBNFormData = z.infer<typeof ISBNSchema>;

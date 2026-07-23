@@ -1,29 +1,8 @@
 import mongoose from "mongoose";
-import Book from "../model/Book.model.js";
-import UserBook from "../model/UserBook.model.js";
 import User from "../model/user.model.js"; // assuming you have this  import BorrowRequest from "../model/BorrowRequest.model.js";
-import BorrowRecord from "../model/BorrowRecord.model.js";
-import BorrowRequest from "../model/BorrowRequest.model.js";
-import { Request, Response } from "express";
-import connectMongoDB from "../config/connectMongoDB.js";
-import bcrypt from "bcryptjs";
 
 import dotenv from "dotenv";
-import FriendRequest from "../model/FriendRequest.model.js";
-import Notification, {
-  NotificationEvents,
-} from "../model/Notification.model.js";
-import {
-  connectFriends,
-  createFriendRequests,
-  createFriendRequestsIds,
-  createUsers,
-  deleteUserAndData,
-  getUserIdsByUsername,
-} from "./user.seed.js";
 // import { createBooks, createBorrowRequests } from "./book.seed.js";
-import { createNotifications } from "./notification.seed.js";
-import ReturnRequest from "../model/ReturnRequest.model.js";
 dotenv.config();
 
 const seed = async () => {
@@ -46,40 +25,6 @@ const seed = async () => {
     const user_1_id = user_1._id.toString();
     const user_2_id = user_2._id.toString();
 
-    // const users = await createUsers();
-
-    // await connectFriends(users, user_1, user_2);
-
-    // await createBooks(users);
-
-    // await createFriendRequests(users, user_1, user_2);
-
-    // await createBorrowRequests(users, user_1, user_2);
-
-    // await createNotifications(users, user_1, user_2);
-
-    // await deleteUserAndData("sara")
-    // console.log(users)
-
-    // const ids = await getUserIdsByUsername([
-    //   "sara",
-    //   "sophia",
-    //   "meii",
-    //   "dazai",
-    //   "kate",
-    //   "senku",
-    // ]);
-
-    // await createFriendRequestsIds(ids, user_1_id, user_2_id);
-    // await createNotifications(ids, user_1_id, user_2_id);
-
-    try {
-      await ReturnRequest.collection.dropIndex("borrowRecord_1");
-      console.log("Dropped borrowRecord_1 index");
-    } catch (err) {
-      console.log("Index does not exist");
-    }
-    
     console.log("Seeding completed!");
 
     await mongoose.disconnect();

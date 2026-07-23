@@ -49,7 +49,7 @@ export default function BookList({
         {
           // flexGrow: 1,
           padding: 12,
-          paddingBottom: 20,
+          paddingBottom: 12,
           paddingVertical: 12,
           marginBottom: 12,
           // backgroundColor: Colors.backgroundDark

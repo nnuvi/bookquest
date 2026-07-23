@@ -34,9 +34,9 @@ export default function ScanISBN() {
         ]}
       />
 
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center bg-background">
         {tab === "scan" ? (
-          <View className="">
+          <View className="bg-background">
             <View className="aspect-square w-90 overflow-hidden rounded-3xl border border-border mb-16">
               <ISBNScanner onScanned={handleSubmit} />
             </View>

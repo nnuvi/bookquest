@@ -16,7 +16,11 @@ export default function Screen({
     <SafeAreaView
       style={{ flex: 1, width: "100%", backgroundColor: statusBarColor }}
     >
-      <View className="flex-1 w-full bg-background">{children}</View>
+      <View
+        className="flex-1 w-full bg-background"
+      >
+        {children}
+      </View>
     </SafeAreaView>
   );
 }

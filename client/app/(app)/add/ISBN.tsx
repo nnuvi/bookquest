@@ -27,18 +27,16 @@ export default function ISBN() {
   }
 
   return (
-    <Screen>
-      <View className="p-6 justify-center">
-        <FormInput
-          control={form.control}
-          name="isbn"
-          // label="ISBN"
-          placeholder="ISBN"
-          keyboardType="numeric"
-        />
+    <View className="flex-1 w-full mt-8 p-6 justify-cente">
+      <FormInput
+        control={form.control}
+        name="isbn"
+        // label="ISBN"
+        placeholder="ISBN"
+        keyboardType="numeric"
+      />
 
-        <Button title="Search Book" onPress={form.handleSubmit(onSubmit)} />
-      </View>
-    </Screen>
+      <Button title="Search Book" onPress={form.handleSubmit(onSubmit)} />
+    </View>
   );
 }

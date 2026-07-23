@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { Octicons } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity, View } from "react-native";
 
@@ -26,16 +27,17 @@ export default function SearchBar({
         <Octicons name="search" size={22} color="black" />
       </TouchableOpacity>
       <View className="flex-1 p-0.5 ml-3 rounded-full bg-input">
-      <TextInput
-        style={{ paddingHorizontal: 16 }}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        editable={editable}
-        autoFocus={autoFocus}
-        returnKeyType="search"
-        onSubmitEditing={onSubmitEditing}
-      />
+        <TextInput
+          placeholderTextColor={Colors.neutralDark}
+          style={{ paddingHorizontal: 16, color: Colors.text }}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          editable={editable}
+          autoFocus={autoFocus}
+          returnKeyType="search"
+          onSubmitEditing={onSubmitEditing}
+        />
       </View>
     </View>
   );
