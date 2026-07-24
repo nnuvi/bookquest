@@ -85,6 +85,72 @@
 
 <h2 align="center">Feature Demonstrations</h2>
 
+<table>
+  <tr>
+    <td align="center">
+      <strong>Authentication</strong><br>
+      <img src="assets/gifs/auth.gif" width="280" height="500"><br>
+      Login, registration, and authentication flow.
+    </td>
+    <td align="center">
+      <strong>Library & Profile</strong><br>
+      <img src="assets/gifs/library.gif" width="280" height="500"><br>
+      Personal library, home feed, and profile.
+    </td>
+    <td align="center">
+      <strong>Book Search</strong><br>
+      <img src="assets/gifs/search.gif" width="280" height="500"><br>
+      Search books and users.
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Add Book (Scan)</strong><br>
+      <img src="assets/gifs/isbnscan.gif" width="280" height="500"><br>
+      Scan a barcode to import a book.
+    </td>
+    <td align="center">
+      <strong>Add Book (ISBN)</strong><br>
+      <img src="assets/gifs/isbn.gif" width="280" height="500"><br>
+      Add a book using its ISBN.
+    </td>
+    <td align="center">
+      <strong>Borrow Request</strong><br>
+      <img src="assets/gifs/borrow.gif" width="280" height="500"><br>
+      Send, review, and accept borrow requests.
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Return Workflow</strong><br>
+      <img src="assets/gifs/return.gif" width="280" height="500"><br>
+      Return requests and reminders.
+    </td>
+    <td align="center">
+      <strong>Book Details</strong><br>
+      <img src="assets/gifs/details.gif" width="280" height="500"><br>
+      View book metadata and borrowing status.
+    </td>
+    <td align="center">
+      <strong>Friends</strong><br>
+      <img src="assets/gifs/friend.gif" width="280" height="500"><br>
+      Send friend requests and manage connections.
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <strong>Notifications</strong><br>
+      <img src="assets/gifs/notification.gif" width="280" height="500"><br>
+      Notification center and activity updates.
+    </td>
+  </tr>
+</table>
+
+<!-- <h2 align="center">Feature Demonstrations</h2>
+
 | Authentication | Library & Profile | Book Search |
 | :------------: | :---------------: | :---------: |
 | ![](assets/gifs/auth.gif) | ![](assets/gifs/library.gif) | ![](assets/gifs/search.gif) |
@@ -103,7 +169,8 @@
 | Notifications |  |  |
 | :-----------: | :-: | :-: |
 | ![](assets/gifs/notification.gif) | | |
-| Notification center and activity updates. | | |
+| Notification center and activity updates. | | | -->
+
 ---
 
 <h2 align="center">Architecture</h2>
