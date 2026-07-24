@@ -303,7 +303,7 @@ server/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/bookquest.git
+git clone https://github.com/nnuvi/bookquest.git
 ```
 
 ### 2. Install the Client
@@ -337,13 +337,13 @@ npx expo start
 
 <h2 align="center">Future Improvements</h2>
 
-- AI-powered book recommendations based on reading history and borrowing activity.
-- Admin dashboard for managing users, books, reports, and platform moderation.
-- Dark mode and additional theme customization.
-- Push notifications for borrow requests, reminders, and friend activity.
-- Improved borrowing and return workflows with enhanced user experience.
-- Advanced search, filtering, and sorting options.
-- User customization options, including profile personalization and library preferences.
-- Enhanced security with features such as rate limiting, account protection, and session management.
-- Performance optimizations and continued codebase refactoring for improved maintainability.
-- Expanded analytics and reading insights for personal library activity.
+- Push notifications for borrow requests, reminders, and user activities.
+- Dark mode, light mode, and more theme options.
+- Advanced search with sorting and filtering features.
+- More profile and library customization options.
+- Admin dashboard for managing users and platform activities.
+- Improved authentication and security features.
+- Personalized book recommendations.
+- Better borrowing and return workflow.
+- Improve responsive UI for different screen sizes and devices.
+- Performance improvements and project structure updates.
