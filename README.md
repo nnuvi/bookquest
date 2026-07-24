@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/bookquest-logo.png" alt="BookQuest Logo" width="180">
+  <img src="assets/images/bookquest-logo.png" alt="BookQuest Logo" width="80%">
 </p>
 
 <h3 align="center">
