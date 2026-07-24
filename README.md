@@ -198,9 +198,7 @@ flowchart LR
     A["React Native (Expo)"] -->|HTTPS| B["Express.js API"]
     B --> C["MongoDB"]
     B --> D["Cloudinary"]
-    A --> E["Google Books API"]
-    A --> F["Open Library API"]
-```
+    B --> E["Google Books API"]
 
 ---
 
