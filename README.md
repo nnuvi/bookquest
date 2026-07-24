@@ -86,73 +86,85 @@
 <h2 align="center">Feature Demonstrations</h2>
 
 <table>
-  <tr>
-    <td align="center" style="padding: 25px;">
-      <strong>Authentication</strong><br><br>
-      <img src="assets/gifs/auth.gif" width="220"><br><br>
-      Login, registration, and authentication flow.
-    </td>
+<tr>
+<td align="center">
+<strong>Authentication</strong><br><br>
+<img src="assets/gifs/auth.gif" width="220"><br><br>
+Login, registration, and authentication flow.
+</td>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Library & Profile</strong><br><br>
-      <img src="assets/gifs/library.gif" width="220"><br><br>
-      Personal library, home feed, and profile.
-    </td>
+<td align="center">
+<strong>Library & Profile</strong><br><br>
+<img src="assets/gifs/library.gif" width="220"><br><br>
+Personal library, home feed, and profile.
+</td>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Book Search</strong><br><br>
-      <img src="assets/gifs/search.gif" width="220"><br><br>
-      Search books and users.
-    </td>
-  </tr>
+<td align="center">
+<strong>Book Search</strong><br><br>
+<img src="assets/gifs/search.gif" width="220"><br><br>
+Search books and users.
+</td>
+</tr>
+</table>
 
-  <tr>
-    <td align="center" style="padding: 25px;">
-      <strong>Add Book (Scan)</strong><br><br>
-      <img src="assets/gifs/isbnscan.gif" width="220"><br><br>
-      Scan a barcode to import a book.
-    </td>
+<br>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Add Book (ISBN)</strong><br><br>
-      <img src="assets/gifs/isbn.gif" width="220"><br><br>
-      Add a book using its ISBN.
-    </td>
+<table>
+<tr>
+<td align="center">
+<strong>Add Book (Scan)</strong><br><br>
+<img src="assets/gifs/isbnscan.gif" width="220"><br><br>
+Scan a barcode to import a book.
+</td>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Borrow Request</strong><br><br>
-      <img src="assets/gifs/borrow.gif" width="220"><br><br>
-      Send, review, and accept borrow requests.
-    </td>
-  </tr>
+<td align="center">
+<strong>Add Book (ISBN)</strong><br><br>
+<img src="assets/gifs/isbn.gif" width="220"><br><br>
+Add a book using its ISBN.
+</td>
 
-  <tr>
-    <td align="center" style="padding: 25px;">
-      <strong>Return Workflow</strong><br><br>
-      <img src="assets/gifs/return.gif" width="220"><br><br>
-      Return requests and reminders.
-    </td>
+<td align="center">
+<strong>Borrow Request</strong><br><br>
+<img src="assets/gifs/borrow.gif" width="220"><br><br>
+Send, review, and accept borrow requests.
+</td>
+</tr>
+</table>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Book Details</strong><br><br>
-      <img src="assets/gifs/details.gif" width="220"><br><br>
-      View book metadata and borrowing status.
-    </td>
+<br>
 
-    <td align="center" style="padding: 25px;">
-      <strong>Friends</strong><br><br>
-      <img src="assets/gifs/friend.gif" width="220"><br><br>
-      Send friend requests and manage connections.
-    </td>
-  </tr>
+<table>
+<tr>
+<td align="center">
+<strong>Return Workflow</strong><br><br>
+<img src="assets/gifs/return.gif" width="220"><br><br>
+Return requests and reminders.
+</td>
 
-  <tr>
-    <td align="center" style="padding: 25px;">
-      <strong>Notifications</strong><br><br>
-      <img src="assets/gifs/notification.gif" width="220"><br><br>
-      Notification center and activity updates.
-    </td>
-  </tr>
+<td align="center">
+<strong>Book Details</strong><br><br>
+<img src="assets/gifs/details.gif" width="220"><br><br>
+View book metadata and borrowing status.
+</td>
+
+<td align="center">
+<strong>Friends</strong><br><br>
+<img src="assets/gifs/friend.gif" width="220"><br><br>
+Send friend requests and manage connections.
+</td>
+</tr>
+</table>
+
+<br>
+
+<table>
+<tr>
+<td align="center">
+<strong>Notifications</strong><br><br>
+<img src="assets/gifs/notification.gif" width="220"><br><br>
+Notification center and activity updates.
+</td>
+</tr>
 </table>
 
 <!-- <h2 align="center">Feature Demonstrations</h2>
