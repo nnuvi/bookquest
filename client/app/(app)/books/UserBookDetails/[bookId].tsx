@@ -109,13 +109,15 @@ export default function BookDetails() {
               },
               {
                 label: "Publish Date",
-                value: new Date(
-                  userBook?.book?.publishDate!,
-                ).toLocaleDateString(),
+                value: formatDate(userBook?.book?.publishDate),
+                // value: new Date(
+                //   userBook?.book?.publishDate!,
+                // ).toLocaleDateString(),
               },
               {
                 label: "Added",
-                value: new Date(userBook.addedAt).toLocaleDateString(),
+                value: formatDate(userBook.addedAt),
+                // value: new Date(userBook.addedAt).toLocaleDateString(),
               },
               ...(record?.owner?._id === user?._id
                 ? [

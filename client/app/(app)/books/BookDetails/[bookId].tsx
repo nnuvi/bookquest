@@ -17,6 +17,7 @@ import BookHeader from "@/components/feature/book/BookHeader";
 import BookDetailsSkeleton from "@/components/skeleton/BookDetailsSkeleton";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import NotFoundScreen from "@/components/common/NotFoundScreen";
+import { formatDate } from "@/lib/date";
 
 export default function BookDetails() {
   const { bookId } = useGlobalSearchParams<{ bookId: string }>();
@@ -96,7 +97,7 @@ export default function BookDetails() {
                 },
                 {
                   label: "Publish Date",
-                  value: book?.publishDate,
+                  value: formatDate(book.publishDate),
                 },
               ]}
             />

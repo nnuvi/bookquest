@@ -83,7 +83,7 @@ export default function BookCard({
                   {item?.requester?.fullName ?? "N/A"}
                 </AppText>
               </View>
-            ) : item.owner?.id !== user?._id ? (
+            ) : item.owner && item.owner?.id !== user?._id ? (
               <View className="flex-row items-center gap-1 mb-2">
                 {/* <AppText size="sm">Requested by</AppText> */}
 
