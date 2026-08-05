@@ -68,14 +68,6 @@ export default function BorrowAction({
         />
       )}
 
-      {data.actions.includes("ask-back") && (
-        <AskBackButton
-          recordId={data.borrowRecordId!}
-          fullWidth={fullWidth}
-          buttonClassName={buttonClassName}
-        />
-      )}
-
       {data.actions.includes("accept-return-request") && (
         <ReturnActionButton
           requestId={data.returnRequestId!}
@@ -89,6 +81,14 @@ export default function BorrowAction({
           requestId={data.returnRequestId!}
           fullWidth={fullWidth}
           mode="sent"
+          buttonClassName={buttonClassName}
+        />
+      )}
+
+      {data.actions.includes("ask-back") && (
+        <AskBackButton
+          recordId={data.borrowRecordId!}
+          fullWidth={fullWidth}
           buttonClassName={buttonClassName}
         />
       )}

@@ -217,7 +217,18 @@ export async function sendAskBackReminder(recordId: string, ownerId: string) {
 }
 
 export async function getReturnRequestOrThrow(requestId: string) {
-  const returnRequest = await ReturnRequest.findById(requestId);
+  const returnRequest = await ReturnRequest.findById(requestId)
+    .populate("borrower", "fullName username profileImage.url")
+    .populate({
+      path: "borrowRecord",
+      populate: {
+        path: "userBook",
+        populate: {
+          path: "book",
+          select: "title author coverImage",
+        },
+      },
+    });
 
   if (!returnRequest) {
     throw new ApiError(HTTP_STATUS.NOT_FOUND, "Return request not found.");
