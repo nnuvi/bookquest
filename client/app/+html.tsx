@@ -1,9 +1,16 @@
-import { Head, Html, Main, NextScript } from "expo-router/html";
+import { ScrollViewStyleReset } from "expo-router/html";
+import type { PropsWithChildren } from "react";
 
-export default function Root() {
+export default function Root({ children }: PropsWithChildren) {
   return (
-    <Html lang="en">
-      <Head>
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
         <meta
           name="description"
           content="BookQuest helps you discover, borrow, lend, and manage your books."
@@ -18,6 +25,10 @@ export default function Root() {
           property="og:image"
           content="https://bookquest-eight.vercel.app/preview.png"
         />
+        <meta
+          property="og:url"
+          content="https://bookquest-eight.vercel.app"
+        />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
@@ -30,12 +41,11 @@ export default function Root() {
           name="twitter:image"
           content="https://bookquest-eight.vercel.app/preview.png"
         />
-      </Head>
 
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
+        <ScrollViewStyleReset />
+      </head>
+
+      <body>{children}</body>
+    </html>
   );
 }
