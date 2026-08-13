@@ -10,12 +10,13 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FDF6ED"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FDF6ED",
+        "monochromeImage": "./assets/images/adaptive-icon.png"
       },
       "package": "com.bookquest.app",
       "softwareKeyboardLayoutMode": "pan"
@@ -29,6 +30,7 @@
     "plugins": [
       "expo-router",
       "expo-splash-screen",
+      "expo-system-ui",
       "@react-native-community/datetimepicker"
     ]
   }
